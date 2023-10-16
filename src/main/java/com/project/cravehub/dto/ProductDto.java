@@ -1,0 +1,112 @@
+package com.project.cravehub.dto;
+
+import com.project.cravehub.model.admin.Category;
+import com.project.cravehub.model.admin.SubCategory;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Set;
+
+public class ProductDto {
+
+    private Integer productId;
+    private String productName;
+    private String description;
+    private Double price;
+    private Integer quantity;
+    private Category categories;
+    private SubCategory subcategories ;
+    private String imageName;
+    private boolean isEnabled;
+
+    //
+//    private Set<Category> category;
+//    private Set<SubCategory> subcategory;
+    public Integer getProductId() {
+        return productId;
+    }
+
+    public void setProductId(Integer productId) {
+        this.productId = productId;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
+    public Category getCategories() {
+        return categories;
+    }
+
+    public void setCategories(Category categories) {
+        this.categories = categories;
+    }
+
+    public SubCategory getSubcategories() {
+        return subcategories;
+    }
+
+    public void setSubcategories(SubCategory subcategories) {
+        this.subcategories = subcategories;
+    }
+
+    public String getImageName() {
+        return imageName;
+    }
+
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
+    }
+
+    public boolean isEnabled() {
+        return isEnabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        isEnabled = enabled;
+    }
+//
+//    public Set<Category> getCategory() {
+//        return category;
+//    }
+//
+//    public void setCategory(Set<Category> category) {
+//        this.category = category;
+//    }
+
+//    public Set<SubCategory> getSubcategory() {
+//        return subcategory;
+//    }
+//
+//    public void setSubcategory(Set<SubCategory> subcategory) {
+//        this.subcategory = subcategory;
+//    }
+
+}

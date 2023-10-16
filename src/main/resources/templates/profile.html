@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http//www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Molla - Bootstrap eCommerce Template</title>
+    <meta name="keywords" content="HTML5 Template">
+    <meta name="description" content="Molla - Bootstrap eCommerce Template">
+    <meta name="author" content="p-themes">
+    <!-- Favicon -->
+<!--    <link rel="apple-touch-icon" sizes="180x180" href="assets/images/icons/apple-touch-icon.png">-->
+<!--    <link rel="icon" type="image/png" sizes="32x32" href="assets/images/icons/favicon-32x32.png">-->
+<!--    <link rel="icon" type="image/png" sizes="16x16" href="assets/images/icons/favicon-16x16.png">-->
+<!--    <link rel="manifest" href="assets/images/icons/site.html">-->
+<!--    <link rel="mask-icon" href="/images/icons/safari-pinned-tab.svg" color="#666666">-->
+<!--    <meta name="apple-mobile-web-app-title" content="Molla">-->
+<!--    <meta name="application-name" content="Molla">-->
+<!--    <meta name="msapplication-TileColor" content="#cc9966">-->
+<!--    <meta name="msapplication-config" content="assets/images/icons/browserconfig.xml">-->
+<!--    <meta name="theme-color" content="#ffffff">-->
+    <!-- Plugins CSS File -->
+    <link rel="stylesheet" href="/assetsProfile/css/bootstrap.min.css">
+    <!-- Main CSS File -->
+    <link rel="stylesheet" href="/assetsProfile/css/style.css">
+
+
+
+    <link href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700,700i&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Amatic+SC:400,700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="/css/open-iconic-bootstrap.min.css">
+    <link rel="stylesheet" href="/css/animate.css">
+
+    <link rel="stylesheet" href="/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="/css/owl.theme.default.min.css">
+    <link rel="stylesheet" href="/css/magnific-popup.css">
+
+    <link rel="stylesheet" href="/css/aos.css">
+
+    <link rel="stylesheet" href="/css/ionicons.min.css">
+
+    <link rel="stylesheet" href="/css/bootstrap-datepicker.css">
+    <link rel="stylesheet" href="/css/jquery.timepicker.css">
+
+
+    <link rel="stylesheet" href="/css/flaticon.css">
+    <link rel="stylesheet" href="/css/icomoon.css">
+    <link rel="stylesheet" href="/css/style.css">
+
+    <link rel="stylesheet" href="/extra.css">
+
+    <style>
+        .btn-login {
+          background-color: #fc8019;
+          border: none;
+          width: 30rem;
+          height: 40rem
+          padding: 10px;
+          color: #fff;
+          border-radius: 4px;
+          cursor: pointer;
+          transition: background-color 0.3s;
+        }
+
+        .btn-login:hover {
+          background-color:#fc8019;
+          color: white;
+        }
+        .address p{
+            line-height: 1;
+        }
+
+    </style>
+
+</head>
+
+<body class="goto-here">
+<!--    <div class="page-wrapper">-->
+    <div class="py-1 bg-primary">
+        <div class="container">
+            <div class="row no-gutters d-flex align-items-start align-items-center px-md-0">
+                <div class="col-lg-12 d-block">
+                    <div class="row d-flex">
+                        <div class="col-md pr-4 d-flex topper align-items-center">
+                            <div class="icon mr-2 d-flex justify-content-center align-items-center"><span class="icon-phone2"></span></div>
+                            <span class="text">+ 1235 2355 98</span>
+                        </div>
+                        <div class="col-md pr-4 d-flex topper align-items-center">
+                            <div class="icon mr-2 d-flex justify-content-center align-items-center"><span class="icon-paper-plane"></span></div>
+                            <span class="text">youremail@email.com</span>
+                        </div>
+                        <div class="col-md-5 pr-4 d-flex topper align-items-center text-lg-right">
+                            <span class="text">3-5 Business days delivery &amp; Free Returns</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
+        <div class="container">
+            <a class="navbar-brand" href="#">CraveHub</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="oi oi-menu"></span> Menu
+            </button>
+            <div class="collapse navbar-collapse" id="ftco-nav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item active"><a th:href="@{/}" class="nav-link">Home</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Shop</a>
+                        <div class="dropdown-menu" aria-labelledby="dropdown04">
+                            <a class="dropdown-item" href="shop.html">Shop</a>
+                            <a class="dropdown-item" href="wishlist.html">Wishlist</a>
+                            <a class="dropdown-item" href="product-single.html">Single Product</a>
+                            <a class="dropdown-item" href="cart.html">Cart</a>
+                            <a class="dropdown-item" href="checkout.html">Checkout</a>
+                        </div>
+                    </li>
+                    <li class="nav-item"><a href="about.html" class="nav-link">Order</a></li>
+                    <li class="nav-item cta cta-colored"><a href="cart.html" class="nav-link"><span class="icon-shopping_cart"></span>[0]</a></li>
+                    <li class="nav-item">
+                        <!-- <input class="search_bar" type="search" placeholder="Search" aria-label="Search"> -->
+                        <input type="text" class="search-bar" placeholder="Search...">
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Account</a>
+                        <div class="dropdown-menu" aria-labelledby="dropdown04">
+                            <a class="dropdown-item" href="shop.html">Profile</a>
+                            <a class="dropdown-item" th:href="@{/login}">Login</a>
+                            <a class="dropdown-item" th:href="@{/registration}">Signup</a>
+                            <a class="dropdown-item" href="cart.html">Logout</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- END nav -->
+
+    <main class="main">
+        <div class="page-header text-center" style="background-image: url('/images/—Pngtree—background%20with%20fast%20food%20drawn_1199846%20copy.jpg')">
+            <div class="container">
+                <h1 class="page-title text-white">My Account<span class="text-warning">Shop</span></h1>
+            </div>
+        </div>
+        <nav aria-label="breadcrumb" class="breadcrumb-nav mb-3">
+            <div class="container">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                    <li class="breadcrumb-item"><a href="#">Shop</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">My Account</li>
+                </ol>
+            </div>
+        </nav>
+
+        <div class="page-content">
+            <div class="dashboard">
+                <div class="container">
+                    <div class="row">
+                        <aside class="col-md-4 col-lg-3">
+                            <ul class="nav nav-dashboard flex-column mb-3 mb-md-0" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="tab-dashboard-link" data-toggle="tab" href="#tab-dashboard" role="tab" aria-controls="tab-dashboard" aria-selected="true">Dashboard</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="tab-account-link" data-toggle="tab" href="#tab-account" role="tab" aria-controls="tab-account" aria-selected="false">Account Details</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="tab-address-link" data-toggle="tab" href="#tab-address" role="tab" aria-controls="tab-address" aria-selected="false">Addresses</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="tab-addAddress-link" data-toggle="tab" href="#tab-addAddress" role="tab" aria-controls="tab-addAddress" aria-selected="false">Add Address</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="tab-orders-link" data-toggle="tab" href="#tab-orders" role="tab" aria-controls="tab-orders" aria-selected="false">Orders</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="tab-downloads-link" data-toggle="tab" href="#tab-downloads" role="tab" aria-controls="tab-downloads" aria-selected="false">Downloads</a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#">Sign Out</a>
+                                </li>
+                            </ul>
+                        </aside>
+
+                        <div class="col-md-8 col-lg-9">
+                            <div class="tab-content">
+                                 <div class="tab-pane fade profile show active" id="tab-dashboard" role="tabpanel" aria-labelledby="tab-dashboard-link">
+                                     <div class="text-center d-flex align-items-center justify-content-center "  style="height:20rem;">
+                                         <img src="/productImages/user-sign-icon-front-side-with-white-background-removebg-preview.png" alt="Profile Logo" style="max-width: 100%; max-height: 100%;">
+                                     </div>
+                                     <div class="text-center " style="margin-top:-2rem" >
+                                         <h2 th:text="${user.userName}"></h2>
+                                     </div>
+                                    <div class="mt-5">
+                                         <form action="#">
+                                             <div class="row">
+                                                 <div class="col-sm-7">
+                                                     <label>First Name *</label>
+                                                     <input type="text" class="form-control" readonly  required th:value="${user.firstName}">
+                                                 </div>
+                                                 <div  class="col-sm-5">
+                                                     <label>Last Name *</label>
+                                                     <input type="text" class="form-control" readonly  required th:value="${user.lastName}">
+                                                 </div>
+                                                 <div  class="col-sm-12">
+                                                     <label>Email Id *</label>
+                                                     <input type="text" class="form-control" readonly  required th:value="${user.email}">
+                                                 </div>
+                                             </div>
+
+                                         </form>
+                                    </div>
+                                 </div>
+
+                                <div class="tab-pane fade" id="tab-orders" role="tabpanel" aria-labelledby="tab-orders-link">
+                                    <p>No order has been made yet.</p>
+                                    <a href="category.html" class="btn btn-outline-primary-2"><span>GO SHOP</span><i class="icon-long-arrow-right"></i></a>
+                                </div>
+
+                                <div class="tab-pane fade" id="tab-downloads" role="tabpanel" aria-labelledby="tab-downloads-link">
+                                    <p>No downloads available yet.</p>
+                                    <a href="category.html" class="btn btn-outline-primary-2"><span>GO SHOP</span><i class="icon-long-arrow-right"></i></a>
+                                </div>
+
+
+<!-----------------------------------------------add Address-------------------------------------------------->
+
+                                <div class="tab-pane fade" id="tab-addAddress" role="tabpanel" aria-labelledby="tab-addAaddress-link">
+
+                                    <div class="row p-5">
+                                        <div class="col-lg-10 mx-auto">
+                                            <div class="card card-dashboard">
+                                                <div class="card-body">
+                                                    <h3 class="card-title">Add Address</h3>
+                                                    <form th:action="@{/addAddress}" th:object="${address}" method="post">
+                                                        <div class="row p-5" >
+                                                            <div class="col-sm-12">
+                                                                <label>Full Name *</label>
+                                                                <input type="text" class="form-control" th:field="*{fullName}" required>
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <label>City *</label>
+                                                                <input type="text" class="form-control" th:field="*{city}" required>
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <label>State *</label>
+                                                                <input type="text" class="form-control" th:field="*{state}" required>
+                                                            </div>
+                                                            <div class="col-sm-12">
+                                                                <label>Country *</label>
+                                                                <input type="text" class="form-control" th:field="*{country}" required>
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <label>Mobile no. *</label>
+                                                                <input type="text" class="form-control" th:field="*{number}" required>
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <label>pin-code *</label>
+                                                                <input type="text" class="form-control" th:field="*{pinCode}" required>
+                                                            </div>
+
+                                                                <div class=" col-12 ">
+                                                                    <button value="login" type="submit" class="btn-login my-4 w-100 " >+ Add Address</button>
+                                                                </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+<!-------------------------------------------------address------------------------------------>
+
+                                <div class="tab-pane fade" id="tab-address" role="tabpanel" aria-labelledby="tab-address-link">
+<div class="d-flex py-3 justify-content-end w-100">
+    <a href="#tab-addAddress" type="button" id="addressBtn" class="btn p-3 mx-5 mb-5" style="background-color:#fc8019; color:#fff"  >+ Add Address</a>
+
+</div>
+                                    <div class="row" >
+                                        <div class="col-lg-3" th:each="address : ${addresses}">
+                                            <div class="card card-dashboard">
+                                                <div class="card-body">
+                                                    <h3 class="card-title" th:text="'Address'+ ${address.address_id}"></h3>
+                                                    <div class="address">
+                                                        <p th:text="${address.fullName}"><p>
+                                                        <p th:text="${address.city}"><p>
+                                                        <p th:text="${address.state}"><p>
+                                                        <p th:text="${address.country}"><p>
+                                                        <p th:text="${address.number}"><p>
+                                                        <p th:text="${address.pinCode}"></p>
+                                                        <p style="cursor: pointer;" data-bs-toggle="modal" th:attr="data-bs-target='#modal_' + ${address.address_id}">Edit <i class="icon-edit"></i><a href="#">Delete </a></p>
+                                                        <button type="button"  class="view-button"   data-bs-toggle="modal" th:attr="data-bs-target='#modal_' + ${address.address_id}"
+                                                        >View
+                                                        </button>
+<!--                                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"></button>-->
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="modal fade" th:id="'modal_' + ${address.address_id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <!--                                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">-->
+
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header px-5">
+                                                            <h3 class="modal-title" id="exampleModalLabel">Modal title</h3>
+                                                            <button style="background: none; border: none;" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">x</button>
+                                                        </div>
+                                                        <div class="modal-body px-5">
+                                                            <form th:action="@{'/updateAddress'+${address.address_id}}" th:object="${user_address}" method="post">
+                                                                <div class="row">
+                                                                    <div class="col-sm-12">
+                                                                        <label>Full Name *</label>
+
+                                                                            <input type="text" class="form-control" name="fullName" th:value="${address.fullName}" required>
+
+                                                                    </div>
+                                                                    <div class="col-sm-6">
+                                                                        <label>City *</label>
+                                                                            <input type="text" class="form-control" name="city"  th:value="${address.city}" required>
+                                                                    </div>
+                                                                    <div class="col-sm-6">
+                                                                        <label>State *</label>
+                                                                        <input type="text" class="form-control" name="state" th:value="${address.state}"  required>
+                                                                    </div>
+                                                                    <div class="col-sm-12">
+                                                                        <label>Country *</label>
+                                                                        <input type="text" class="form-control" name="country" th:value="${address.country}" required>
+                                                                    </div>
+                                                                    <div class="col-sm-6">
+                                                                        <label>Mobile no. *</label>
+                                                                        <input type="text" class="form-control"  name="number" th:value="${address.number}"  required>
+                                                                    </div>
+                                                                    <div class="col-sm-6">
+                                                                        <label>pin-code *</label>
+                                                                        <input type="text" class="form-control" name="pinCode" th:value="${address.pinCode}" required>
+                                                                    </div>
+
+                                                                    <div class=" col-12">
+                                                                        <button value="login" type="submit" class="btn-login my-4 w-100" >+ Add Address</button>
+                                                                    </div>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                        <div class="modal-footer w-100">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Modal -->
+
+
+<!-------------------------------------------------------Update Details-------------------------------->
+
+                                <div class="tab-pane fade" id="tab-account" role="tabpanel" aria-labelledby="tab-account-link">
+                                    <h3 class="card-title my-5">User Details</h3>
+                                        <form th:action="@{/updateUserDetails}" th:object="${user}" method="post">
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <label>First Name *</label>
+                                                    <input type="text" class="form-control" th:field="*{firstName}" required>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <label>Last Name *</label>
+                                                    <input type="text" class="form-control" th:field="*{lastName}" required>
+                                                </div>
+                                                <div class="col-sm-12">
+                                                    <label>UserName *</label>
+                                                    <input type="text" class="form-control" th:field="*{userName}" required>
+                                                </div>
+                                                <div class="col-sm-12">
+                                                    <label>Email *</label>
+                                                    <input type="text" class="form-control" th:field="*{email}" required>
+                                                </div>
+
+                                                <div class="col-sm-12">
+                                                    <div class="add-btn my-4">
+                                                        <button value="login" type="submit" class="btn-login" >+ Add Address</button>
+<!--                                                        <p><a  type="submit" class="btn-radius py-3 px-5">+ Add Address</a></p>-->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+
+    <section class="ftco-section ftco-no-pt ftco-no-pb py-5 bg-light">
+        <div class="container py-4">
+            <div class="row d-flex justify-content-center py-5">
+                <div class="col-md-6">
+                    <h2 style="font-size: 22px;" class="mb-0">Subcribe to our Newsletter</h2>
+                    <span>Get e-mail updates about our latest shops and special offers</span>
+                </div>
+                <div class="col-md-6 d-flex align-items-center">
+                    <form action="#" class="subscribe-form">
+                        <div class="form-group d-flex">
+                            <input type="text" class="form-control" placeholder="Enter email address">
+                            <input type="submit" value="Subscribe" class="submit px-3">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer class="ftco-footer ftco-section">
+        <div class="container">
+            <div class="row">
+                <div class="mouse">
+                    <a href="#" class="mouse-icon">
+                        <div class="mouse-wheel"><span class="ion-ios-arrow-up"></span></div>
+                    </a>
+                </div>
+            </div>
+            <div class="row mb-5">
+                <div class="col-md">
+                    <div class="ftco-footer-widget mb-4">
+                        <h2 class="ftco-heading-2">Vegefoods</h2>
+                        <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia.</p>
+                        <ul class="ftco-footer-social list-unstyled float-md-left float-lft mt-5">
+                            <li class="ftco-animate"><a href="#"><span class="icon-twitter"></span></a></li>
+                            <li class="ftco-animate"><a href="#"><span class="icon-facebook"></span></a></li>
+                            <li class="ftco-animate"><a href="#"><span class="icon-instagram"></span></a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md">
+                    <div class="ftco-footer-widget mb-4 ml-md-5">
+                        <h2 class="ftco-heading-2">Menu</h2>
+                        <ul class="list-unstyled">
+                            <li><a href="#" class="py-2 d-block">Shop</a></li>
+                            <li><a href="#" class="py-2 d-block">About</a></li>
+                            <li><a href="#" class="py-2 d-block">Journal</a></li>
+                            <li><a href="#" class="py-2 d-block">Contact Us</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="ftco-footer-widget mb-4">
+                        <h2 class="ftco-heading-2">Help</h2>
+                        <div class="d-flex">
+                            <ul class="list-unstyled mr-l-5 pr-l-3 mr-4">
+                                <li><a href="#" class="py-2 d-block">Shipping Information</a></li>
+                                <li><a href="#" class="py-2 d-block">Returns &amp; Exchange</a></li>
+                                <li><a href="#" class="py-2 d-block">Terms &amp; Conditions</a></li>
+                                <li><a href="#" class="py-2 d-block">Privacy Policy</a></li>
+                            </ul>
+                            <ul class="list-unstyled">
+                                <li><a href="#" class="py-2 d-block">FAQs</a></li>
+                                <li><a href="#" class="py-2 d-block">Contact</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md">
+                    <div class="ftco-footer-widget mb-4">
+                        <h2 class="ftco-heading-2">Have a Questions?</h2>
+                        <div class="block-23 mb-3">
+                            <ul>
+                                <li><span class="icon icon-map-marker"></span><span class="text">203 Fake St. Mountain View, San Francisco, California, USA</span></li>
+                                <li><a href="#"><span class="icon icon-phone"></span><span class="text">+2 392 3929 210</span></a></li>
+                                <li><a href="#"><span class="icon icon-envelope"></span><span class="text">info@yourdomain.com</span></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 text-center">
+
+                    <p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                        Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="icon-heart color-danger" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+                        <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+
+
+<!-- Plugins JS File -->
+<script src="assetsProfile/js/jquery.min.js"></script>
+<script src="assetsProfile/js/bootstrap.bundle.min.js"></script>
+<script src="assetsProfile/js/jquery.hoverIntent.min.js"></script>
+<script src="assetsProfile/js/jquery.waypoints.min.js"></script>
+<script src="assetsProfile/js/superfish.min.js"></script>
+<script src="assetsProfile/js/owl.carousel.min.js"></script>
+<!-- Main JS File -->
+<script src="assetsProfile/js/main.js"></script>
+
+
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/jquery-migrate-3.0.1.min.js"></script>
+    <script src="/js/popper.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/jquery.easing.1.3.js"></script>
+    <script src="/js/jquery.waypoints.min.js"></script>
+    <script src="/js/jquery.stellar.min.js"></script>
+    <script src="/js/owl.carousel.min.js"></script>
+    <script src="/js/jquery.magnific-popup.min.js"></script>
+    <script src="/js/aos.js"></script>
+    <script src="/js/jquery.animateNumber.min.js"></script>
+    <script src="/js/bootstrap-datepicker.js"></script>
+    <script src="/js/scrollax.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
+    <script src="/js/google-map.js"></script>
+    <script src="/js/main.js"></script>
+
+    <script>
+        let addrssBtn = document.getElementById("addressBtn");
+  let addreslinkBtn = document.getElementById("tab-addAddress-link");
+  addrssBtn.addEventListener('click',()=>{
+    addreslinkBtn.click()
+  })
+    </script>
+</body>
+</html>

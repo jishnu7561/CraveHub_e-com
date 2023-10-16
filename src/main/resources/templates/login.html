@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>RegistrationForm_v1 by Colorlib</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<!-- MATERIAL DESIGN ICONIC FONT -->
+		<link rel="stylesheet" href="/fonts/material-design-iconic-font">
+
+		<!-- STYLE CSS -->
+		<link rel="stylesheet" href="/css/styleLogin.css">
+		<style>
+			/* Style for the signup link */
+            .signup-link {
+                text-decoration: none; /* Remove underline */
+                color: orange; /* Set the text color to black */
+            }
+			.signup{
+				margin-top:2em;
+			}
+		</style>
+
+	</head>
+
+	<body>
+
+		<div class="wrapper" style="background-image: url('/images/Untitled-1.jpg');">
+			<div class="inner">
+				<div class="image-holder">
+					<img src="/images/backrem.png" alt="">
+				</div>
+<!--				<form th:action="@{/login}" method="post">-->
+<!--					<h3>Login</h3>-->
+<!--					<div class="form-wrapper">-->
+<!--						<input type="text" placeholder="Username" class="form-control" >-->
+<!--						<i class="zmdi zmdi-account"></i>-->
+<!--					</div>-->
+<!--					<div class="form-wrapper">-->
+<!--						<input type="password" placeholder="Password" class="form-control" >-->
+<!--						<i class="zmdi zmdi-lock"></i>-->
+<!--					</div>-->
+<!--					<button>Login-->
+<!--						<i class="zmdi zmdi-arrow-right">-></i>-->
+<!--					</button>-->
+<!--				</form>-->
+				<form class="form-horizontal" th:action="@{/login}" method="post">
+					<div th:if="${param.logout}" class="alert alert-info" style="color:red">
+						You have been logged out.
+					</div>
+					<div th:if="${param.error}" class="alert alert-info" style="color:red" >
+						Invalid username or password.
+					</div>
+					<div class="mb-3">
+						<label for="username" class="col-sm-4 form-label">Username:</label>
+						<input type="text" class="form-control" id="username" name="username"
+							   placeholder="Enter Email ID" autofocus="autofocus" required>
+					</div>
+					<div>
+						<label for="password" class="col-sm-4 form-label">Password:</label>
+						<input type="password" id="password" name="password" class="form-control"
+							   placeholder="Enter Password" required/>
+					</div>
+					<div class="forgot"  style="text-align: right;">
+						<p><a th:href="@{/confirmEmail}" class="signup-link">Forgot Password</a></p>
+					</div>
+					<div>
+						<div class="d-grid">
+							<button type="submit" name="login-submit" class="btn btn-primary">Log In</button>
+						</div>
+					</div>
+					<div class="signup">
+						<p>Don't have an account? <a th:href="@{/registration}" class="signup-link">Signup here</a>.</p>
+					</div>
+				</form>
+			</div>
+		</div>
+	</body><!-- This templates was made by Colorlib (https://colorlib.com) -->
+</html>
