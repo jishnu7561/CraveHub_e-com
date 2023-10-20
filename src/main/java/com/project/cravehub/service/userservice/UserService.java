@@ -1,10 +1,11 @@
 package com.project.cravehub.service.userservice;
 
-import com.project.cravehub.dto.AddressDto;
+import com.project.cravehub.dto.ProductDto;
 import com.project.cravehub.dto.UserRegistrationDto;
 import com.project.cravehub.model.user.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
+import java.security.Principal;
 import java.util.List;
 
 public interface UserService extends UserDetailsService {
@@ -31,4 +32,9 @@ public interface UserService extends UserDetailsService {
     void sentOtp(String email);
 
 
+    boolean addProductToCart(Principal principal, ProductDto product);
+
+    int updateQuantity(int count, Integer productId,String username);
+
+    double totalPrice(String username);
 }

@@ -1,14 +1,11 @@
 package com.project.cravehub.service.userservice;
 
-import com.project.cravehub.dto.AddressDto;
 import com.project.cravehub.dto.ProductDto;
 import com.project.cravehub.dto.UserRegistrationDto;
 import com.project.cravehub.model.admin.Product;
-import com.project.cravehub.model.user.Otp;
-import com.project.cravehub.model.user.Role;
-import com.project.cravehub.model.user.User;
-import com.project.cravehub.repository.OtpRepository;
-import com.project.cravehub.repository.UserRepository;
+import com.project.cravehub.model.user.*;
+import com.project.cravehub.repository.*;
+import com.project.cravehub.service.productservice.ProductService;
 import com.project.cravehub.util.EmailUtil;
 import com.project.cravehub.util.OtpUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
+import java.security.Principal;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -47,6 +45,18 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private ProductRepository productRepository;
+
+    @Autowired
+    private CartItemRepository cartItemRepository;
+
+    @Autowired
+    private ProductService productService;
+
+    @Autowired
+    private CartRepository cartRepository;
 
     @Override
     public User save(UserRegistrationDto registrationDto) {
@@ -174,6 +184,98 @@ public class UserServiceImpl implements UserService {
         otpRepository.save(newOtp);
     }
 
+    @Override
+    public boolean addProductToCart(Principal principal, ProductDto productDto) {
+        String userEmail = principal.getName();
+        User user = userRepository.findByEmail(userEmail);
+        System.out.println(user);
+        if(user != null) {
+            Cart cart = user.getCart();
+
+            if (cart == null) {
+                cart = new Cart();
+                cart.setUser(user);
+                user.setCart(cart);
+            }
+
+            CartItem cartItem = new CartItem();
+            System.out.println(productDto.getProductId());
+            Optional<Product> isProduct = productRepository.findById(productDto.getProductId());
+            if(isProduct.isPresent()) {
+                System.out.println("product exist in db");
+                Optional<CartItem> productExist = cartItemRepository.findByCartAndProduct(cart, isProduct.get());
+                if (productExist.isPresent()) {
+                    System.out.println("product already exist in this user cart");
+                    return false;//product already exist
+
+                }
+                Product product = isProduct.get();
+                System.out.println(product);
+                cartItem.setProduct(product);
+                cartItem.setQuantity(productDto.getQuantity());
+                cartItem.setCart(cart);
+                cartItem.setPrice(product.getPrice() * productDto.getQuantity());
+
+                cart.getCartItem().add(cartItem);
+                userRepository.save(user);
+            }
+            return false;//product not found in db
+        }
+        return true;
+    }
+
+    @Override
+    public int   updateQuantity(int count, Integer productId,String username) {
+        // Retrieve the authenticated user (you might have your own way to do this)
+        User user = userRepository.findByEmail(username);// Retrieve the authenticated user (use Spring Security, etc.)
+
+                // Retrieve the product by ID
+            Product product = productService.getProductById(productId);
+
+            Cart cart = cartRepository.findByUser(user);
+        // Find existing CartItem or create a new one
+        Optional<CartItem> cartItem = cartItemRepository.findByCartAndProduct(cart, product);
+        if(cartItem.isPresent()) {
+            // Update the quantity based on the count (add or subtract)
+            int updatedQuantity = cartItem.get().getQuantity() + count;
+
+            // Ensure the quantity doesn't go below 0
+            updatedQuantity = Math.max(updatedQuantity, 1);
+
+            // Set the updated quantity
+            cartItem.get().setQuantity(updatedQuantity);
+           // cartItem.(updatedQuantity);
+
+            // Save the CartItem to the database
+            cartItemRepository.save(cartItem.get());
+
+
+            // Return the updated quantity
+            return updatedQuantity;
+        }
+        return 1;
+    }
+
+    @Override
+    public double totalPrice(String username) {
+        User user = userRepository.findByEmail(username);
+        Cart cart = cartRepository.findByUser(user);
+
+        List<CartItem> cartItems =  cartItemRepository.findByCart(cart);
+        int totalPrice = 0;
+
+        for (CartItem cartItem : cartItems) {
+            int quantity = cartItem.getQuantity();
+            Product product = cartItem.getProduct();
+            Double productPrice = product.getPrice(); // Assuming you have a 'price' field in your Product entity
+
+            // Calculate subtotal for this cart item and add it to the total price
+            Double subtotal = quantity * productPrice;
+            totalPrice += subtotal;
+        }
+
+        return totalPrice;
+    }
 
 
 }

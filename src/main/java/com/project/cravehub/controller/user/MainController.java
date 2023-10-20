@@ -39,9 +39,25 @@ public class MainController {
     public String showHome(Model model, Principal principal) {
         List<Product> products = productRepository.findAll();
         model.addAttribute("products",products);
-        String user_email = principal.getName();
-        User user = userRepository.findByEmail(user_email);
-        model.addAttribute("user",user);
+
+//        if(principal.getName()==null)
+//        {
+//            return "index";
+//        }
+//        String user_email = principal.getName();
+//        User user = userRepository.findByEmail(user_email);
+//        model.addAttribute("user",user);
+//        return "index";
+
+        if (principal == null || principal.getName() == null) {
+            // User is not authenticated, handle it accordingly.
+            model.addAttribute("user", null); // or handle it in a way that fits your application logic
+        } else {
+            // User is authenticated, fetch user details and add to the model.
+            String user_email = principal.getName();
+            User user = userRepository.findByEmail(user_email);
+            model.addAttribute("user", user);
+        }
         return "index";
     }
 

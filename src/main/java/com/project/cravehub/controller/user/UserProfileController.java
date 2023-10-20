@@ -8,8 +8,10 @@ import com.project.cravehub.model.user.Address;
 import com.project.cravehub.model.user.User;
 import com.project.cravehub.repository.AddressRepository;
 import com.project.cravehub.repository.UserRepository;
+import com.project.cravehub.service.addressService.AddressService;
 import com.project.cravehub.service.userservice.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +21,6 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/")
 public class UserProfileController {
 
     @Autowired
@@ -29,7 +30,13 @@ public class UserProfileController {
     private AddressRepository addressRepository;
 
     @Autowired
+    private AddressService addressService;
+
+    @Autowired
     private UserService userService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @ModelAttribute("user")
     public UserRegistrationDto userRegistrationDto() {
@@ -93,22 +100,6 @@ public class UserProfileController {
         return "redirect:/profile?cantAdd";
     }
 
-//    @GetMapping("/updateAddress/{id}")
-//    public String updateAddressGet(@PathVariable("id") Integer addressId, Model model) {
-//        Optional<Address> optionalAddress = addressRepository.findById(addressId);
-//        if (optionalAddress.isPresent()) {
-//            Address address1 = optionalAddress.get();
-//            model.addAttribute("address1", address1);
-//            model.addAttribute("addressId", addressId);
-//        } else {
-//            return "redirect:/profile?addressNotExist";
-//        }
-//        return "update page";
-//    }
-
-
-
-
     @PostMapping("/updateAddress{id}")
     public String updateAddressPost(@PathVariable("id") Integer addressId,
                                     @ModelAttribute("user_address") AddressDto addressDto) {
@@ -125,7 +116,32 @@ public class UserProfileController {
             return "redirect:/profile";
         }
         return "redirect:/profile?addressNull";
+    }
 
+    @PostMapping("/updatePassword")
+    public String changePasswordInProfilePost(@RequestParam("newPassword") String password,
+                                     @RequestParam("confirmPassword") String confirmPassword,Principal principal) {
+        String user_email = principal.getName();
+        User user = userRepository.findByEmail(user_email);
+        if(user == null) {
+            return "user not found";
+        }
+        if(password.equals(confirmPassword)) {
+            user.setPassword(passwordEncoder.encode(confirmPassword));
+            userRepository.save(user);
+            return "redirect:/profile";
+        }
+        return "redirect:/profile?mismatch";
+    }
+
+    @GetMapping("/deleteAddress/{address_id}")
+    public String deleteAddress(@PathVariable("address_id") Integer address_id) {
+        Address deleteAddress = addressService.deleteAddressById(address_id);
+        if(deleteAddress != null)
+        {
+            return "redirect:/profile";
+        }
+        return "redirect:/profile?addressNotFound";
     }
 
 }

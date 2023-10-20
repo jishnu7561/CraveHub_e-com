@@ -163,10 +163,10 @@
                         <aside class="col-md-4 col-lg-3">
                             <ul class="nav nav-dashboard flex-column mb-3 mb-md-0" role="tablist">
                                 <li class="nav-item">
-                                    <a class="nav-link active" id="tab-dashboard-link" data-toggle="tab" href="#tab-dashboard" role="tab" aria-controls="tab-dashboard" aria-selected="true">Dashboard</a>
+                                    <a class="nav-link active" id="tab-dashboard-link" data-toggle="tab" href="#tab-dashboard" role="tab" aria-controls="tab-dashboard" aria-selected="true">Profile</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" id="tab-account-link" data-toggle="tab" href="#tab-account" role="tab" aria-controls="tab-account" aria-selected="false">Account Details</a>
+                                    <a class="nav-link" id="tab-account-link" data-toggle="tab" href="#tab-account" role="tab" aria-controls="tab-account" aria-selected="false">Edit Details</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" id="tab-address-link" data-toggle="tab" href="#tab-address" role="tab" aria-controls="tab-address" aria-selected="false">Addresses</a>
@@ -175,12 +175,11 @@
                                     <a class="nav-link" id="tab-addAddress-link" data-toggle="tab" href="#tab-addAddress" role="tab" aria-controls="tab-addAddress" aria-selected="false">Add Address</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" id="tab-orders-link" data-toggle="tab" href="#tab-orders" role="tab" aria-controls="tab-orders" aria-selected="false">Orders</a>
+                                    <a class="nav-link" id="tab-changePassword-link" data-toggle="tab" href="#tab-changePassword" role="tab" aria-controls="tab-changePassword" aria-selected="false">Change Password</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" id="tab-downloads-link" data-toggle="tab" href="#tab-downloads" role="tab" aria-controls="tab-downloads" aria-selected="false">Downloads</a>
+                                    <a class="nav-link" id="tab-orders-link" data-toggle="tab" href="#tab-orders" role="tab" aria-controls="tab-orders" aria-selected="false">Orders</a>
                                 </li>
-
                                 <li class="nav-item">
                                     <a class="nav-link" href="#">Sign Out</a>
                                 </li>
@@ -222,13 +221,38 @@
                                     <a href="category.html" class="btn btn-outline-primary-2"><span>GO SHOP</span><i class="icon-long-arrow-right"></i></a>
                                 </div>
 
-                                <div class="tab-pane fade" id="tab-downloads" role="tabpanel" aria-labelledby="tab-downloads-link">
-                                    <p>No downloads available yet.</p>
-                                    <a href="category.html" class="btn btn-outline-primary-2"><span>GO SHOP</span><i class="icon-long-arrow-right"></i></a>
+
+<!--=======================================change password=======================================-->
+
+                                <div class="tab-pane fade" id="tab-changePassword" role="tabpanel" aria-labelledby="tab-changePassword-link">
+                                    <div class="row p-5">
+                                        <div class="col-lg-10 mx-auto">
+                                            <div class="card card-dashboard">
+                                                <div class="card-body">
+                                                    <h3 class="card-title">Change Password</h3>
+                                                    <form th:action="@{/updatePassword}" th:object="${address}" method="post">
+                                                        <div class="row p-5" >
+                                                            <div class="col-sm-12">
+                                                                <label>New Password *</label>
+                                                                <input type="text" class="form-control" name="newPassword" required>
+                                                            </div>
+                                                            <div class="col-sm-12">
+                                                                <label>Confirm Password *</label>
+                                                                <input type="text" class="form-control" name="confirmPassword" required>
+                                                            </div>
+                                                            <div class=" col-12 ">
+                                                                <button value="login" type="submit" class="btn-login my-4 w-100 " >Confirm</button>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
 
 
-<!-----------------------------------------------add Address-------------------------------------------------->
+<!--============================================add Address=============================================-->
 
                                 <div class="tab-pane fade" id="tab-addAddress" role="tabpanel" aria-labelledby="tab-addAaddress-link">
 
@@ -276,13 +300,13 @@
                                 </div>
 
 
-<!-------------------------------------------------address------------------------------------>
+<!--========================================addresses==============================-->
 
                                 <div class="tab-pane fade" id="tab-address" role="tabpanel" aria-labelledby="tab-address-link">
-<div class="d-flex py-3 justify-content-end w-100">
-    <a href="#tab-addAddress" type="button" id="addressBtn" class="btn p-3 mx-5 mb-5" style="background-color:#fc8019; color:#fff"  >+ Add Address</a>
+                                    <div class="d-flex py-3 justify-content-end w-100">
+                                        <a href="#tab-addAddress" type="button" id="addressBtn" class="btn p-3 mx-5 mb-5" style="background-color:#fc8019; color:#fff"  >+ Add Address</a>
 
-</div>
+                                    </div>
                                     <div class="row" >
                                         <div class="col-lg-3" th:each="address : ${addresses}">
                                             <div class="card card-dashboard">
@@ -295,11 +319,7 @@
                                                         <p th:text="${address.country}"><p>
                                                         <p th:text="${address.number}"><p>
                                                         <p th:text="${address.pinCode}"></p>
-                                                        <p style="cursor: pointer;" data-bs-toggle="modal" th:attr="data-bs-target='#modal_' + ${address.address_id}">Edit <i class="icon-edit"></i><a href="#">Delete </a></p>
-                                                        <button type="button"  class="view-button"   data-bs-toggle="modal" th:attr="data-bs-target='#modal_' + ${address.address_id}"
-                                                        >View
-                                                        </button>
-<!--                                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"></button>-->
+                                                        <p style="cursor: pointer; color:green" data-bs-toggle="modal" th:attr="data-bs-target='#modal_' + ${address.address_id}" >Edit <i class="icon-edit text-dark"></i><a th:href="@{'/deleteAddress/'+ ${address.address_id}}" class="text-danger">Delete </a></p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -311,7 +331,7 @@
                                                 <div class="modal-dialog">
                                                     <div class="modal-content">
                                                         <div class="modal-header px-5">
-                                                            <h3 class="modal-title" id="exampleModalLabel">Modal title</h3>
+                                                            <h3 class="modal-title" id="exampleModalLabel">Update Address</h3>
                                                             <button style="background: none; border: none;" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">x</button>
                                                         </div>
                                                         <div class="modal-body px-5">
@@ -345,7 +365,7 @@
                                                                     </div>
 
                                                                     <div class=" col-12">
-                                                                        <button value="login" type="submit" class="btn-login my-4 w-100" >+ Add Address</button>
+                                                                        <button value="login" type="submit" class="btn-login my-4 w-100" >Update</button>
                                                                     </div>
                                                                 </div>
                                                             </form>
@@ -358,7 +378,6 @@
                                             </div>
 
 
-
                                         </div>
                                     </div>
                                 </div>
@@ -366,7 +385,7 @@
                                 <!-- Modal -->
 
 
-<!-------------------------------------------------------Update Details-------------------------------->
+<!--=======================================Update Details================================-->
 
                                 <div class="tab-pane fade" id="tab-account" role="tabpanel" aria-labelledby="tab-account-link">
                                     <h3 class="card-title my-5">User Details</h3>
@@ -391,8 +410,7 @@
 
                                                 <div class="col-sm-12">
                                                     <div class="add-btn my-4">
-                                                        <button value="login" type="submit" class="btn-login" >+ Add Address</button>
-<!--                                                        <p><a  type="submit" class="btn-radius py-3 px-5">+ Add Address</a></p>-->
+                                                        <button value="login" type="submit" class="btn-login" >Update</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -407,6 +425,7 @@
         </div>
     </main>
 
+<!--=============================footer=============================-->
 
     <section class="ftco-section ftco-no-pt ftco-no-pb py-5 bg-light">
         <div class="container py-4">
@@ -533,10 +552,10 @@
 
     <script>
         let addrssBtn = document.getElementById("addressBtn");
-  let addreslinkBtn = document.getElementById("tab-addAddress-link");
-  addrssBtn.addEventListener('click',()=>{
-    addreslinkBtn.click()
-  })
+        let addreslinkBtn = document.getElementById("tab-addAddress-link");
+        addrssBtn.addEventListener('click',()=>{
+        addreslinkBtn.click()
+        })
     </script>
 </body>
 </html>

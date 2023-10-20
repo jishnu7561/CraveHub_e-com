@@ -37,6 +37,9 @@ public class User {
             inverseJoinColumns = @JoinColumn( name = "role_id" ,referencedColumnName = "id"))
     private Collection<Role> roles;
 
+    @OneToOne(mappedBy = "user" , cascade = CascadeType.ALL , orphanRemoval = true)
+    private Cart cart;
+
     public User()
     {
     }
@@ -127,5 +130,13 @@ public class User {
 
     public void setAddresses(List<Address> addresses) {
         this.addresses = addresses;
+    }
+
+    public Cart getCart() {
+        return cart;
+    }
+
+    public void setCart(Cart cart) {
+        this.cart = cart;
     }
 }

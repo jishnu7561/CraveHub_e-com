@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.tymeleaf.org">
+<html lang="en" xmlns:th="http://www.tymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
   <head>
     <title>Vegefoods - Free Bootstrap 4 Template by Colorlib</title>
     <meta charset="utf-8">
@@ -22,7 +22,7 @@
 
     <link rel="stylesheet" href="/css/bootstrap-datepicker.css">
     <link rel="stylesheet" href="/css/jquery.timepicker.css">
-
+	  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     
     <link rel="stylesheet" href="/css/flaticon.css">
     <link rel="stylesheet" href="/css/icomoon.css">
@@ -158,26 +158,37 @@
 								</div>
 							</div>
 							<div class="w-100"></div>
-							<div class="input-group col-md-6 d-flex mb-3">
-	             	<span class="input-group-btn mr-2">
-	                	<button type="button" class="quantity-left-minus btn"  data-type="minus" data-field="">
-	                   <i class="ion-ios-remove"></i>
-	                	</button>
-	            		</span>
-	             	<input type="text" id="quantity" name="quantity" class="form-control input-number" value="1" min="1" max="100">
-	             	<span class="input-group-btn ml-2">
-	                	<button type="button" class="quantity-right-plus btn" data-type="plus" data-field="">
-	                     <i class="ion-ios-add"></i>
-	                 </button>
-	             	</span>
-	          	</div>
-	          	<div class="w-100"></div>
-	          	<div class="col-md-12">
-	          		<p  th:utext="${product.getStatus()}"></p>
-	          	</div>
-          	</div>
-          	<p><a href="cart.html" class="btn btn-black py-3 px-5">Add to Cart</a></p>
-    			</div>
+<!--							<div class="input-group col-md-6 d-flex mb-3">-->
+<!--	             				<span class="input-group-btn mr-2">-->
+<!--	                				<button type="button" class="quantity-left-minus btn"  data-type="minus" data-field="">-->
+<!--	                   					<i class="ion-ios-remove"></i>-->
+<!--	                				</button>-->
+<!--	            				</span>-->
+<!--	             				<input type="text" id="quantity" name="quantity" class="form-control input-number" value="1" min="1" max="100">-->
+<!--	             					<span class="input-group-btn ml-2">-->
+<!--	                					<button type="button" class="quantity-right-plus btn" data-type="plus" data-field="">-->
+<!--	                     					<i class="ion-ios-add"></i>-->
+<!--	                			 		</button>-->
+<!--	             					</span>-->
+<!--							</div>-->
+							<div class="w-100"></div>
+							<div class="col-md-12">
+								<p  th:utext="${product.getStatus()}"></p>
+							</div>
+          				</div>
+<!--					<a href="#" onclick="addtocart(${product.productId})">Add to Cart</a>-->
+
+					<!--					th:href="@{/singleProduct/{productId}(productId=${item.productId})}"-->
+<!--          	<p><a href="#" onclick="addtocart(${product.productId})" class="btn btn-black py-3 px-5">Add to Cart</a></p>-->
+<!--					<p><a href="#" th:attr="onclick='addtocart(\'' + ${product.productId} + '\')'" class="btn btn-black py-3 px-5">Add to Cart</a></p>-->
+					<p sec:authorize="isAuthenticated()">
+						<a href="#" th:attr="data-id=${product.productId}" class="btn btn-black py-3 px-5" id="addToCartButton">Add to Cart</a>
+					</p>
+					<p sec:authorize="!isAuthenticated()">
+						<a th:href="@{/login}"  class="btn btn-black py-3 px-5" >Add to Cart</a>
+					</p>
+
+				</div>
     		</div>
     	</div>
     </section>
@@ -204,7 +215,7 @@
 							<h3><a href="#" th:text="${item.productName}"></a></h3>
 							<div class="d-flex">
 								<div class="pricing">
-									<p class="price"><span class="price-sale" th:text="'$'+${item.price}"></span></p>
+									<p class="price"><span th:text="'$'+${item.price}"></span></p>
 								</div>
 							</div>
 							<div class="bottom-area d-flex px-3">
@@ -427,41 +438,32 @@
   <script src="/js/main.js"></script>
 
   <script>
-		$(document).ready(function(){
+          $(document).ready(function() {
+              $("#addToCartButton").click(function(event) {
+                  event.preventDefault();
 
-		var quantitiy=0;
-		   $('.quantity-right-plus').click(function(e){
-		        
-		        // Stop acting like a button
-		        e.preventDefault();
-		        // Get the field name
-		        var quantity = parseInt($('#quantity').val());
-		        
-		        // If is not undefined
-		            
-		            $('#quantity').val(quantity + 1);
+                  var id = $(this).data("id"); // Replace with the actual product ID
+                  var quantity = 1; // You can allow users to specify the quantity
+                  console.log(id)
+                  $.ajax({
+                      type: "POST",
+                      url: "/addToCart",
+                      data: JSON.stringify({ productId: id, quantity: quantity }),
 
-		          
-		            // Increment
-		        
-		    });
+                      contentType: "application/json",
+                      success: function(data) {
+                          alert("Product added to cart successfully.");
+                          // Implement code to update the cart UI as needed
 
-		     $('.quantity-left-minus').click(function(e){
-		        // Stop acting like a button
-		        e.preventDefault();
-		        // Get the field name
-		        var quantity = parseInt($('#quantity').val());
-		        
-		        // If is not undefined
-		      
-		            // Increment
-		            if(quantity>0){
-		            $('#quantity').val(quantity - 1);
-		            }
-		    });
-		    
-		});
-	</script>
+                      },
+                      error: function() {
+                          alert("Failed to add the product to the cart.");
+                      }
+                  });
+              });
+          });
+
+  </script>
     
   </body>
 </html>

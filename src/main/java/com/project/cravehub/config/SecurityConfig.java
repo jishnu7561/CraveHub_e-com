@@ -120,7 +120,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
+        http.csrf().disable().
+                authorizeRequests()
                 .antMatchers(
                         "/registration**",
                         "/js/**",
@@ -131,16 +132,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         ,"/regenerate-otp"
                         ,"/login",
                         "/verify-account"
-                        ,"profile"
                         ,"/confirmEmail"
                         ,"/verifyOtp"
+                        ,"/singleProduct/**"
+                        ,"/**"
                         ,"/changePassword"
                         ,"/regenerateForgotOtp"
+
                 ).permitAll()
                 .antMatchers("/").hasAnyRole("USER","ADMIN")
                 .antMatchers("/accessDenied").hasAnyRole("ROLE_USER", "ROLE_ADMIN")
                 .antMatchers("/admin/**").hasRole("ADMIN")
-                .antMatchers("/").hasRole("USER")
+                //.antMatchers("/").hasRole("USER")
                 .anyRequest().authenticated()
                 .and()
 
@@ -152,7 +155,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     if (authentication.getAuthorities().stream()
                             .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"))) {
                         response.sendRedirect("/admin/adminHome");
-                    } else {
+                    }
+                    else {
                         response.sendRedirect("/");
                     }
                 })
