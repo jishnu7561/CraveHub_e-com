@@ -13,8 +13,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
@@ -36,19 +39,9 @@ public class MainController {
     private ProductRepository productRepository;
 
     @GetMapping("/")
-    public String showHome(Model model, Principal principal) {
+    public String showHome(Model model, Principal principal, HttpSession session) {
         List<Product> products = productRepository.findAll();
         model.addAttribute("products",products);
-
-//        if(principal.getName()==null)
-//        {
-//            return "index";
-//        }
-//        String user_email = principal.getName();
-//        User user = userRepository.findByEmail(user_email);
-//        model.addAttribute("user",user);
-//        return "index";
-
         if (principal == null || principal.getName() == null) {
             // User is not authenticated, handle it accordingly.
             model.addAttribute("user", null); // or handle it in a way that fits your application logic
@@ -61,9 +54,18 @@ public class MainController {
         return "index";
     }
 
+//    @GetMapping("/login")
+//    public String loginPage() {
+//        System.out.println("login page");
+//        return "login";
+//    }
+
     @GetMapping("/login")
-    public String loginPage() {
-        System.out.println("login page");
+    public String loginPage(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session != null && session.getAttribute("authenticated") != null && (Boolean) session.getAttribute("authenticated")) {
+            return "redirect:/"; // Redirect authenticated users away from the login page
+        }
         return "login";
     }
 

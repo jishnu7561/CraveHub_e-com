@@ -19,5 +19,7 @@ public interface ProductService {
 
     void editProductByID(Integer productId, ProductDto productDto);
 
+    boolean isExist(Integer productId);
+
 //    void deleteProductB(Integer id);
 }

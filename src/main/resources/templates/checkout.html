@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
   <head>
     <title>Vegefoods - Free Bootstrap 4 Template by Colorlib</title>
     <meta charset="utf-8">
@@ -9,79 +9,148 @@
     <link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700,700i&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Amatic+SC:400,700&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="../static/css/open-iconic-bootstrap.min.css">
-    <link rel="stylesheet" href="/../static/css/animate.css">
+    <link rel="stylesheet" href="/css/open-iconic-bootstrap.min.css">
+    <link rel="stylesheet" href="/css/animate.css">
     
-    <link rel="stylesheet" href="/../static/css/owl.carousel.min.css">
-    <link rel="stylesheet" href="/../static/css/owl.theme.default.min.css">
-    <link rel="stylesheet" href=/../static/css/magnific-popup.css">
+    <link rel="stylesheet" href="/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="/css/owl.theme.default.min.css">
+    <link rel="stylesheet" href="/css/magnific-popup.css">
 
-    <link rel="stylesheet" href="/../static/css/aos.css">
+    <link rel="stylesheet" href="/css/aos.css">
 
-    <link rel="stylesheet" href="../static/css/ionicons.min.css">
+    <link rel="stylesheet" href="/css/ionicons.min.css">
 
-    <link rel="stylesheet" href="/../static/css/bootstrap-datepicker.css">
-    <link rel="stylesheet" href="/../static/css/jquery.timepicker.css">
+    <link rel="stylesheet" href="/css/bootstrap-datepicker.css">
+    <link rel="stylesheet" href="/css/jquery.timepicker.css">
 
-    
-    <link rel="stylesheet" href="../static/css/flaticon.css">
-    <link rel="stylesheet" href="../static/css/icomoon.css">
-    <link rel="stylesheet" href="/../static/css/style.css">
+	  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+	  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+	  <link rel="stylesheet" href="/css/flaticon.css">
+    <link rel="stylesheet" href="/css/icomoon.css">
+    <link rel="stylesheet" href="/css/style.css">
+	  <style>
+		  .form-group {
+              display: flex;
+              align-items: center;
+              border: 1px solid #ccc; /* Set border for the entire form-group */
+              border-radius: 5px; /* Optional: Add border-radius for rounded corners */
+              padding: 10px; /* Optional: Add padding inside the form-group */
+          }
+
+          .form-group input[type="text"] {
+              border: none; /* Remove border for the text box */
+              outline: none; /* Remove outline when focused */
+              flex: 1; /* Make the text box take up remaining space */
+          }
+
+          .form-group button {
+              margin-left: 10px; /* Add margin between text box and button */
+          }
+		     .btn-login {
+          background-color: #fc8019;
+          border: none;
+          width: 30rem;
+          height: 40rem
+          padding: 10px;
+          color: #fff;
+          border-radius: 4px;
+          cursor: pointer;
+          transition: background-color 0.3s;
+        }
+
+        .btn-login:hover {
+          background-color:#fc8019;
+          color: white;
+        }
+	  </style>
+<!--	  <script>-->
+<!--		  var xhttp = new XMLHttpRequest();-->
+<!--          var RazorpayOrderId;-->
+<!--          function CreateOrderID(){-->
+<!--          xhttp.open["GET","http://localhost:8081/RZP_Java/OrderCreation",false);-->
+<!--          xhttp.send();-->
+<!--          RazorpayOrderId = xhttp.responseText;-->
+<!--          online();-->
+<!--	  </script>-->
+
+	  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   </head>
   <body class="goto-here">
-		<div class="py-1 bg-primary">
-    	<div class="container">
-    		<div class="row no-gutters d-flex align-items-start align-items-center px-md-0">
-	    		<div class="col-lg-12 d-block">
-		    		<div class="row d-flex">
-		    			<div class="col-md pr-4 d-flex topper align-items-center">
-					    	<div class="icon mr-2 d-flex justify-content-center align-items-center"><span class="icon-phone2"></span></div>
-						    <span class="text">+ 1235 2355 98</span>
-					    </div>
-					    <div class="col-md pr-4 d-flex topper align-items-center">
-					    	<div class="icon mr-2 d-flex justify-content-center align-items-center"><span class="icon-paper-plane"></span></div>
-						    <span class="text">youremail@email.com</span>
-					    </div>
-					    <div class="col-md-5 pr-4 d-flex topper align-items-center text-lg-right">
-						    <span class="text">3-5 Business days delivery &amp; Free Returns</span>
-					    </div>
-				    </div>
-			    </div>
-		    </div>
+  <div class="py-1 bg-primary">
+	  <div class="container">
+		  <div class="row no-gutters d-flex align-items-start align-items-center px-md-0">
+			  <div class="col-lg-12 d-block">
+				  <div class="row d-flex">
+					  <div class="col-md pr-4 d-flex topper align-items-center">
+						  <div class="icon mr-2 d-flex justify-content-center align-items-center"><span class="icon-phone2"></span></div>
+						  <span class="text">+ 1235 2355 98</span>
+					  </div>
+					  <div class="col-md pr-4 d-flex topper align-items-center">
+						  <div class="icon mr-2 d-flex justify-content-center align-items-center"><span class="icon-paper-plane"></span></div>
+						  <span class="text">youremail@email.com</span>
+					  </div>
+					  <div class="col-md-5 pr-4 d-flex topper align-items-center text-lg-right">
+						  <span class="text">3-5 Business days delivery &amp; Free Returns</span>
+					  </div>
+				  </div>
+			  </div>
 		  </div>
-    </div>
-    <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
-	    <div class="container">
-	      <a class="navbar-brand" href="index.html">Vegefoods</a>
-	      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
-	        <span class="oi oi-menu"></span> Menu
-	      </button>
+	  </div>
+  </div>
+  <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
+	  <div class="container">
+		  <a class="navbar-brand" href="#">CraveHub</a>
+		  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+			  <span class="oi oi-menu"></span> Menu
+		  </button>
 
-	      <div class="collapse navbar-collapse" id="ftco-nav">
-	        <ul class="navbar-nav ml-auto">
-	          <li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
-	          <li class="nav-item active dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Shop</a>
-              <div class="dropdown-menu" aria-labelledby="dropdown04">
-              	<a class="dropdown-item" href="shop.html">Shop</a>
-              	<a class="dropdown-item" href="wishlist.html">Wishlist</a>
-                <a class="dropdown-item" href="product-single.html">Single Product</a>
-                <a class="dropdown-item" href="cart.html">Cart</a>
-                <a class="dropdown-item" href="checkout.html">Checkout</a>
-              </div>
-            </li>
-	          <li class="nav-item"><a href="about.html" class="nav-link">About</a></li>
-	          <li class="nav-item"><a href="blog.html" class="nav-link">Blog</a></li>
-	          <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
-	          <li class="nav-item cta cta-colored"><a href="cart.html" class="nav-link"><span class="icon-shopping_cart"></span>[0]</a></li>
+		  <div class="collapse navbar-collapse" id="ftco-nav">
+			  <ul class="navbar-nav ml-auto">
+				  <li class="nav-item active"><a th:href="@{/}" class="nav-link">Home</a></li>
+				  <li class="nav-item dropdown">
+					  <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Shop</a>
+					  <div class="dropdown-menu" aria-labelledby="dropdown04">
+						  <a class="dropdown-item" href="shop.html">Shop</a>
+						  <a class="dropdown-item" href="wishlist.html">Wishlist</a>
+						  <a class="dropdown-item" th:href="@{/cart}" th:if="${#authorization.expression('isAuthenticated()')}">Cart</a>
+						  <a class="dropdown-item" th:href="@{/login}" th:if="${#authorization.expression('!isAuthenticated()')}">Cart</a>
+						  <a class="dropdown-item" href="checkout.html">Checkout</a>
+					  </div>
+				  </li>
+				  <li class="nav-item"><a href="about.html" class="nav-link">Order</a></li>
+				  <li class="nav-item cta cta-colored"><a href="cart.html" class="nav-link"><span class="icon-shopping_cart"></span>[0]</a></li>
+				  <li class="nav-item">
+					  <!-- <input class="search_bar" type="search" placeholder="Search" aria-label="Search"> -->
+					  <input type="text" class="search-bar" placeholder="Search...">
+					  <!-- <div class="search-container">
+                          <input type="text" class="search-input" placeholder="Search...">
+                          <button class="search-button">
+                            <i class="fa fa-search"></i>
+                          </button>
+                        </div> -->
+				  </li>
+				  <li class="nav-item dropdown">
+					  <!--					  <a href="contact.html" class="nav-link"  th:text="${session.userName}">Contact</a>-->
+					  <!--					  				<a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"  th:text="${user.userName}">Account</a>-->
+					  <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"  th:text="${userName}">Account</a>
+					  <!--					  <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" th:unless="${user != null}">Account</a>-->
 
-	        </ul>
-	      </div>
-	    </div>
-	  </nav>
+					  <div class="dropdown-menu" aria-labelledby="dropdown04">
+						  <a class="dropdown-item" sec:authorize="hasRole('USER')" th:href="@{/profile}">Profile</a>
+						  <a class="dropdown-item" th:href="@{/login}">Login</a>
+						  <a class="dropdown-item" th:href="@{/registration}">Signup</a>
+						  <a class="dropdown-item" sec:authorize="isAuthenticated()" th:href="@{/logout}">Logout</a>
+					  </div>
+				  </li>
+			  </ul>
+		  </div>
+	  </div>
+  </nav>
     <!-- END nav -->
 
-    <div class="hero-wrap hero-bread" style="background-image: url('../static/images/bg_1.jpg');">
+    <div class="hero-wrap hero-bread" style="background-image: url('/images/bg_1.jpg');">
       <div class="container">
         <div class="row no-gutters slider-text align-items-center justify-content-center">
           <div class="col-md-9 ftco-animate text-center">
@@ -94,111 +163,76 @@
 
     <section class="ftco-section">
       <div class="container">
+		  <div class="col-xl-6 " style="margin-left:.5em">
+<!--			  <form id="couponForm" class="info" >-->
+				  <div class="form-group">
+					  <input type="text" id="couponForm" class="form-control text-left px-3" placeholder="Coupon code" style="border: none;" onkeyup="this.value = this.value.toUpperCase()">
+					  <button id="couponBtn" class="btn btn-primary py-3 px-4" >Apply Coupon</button>
+				  </div>
+<!--			  </form>-->
+		  </div>
+		  <form id="addressForm" >
         <div class="row justify-content-center">
           <div class="col-xl-7 ftco-animate">
-						<form action="#" class="billing-form">
-							<h3 class="mb-4 billing-heading">Billing Details</h3>
-	          	<div class="row align-items-end">
-	          		<div class="col-md-6">
-	                <div class="form-group">
-	                	<label for="firstname">Firt Name</label>
-	                  <input type="text" class="form-control" placeholder="">
-	                </div>
-	              </div>
-	              <div class="col-md-6">
-	                <div class="form-group">
-	                	<label for="lastname">Last Name</label>
-	                  <input type="text" class="form-control" placeholder="">
-	                </div>
-                </div>
-                <div class="w-100"></div>
-		            <div class="col-md-12">
-		            	<div class="form-group">
-		            		<label for="country">State / Country</label>
-		            		<div class="select-wrap">
-		                  <div class="icon"><span class="ion-ios-arrow-down"></span></div>
-		                  <select name="" id="" class="form-control">
-		                  	<option value="">France</option>
-		                    <option value="">Italy</option>
-		                    <option value="">Philippines</option>
-		                    <option value="">South Korea</option>
-		                    <option value="">Hongkong</option>
-		                    <option value="">Japan</option>
-		                  </select>
-		                </div>
-		            	</div>
-		            </div>
-		            <div class="w-100"></div>
-		            <div class="col-md-6">
-		            	<div class="form-group">
-	                	<label for="streetaddress">Street Address</label>
-	                  <input type="text" class="form-control" placeholder="House number and street name">
-	                </div>
-		            </div>
-		            <div class="col-md-6">
-		            	<div class="form-group">
-	                  <input type="text" class="form-control" placeholder="Appartment, suite, unit etc: (optional)">
-	                </div>
-		            </div>
-		            <div class="w-100"></div>
-		            <div class="col-md-6">
-		            	<div class="form-group">
-	                	<label for="towncity">Town / City</label>
-	                  <input type="text" class="form-control" placeholder="">
-	                </div>
-		            </div>
-		            <div class="col-md-6">
-		            	<div class="form-group">
-		            		<label for="postcodezip">Postcode / ZIP *</label>
-	                  <input type="text" class="form-control" placeholder="">
-	                </div>
-		            </div>
-		            <div class="w-100"></div>
-		            <div class="col-md-6">
-	                <div class="form-group">
-	                	<label for="phone">Phone</label>
-	                  <input type="text" class="form-control" placeholder="">
-	                </div>
-	              </div>
-	              <div class="col-md-6">
-	                <div class="form-group">
-	                	<label for="emailaddress">Email Address</label>
-	                  <input type="text" class="form-control" placeholder="">
-	                </div>
-                </div>
-                <div class="w-100"></div>
-                <div class="col-md-12">
-                	<div class="form-group mt-4">
-										<div class="radio">
-										  <label class="mr-3"><input type="radio" name="optradio"> Create an Account? </label>
-										  <label><input type="radio" name="optradio"> Ship to different address</label>
-										</div>
-									</div>
-                </div>
-	            </div>
-	          </form><!-- END -->
-					</div>
-					<div class="col-xl-5">
-	          <div class="row mt-5 pt-3">
+
+			  <div class="col-lg-9 cart-item-box">
+				  <h5 class="text-dark mb-3">1. &nbsp; Select a delivery address</h5>
+				  <div  class="p-3 border rounded-4 m-2 custom-label" th:if="${#lists.size(addresses) == 0}">
+					  <div  class="form-check d-flex align-items-center mx-4">
+						  <h5  class="text-danger">No addresses available. Please add an address to proceed.</h5>
+					  </div>
+				  </div>
+				  <label class="p-3 border rounded-4 m-2 custom-label" th:each="address ,  iterStat : ${addresses}">
+						  <div class="form-check d-flex align-items-center mx-4">
+							  <input class="form-check-input " type="radio" th:value="${address.address_id}"
+									 name="address" th:id="'Radio' + ${address.address_id}"  th:checked="${iterStat.index == 0}">
+							  <div class="mx-5">
+								  <p class="text-dark"><b>
+									<span th:text="${address.fullName}"></span>
+								  </b> , <span th:text="${address.city}"></span>,
+									  <span th:text="${address.state}"></span>,
+									  <span>Contanct:<i class="fa-thin fa-mobile"></i>
+									  <b style="color: #043a6c;">
+										  <span
+												style="font-size: 13px;" th:text="${address.number}">smartphone</span>
+
+									  </b> </span></p>
+								  <p th:text="${address.pinCode}">
+									pin
+								  </p>
+							  </div>
+						  </div>
+					  </label>
+				  <div>
+				  </div>
+
+			  </div><!-- End .col-lg-9 -->
+
+			  <div class=" py-3  w-100">
+				  <p   type="button" class="  p-3 mx-4 mb-5" data-bs-toggle="modal" data-bs-target="#exampleModal"  style="background-color:#fc8019; color:#fff ; width:9rem"  >+ Add Address</p>
+			  </div>
+
+
+		  </div>
+			<div class="col-xl-5">
+	          <div class="row pt-3">
 	          	<div class="col-md-12 d-flex mb-5">
 	          		<div class="cart-detail cart-total p-3 p-md-4">
 	          			<h3 class="billing-heading mb-4">Cart Total</h3>
 	          			<p class="d-flex">
 		    						<span>Subtotal</span>
-		    						<span>$20.60</span>
-		    					</p>
-		    					<p class="d-flex">
-		    						<span>Delivery</span>
-		    						<span>$0.00</span>
+		    						<span >₹<b th:text="${totalAmount}" id="amount"></b></span>
 		    					</p>
 		    					<p class="d-flex">
 		    						<span>Discount</span>
-		    						<span>$3.00</span>
+		    						<span id="discount">₹0.00</span>
 		    					</p>
 		    					<hr>
 		    					<p class="d-flex total-price">
 		    						<span>Total</span>
-		    						<span>$17.60</span>
+									<input type="hidden" name="couponId" id="couponId" >
+									<input type="hidden" th:value="${totalAmount}" name="totalAmount" id="DAmount"/>
+		    						<span><b  th:value="${totalAmount}" th:text="${totalAmount}" id="totalAmount"></b></span>
 		    					</p>
 								</div>
 	          	</div>
@@ -208,24 +242,18 @@
 									<div class="form-group">
 										<div class="col-md-12">
 											<div class="radio">
-											   <label><input type="radio" name="optradio" class="mr-2"> Direct Bank Tranfer</label>
+											   <label><input type="radio" name="optradio" th:value="online" class="mr-2" checked> Online Payment</label>
 											</div>
 										</div>
 									</div>
 									<div class="form-group">
 										<div class="col-md-12">
 											<div class="radio">
-											   <label><input type="radio" name="optradio" class="mr-2"> Check Payment</label>
+											   <label><input type="radio" name="optradio" th:value="COD" class="mr-2"> COD</label>
 											</div>
 										</div>
 									</div>
-									<div class="form-group">
-										<div class="col-md-12">
-											<div class="radio">
-											   <label><input type="radio" name="optradio" class="mr-2"> Paypal</label>
-											</div>
-										</div>
-									</div>
+
 									<div class="form-group">
 										<div class="col-md-12">
 											<div class="checkbox">
@@ -233,14 +261,64 @@
 											</div>
 										</div>
 									</div>
-									<p><a href="#"class="btn btn-primary py-3 px-4">Place an order</a></p>
+<!--									<p><a href="#" class="btn btn-primary py-3 px-4">Place an order</a></p>-->
+						<button th:if="${#lists.size(addresses) > 0}" class="btn btn-primary py-3 px-4">Place an order</button>
 								</div>
 	          	</div>
 	          </div>
           </div> <!-- .col-md-8 -->
         </div>
+		  </form>
+
+		  <!-- Modal -->
+		  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			  <div class="modal-dialog">
+				  <div class="modal-content">
+					  <div class="modal-header">
+						  <h1 class="modal-title fs-5" id="exampleModalLabel">Add address</h1>
+						  <button style="background: none; border: none;" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">x</button>
+					  </div>
+					  <div class="modal-body">
+						  <form th:action="@{/checkout/addAddress}" th:object="${address}" method="post">
+							  <div class="row px-5" >
+								  <div class="col-sm-12 mb-4">
+									  <input type="text" class="form-control" th:field="*{fullName}" placeholder="Full Name" required>
+								  </div>
+								  <div class="col-sm-6 mb-4">
+									  <input type="text" class="form-control" th:field="*{city}" placeholder="City" required>
+								  </div>
+								  <div class="col-sm-6 mb-4">
+									  <input type="text" class="form-control" th:field="*{state}" placeholder="State" required>
+								  </div>
+								  <div class="col-sm-12 mb-4">
+									  <input type="text" class="form-control" th:field="*{country}" placeholder="Country" required>
+								  </div>
+								  <div class="col-sm-6 ">
+									  <input type="text" class="form-control" th:field="*{number}" placeholder="Mobile no." required>
+								  </div>
+								  <div class="col-sm-6 ">
+									  <label>
+										  <input type="text" class="form-control" th:field="*{pinCode}" placeholder="pin-code" required>
+									  </label>
+								  </div>
+
+								  <div class=" col-12 ">
+									  <button value="login" type="submit" class="btn-login my-4 w-100 " >+ Add Address</button>
+								  </div>
+							  </div>
+						  </form>
+					  </div>
+					  <div class="modal-footer">
+						  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+					  </div>
+				  </div>
+			  </div>
+		  </div>
+
+
       </div>
     </section> <!-- .section -->
+
 
 		<section class="ftco-section ftco-no-pt ftco-no-pb py-5 bg-light">
       <div class="container py-4">
@@ -333,66 +411,168 @@
         </div>
       </div>
     </footer>
-    
-  
+
+<!--  <div id="couponAlert " data-aos="fade-up" class="alert col-md-3 col-4 text-white fixed-bottom" style="display: none; left: 40%; bottom: 80px; border-radius: 7px; opacity: 0.9; background-color:red ;" role="alert">-->
+<!--	  <div class="d-flex justify-content-center">-->
+<!--		  <dotlottie-player src="https://lottie.host/763347c6-f0b3-4f69-8448-2c1186b30fc5/sEU9OT0DYb.json" background="transparent" speed="0.7" style="width: 50px; height: 50px;" direction="1" loop autoplay></dotlottie-player>-->
+<!--		  <p class="alert-heading d-flex align-items-center" id="couponMessage">Product Added to Your Cart</p>-->
+<!--	  </div>-->
+<!--  </div>-->
+<!--  <div id="couponAlertSuccess " data-aos="fade-up" class="alert col-md-3 col-4 text-white fixed-bottom" style="display: none; left: 40%; bottom: 80px; border-radius: 7px; opacity: 0.9; background-color:red ;" role="alert">-->
+<!--	  <div class="d-flex justify-content-center">-->
+<!--		  <dotlottie-player src="https://lottie.host/763347c6-f0b3-4f69-8448-2c1186b30fc5/sEU9OT0DYb.json" background="transparent" speed="0.7" style="width: 50px; height: 50px;" direction="1" loop autoplay></dotlottie-player>-->
+<!--		  <p class="alert-heading d-flex align-items-center" id="alertSuccess">Product Added to Your Cart</p>-->
+<!--	  </div>-->
+<!--  </div>-->
 
   <!-- loader -->
   <div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00"/></svg></div>
 
 
-  <script src="../static/js/jquery.min.js"></script>
-  <script src="../static/js/jquery-migrate-3.0.1.min.js"></script>
-  <script src="../static/js/popper.min.js"></script>
-  <script src="../static/js/bootstrap.min.js"></script>
-  <script src="../static/js/jquery.easing.1.3.js"></script>
-  <script src="../static/js/jquery.waypoints.min.js"></script>
-  <script src="../static/js/jquery.stellar.min.js"></script>
-  <script src="../static/js/owl.carousel.min.js"></script>
-  <script src="../static/js/jquery.magnific-popup.min.js"></script>
-  <script src="../static/js/aos.js"></script>
-  <script src="../static/js/jquery.animateNumber.min.js"></script>
-  <script src="../static/js/bootstrap-datepicker.js"></script>
-  <script src="../static/js/scrollax.min.js"></script>
+  <script src="/js/jquery.min.js"></script>
+  <script src="/js/jquery-migrate-3.0.1.min.js"></script>
+  <script src="/js/popper.min.js"></script>
+  <script src="/js/bootstrap.min.js"></script>
+  <script src="/js/jquery.easing.1.3.js"></script>
+  <script src="/js/jquery.waypoints.min.js"></script>
+  <script src="/js/jquery.stellar.min.js"></script>
+  <script src="/js/owl.carousel.min.js"></script>
+  <script src="/js/jquery.magnific-popup.min.js"></script>
+  <script src="/js/aos.js"></script>
+  <script src="/js/jquery.animateNumber.min.js"></script>
+  <script src="/js/bootstrap-datepicker.js"></script>
+  <script src="/js/scrollax.min.js"></script>
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
-  <script src="../static/js/google-map.js"></script>
-  <script src="../static/js/main.js"></script>
+  <script src="/js/google-map.js"></script>
+  <script src="/js/main.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 
   <script>
-		$(document).ready(function(){
 
-		var quantitiy=0;
-		   $('.quantity-right-plus').click(function(e){
-		        
-		        // Stop acting like a button
-		        e.preventDefault();
-		        // Get the field name
-		        var quantity = parseInt($('#quantity').val());
-		        
-		        // If is not undefined
-		            
-		            $('#quantity').val(quantity + 1);
+    document.getElementById("couponBtn").addEventListener("click",()=>{
+          let couponCode = document.getElementById("couponForm").value
+          let discount = document.getElementById("discount")
+          let couponId = document.getElementById("couponId")
+          let totalAmount = document.getElementById("totalAmount")
+          let amount = document.getElementById("amount").textContent
+          let DAmount = document.getElementById("DAmount")
+          let couponMessage = document.getElementById("couponMessage")
+          let alertSuccess = document.getElementById("alertSuccess")
+          console.log(amount)
+          $.ajax({
+              url:"/couponCode",
+              method:'post',
+              data:{couponCode},
+              success:(response)=>{
+              var responseData = JSON.parse(response);
+               if(responseData.isValid)
+               {
+               console.log(responseData)
+               discount.innerHTML = "₹"+responseData.couponAmount
+               totalAmount.innerHTML = "₹"+(Number(amount) - Number(responseData.couponAmount ))
+               couponId.value = Number(responseData.couponId)
+               DAmount.value = Number(amount) - Number(responseData.couponAmount )
+               console.log(Number(amount),Number(responseData.couponAmount ))
+				alert("success")
+               }
+               else{
+<!--               couponMessage.innerHTML = responseData.message-->
+				alert(responseData.message)
+               }
 
-		          
-		            // Increment
-		        
-		    });
+              }
+          })
+      })
 
-		     $('.quantity-left-minus').click(function(e){
-		        // Stop acting like a button
-		        e.preventDefault();
-		        // Get the field name
-		        var quantity = parseInt($('#quantity').val());
-		        
-		        // If is not undefined
-		      
-		            // Increment
-		            if(quantity>0){
-		            $('#quantity').val(quantity - 1);
-		            }
-		    });
-		    
-		});
-	</script>
-    
+  </script>
+  <script>
+	  $('#addressForm').submit((e) => {
+            e.preventDefault()
+            let checkoutAlert = document.getElementById("alert")
+            $.ajax({
+                url: '/placeAnOrder',
+                method: 'post',
+                data: $("#addressForm").serialize(),
+                success: (response) => {
+                 var responseData = JSON.parse(response);
+                if(responseData.isValid == true){
+                    window.location.href = "/orderPlaced"
+                    }
+                if(responseData.orderId){
+
+                    alert(responseData.orderId)
+
+	  var options = {
+          "key": "rzp_test_wGwkqS0TUZJIEr", // Enter the Key ID generated from the Dashboard
+          "amount": responseData.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+          "currency": "INR",
+          "name": "CRAVEHUB",
+          "description": "Test Transaction",
+          "image": "/images/crave_hub_logo.png",
+          "order_id": responseData.orderId, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+          "handler": function (response){
+
+               verifyPayment(response,responseData.purchaseId)
+
+          },
+          "prefill": {
+              "name": responseData.username,
+              "email": responseData.email,
+              "contact": responseData.contact
+          },
+          "notes": {
+              "address": "Razorpay Corporate Office"
+          },
+          "theme": {
+              "color": "#fc8019"
+          }
+      };
+      var rzp1 = new Razorpay(options);
+      rzp1.on('payment.failed', function (response){
+              alert(response.error.code);
+              alert(response.error.description);
+              alert(response.error.source);
+              alert(response.error.step);
+              alert(response.error.reason);
+              alert(response.error.metadata.order_id);
+              alert(response.error.metadata.payment_id);
+      });
+          rzp1.open();
+
+                    }
+                }
+            })
+        })
+
+    function verifyPayment(data,purchaseId){
+    let orderId =data.razorpay_order_id
+    let signature = data.razorpay_signature
+    let paymentId = data.razorpay_payment_id
+    alert("function called..")
+      $.ajax({
+        url:"/verifyPayment",
+        method:"post",
+        data:{orderId,signature,paymentId,purchaseId},
+        success:(response)=>{
+			if(response){
+			 window.location.href = "/orderPlaced"
+			}
+			alert("something went wrong")
+        }
+      })
+    }
+
+
+  </script>
+  <script>
+	  var animation = bodymovin.loadAnimation({
+          container: document.getElementById('animContainer'),
+          renderer: 'svg',
+          loop: true,
+          autoplay: true,
+          path: 'page404.lottie' // lottie file path
+      })
+  </script>
+
   </body>
 </html>

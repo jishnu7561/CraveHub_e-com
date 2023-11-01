@@ -22,7 +22,9 @@
         left: 65%; /* Position the element 50% from the left of the viewport */
         transform: translate(-50%, -50%); /* Center the element both horizontally and vertically */
     }
-
+	.errorMessage{
+	color:red;
+			}
 		</style>
 	</head>
 
@@ -33,24 +35,28 @@
 				<div class="image-holder">
 					<img src="/images/registration-form-1%20(2).jpg" alt="">
 				</div>
-				<form   th:action="@{/registration}" method="post" th:object="${user}">
-<!--				<form th:action="@{/registration/{email} (email=${user.email})}" th:object="${user}" method="post">-->
+				<form   th:action="@{/registration}" method="post" th:object="${user}" onsubmit="return validateForm()" >
 					<h3>Sign up</h3>
 					<div class="form-group">
-							<input type="text" placeholder="First Name" class="form-control" th:field="*{firstName}" required>
-							<input type="text" placeholder="Last Name" class="form-control" th:field="*{lastName}" required>
+							<input type="text" placeholder="First Name" class="form-control" th:field="*{firstName}" id="firstName" required>
+							<input type="text" placeholder="Last Name" class="form-control" th:field="*{lastName}" id="lastName" required>
 					</div>
+					<p id="firstNameError" class="error-message errorMessage"></p>
+					<p id="lastNameError" class="error-message errorMessage"></p>
 					<div class="form-wrapper">
-						<input type="text" placeholder="Username" class="form-control" th:field="*{userName}" required>
+						<input type="text" placeholder="Username" class="form-control" th:field="*{userName}"  id="username" required>
 						<i class="zmdi zmdi-account"></i>
+						<p id="usernameError" class="error-message errorMessage"></p>
 					</div>
 					<div class="form-wrapper">
 						<input type="text" placeholder="Email Address" class="form-control" th:field="*{email}" required>
 						<i class="zmdi zmdi-email"></i>
+						<p id="emailError" class="error-message errorMessage"></p>
 					</div>
 					<div class="form-wrapper">
 						<input type="password" placeholder="Password" class="form-control" th:field="*{password}" required>
 						<i class="zmdi zmdi-lock"></i>
+						<p id="passwordError" class="error-message errorMessage"></p>
 					</div>
 					<button>Register
 						<i class="zmdi zmdi-arrow-right">-> </i>
@@ -60,17 +66,98 @@
 				</form>
 			</div>
 		</div>
-<!--		<div th:if="${param.success}">-->
-<!--			<div id="myAlert" class="alert  alert-success fade show fixed-top d-flex justify-content-between" data-aos="fade-down"  role="alert" >-->
-<!--				<p><strong class="fs-2">Congratulations </strong>, your new account has been successfully created!</p>-->
-<!--				<button type="button" class="btn-close " data-bs-dismiss="alert" aria-label="Close"></button>-->
-<!--			</div>-->
-<!--		</div>-->
-<!--		<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>-->
-<!--		<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>-->
-<!--		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js" integrity="sha384-Rx+T1VzGupg4BHQYs2gCW9It+akI2MM/mndMCy36UVfodzcJcF0GGLxZIzObiEfa" crossorigin="anonymous"></script>-->
-<!--		<script>-->
-<!--			AOS.init();-->
-<!--		</script>-->
+
+		<script>
+			var firstNameInput = document.getElementById("firstName");
+            var lastNameInput = document.getElementById("lastName");
+            var usernameInput = document.getElementById("username");
+            var emailInput = document.getElementById("email");
+            var passwordInput = document.getElementById("password");
+
+            var firstNameError = document.getElementById("firstNameError");
+            var lastNameError = document.getElementById("lastNameError");
+            var usernameError = document.getElementById("usernameError");
+            var emailError = document.getElementById("emailError");
+            var passwordError = document.getElementById("passwordError");
+
+           	var regexFirstName = /^[A-Za-z]{4,15}$/; // First name should be between 4 and 15 characters
+			var regexLastName = /^[A-Za-z]{1,15}$/;
+			var regexEmail = /^[a-z0-9._%+-]{3,}@[a-z0-9.-]+\.[a-z]{2,}$/;
+            var regexPassword = /^[A-Za-z0-9]{4,8}$/;
+    		var regexUsername = /^[A-Za-z0-9!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]{4,10}$/;
+
+            firstNameInput.addEventListener("input", function() {
+                validateInput(this, "First name", regexFirstName, firstNameError);
+            });
+
+            lastNameInput.addEventListener("input", function() {
+                validateInput(this, "Last name", regexLastName, lastNameError);
+            });
+
+            usernameInput.addEventListener("input", function() {
+                validateInput(this, "Username", regexUsername, usernameError);
+            });
+
+            emailInput.addEventListener("input", function() {
+                validateInput(this, "Email", regexEmail, emailError);
+            });
+
+            passwordInput.addEventListener("input", function() {
+                validateInput(this, "Password", regexPassword, passwordError);
+            });
+
+            function validateInput(input, nameType, regex, errorElement) {
+                var value = input.value;
+                if (!regex.test(value)) {
+                    errorElement.textContent = nameType + " is not valid.";
+                } else {
+                    errorElement.textContent = "";
+                }
+            }
+
+				function validateForm() {
+					var isValid = true;
+
+					// Validation logic for each input field
+					if (!regexFirstName.test(firstNameInput.value)) {
+						firstNameError.textContent = "First name must contain min 5 and max 15 alphabets.";
+						isValid = false;
+					} else {
+						firstNameError.textContent = "";
+					}
+
+					if (!regexLastName.test(lastNameInput.value)) {
+						lastNameError.textContent = "Last name must contain max 15 alphabets.";
+						isValid = false;
+					} else {
+						lastNameError.textContent = "";
+					}
+
+					if (!regexUsername.test(usernameInput.value)) {
+						usernameError.textContent = "Username must contain min 4 and max 10 characters.";
+						isValid = false;
+					} else {
+						usernameError.textContent = "";
+					}
+
+					if (!regexEmail.test(emailInput.value)) {
+						emailError.textContent = "Email is not valid.";
+						isValid = false;
+					} else {
+						emailError.textContent = "";
+					}
+
+					if (!regexPassword.test(passwordInput.value)) {
+						passwordError.textContent = "Password must contain min 4 and max 8 alphabets or numbers.";
+						isValid = false;
+					} else {
+						passwordError.textContent = "";
+					}
+
+					return isValid;
+				}
+
+		</script>
+
 	</body><!-- This templates was made by Colorlib (https://colorlib.com) -->
 </html>

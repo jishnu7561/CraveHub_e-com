@@ -3,12 +3,13 @@ package com.project.cravehub.service.productservice;
 import com.project.cravehub.dto.ProductDto;
 import com.project.cravehub.model.admin.Category;
 import com.project.cravehub.model.admin.Product;
-import com.project.cravehub.repository.CategoryRepository;
-import com.project.cravehub.repository.ProductRepository;
-import com.project.cravehub.repository.SubCategoryRepository;
+import com.project.cravehub.model.user.CartItem;
+import com.project.cravehub.model.user.OrderItem;
+import com.project.cravehub.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -22,6 +23,12 @@ public class ProductServiceImpl implements ProductService{
 
     @Autowired
     private SubCategoryRepository subCategoryRepository;
+
+    @Autowired
+    private CartItemRepository cartItemRepository;
+
+    @Autowired
+    private OrderItemRepository orderItemRepository;
 
     @Override
     public void save(ProductDto productDto) {
@@ -108,6 +115,22 @@ public class ProductServiceImpl implements ProductService{
             product.setQuantity(productDto.getQuantity());
             productRepository.save(product);
         }
+    }
+
+    @Override
+    public boolean isExist(Integer productId) {
+        Optional<Product> productOptional = productRepository.findById(productId);
+        if(productOptional.isPresent()) {
+            Product product = productOptional.get();
+            CartItem cartItem = cartItemRepository.findByProduct(product);
+            List<OrderItem> orderItems = orderItemRepository.findByProduct(product);
+            if(cartItem != null || !orderItems.isEmpty())
+            {
+                return true;
+            }
+            return false;
+        }
+        return false;
     }
 
 

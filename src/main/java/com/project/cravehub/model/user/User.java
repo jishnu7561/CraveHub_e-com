@@ -3,7 +3,9 @@ package com.project.cravehub.model.user;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "user")
@@ -39,6 +41,15 @@ public class User {
 
     @OneToOne(mappedBy = "user" , cascade = CascadeType.ALL , orphanRemoval = true)
     private Cart cart;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "user_coupon",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "coupon_id"))
+    private Set<Coupon> coupons = new HashSet<>();
+
+    @OneToMany(mappedBy="user",cascade=CascadeType.REMOVE)
+    private List<PurchaseOrder> orders;
 
     public User()
     {
@@ -138,5 +149,21 @@ public class User {
 
     public void setCart(Cart cart) {
         this.cart = cart;
+    }
+
+    public Set<Coupon> getCoupons() {
+        return coupons;
+    }
+
+    public void setCoupons(Set<Coupon> coupons) {
+        this.coupons = coupons;
+    }
+
+    public List<PurchaseOrder> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<PurchaseOrder> orders) {
+        this.orders = orders;
     }
 }

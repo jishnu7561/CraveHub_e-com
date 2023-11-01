@@ -79,6 +79,7 @@
 
 
 package com.project.cravehub.config;
+import com.project.cravehub.service.dashboardService.DashboardService;
 import com.project.cravehub.service.userservice.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -127,6 +128,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/js/**",
                         "/css/**",
                         "/images/**"
+                        ,"/productImages/**"
+                        ,"/static**"
                         ,"/fonts/**"
                         ,"/registration"
                         ,"/regenerate-otp"
@@ -135,12 +138,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         ,"/confirmEmail"
                         ,"/verifyOtp"
                         ,"/singleProduct/**"
-                        ,"/**"
+                        ,"/"
                         ,"/changePassword"
                         ,"/regenerateForgotOtp"
 
                 ).permitAll()
-                .antMatchers("/").hasAnyRole("USER","ADMIN")
+                //.antMatchers("/").hasAnyRole("USER","ADMIN")
                 .antMatchers("/accessDenied").hasAnyRole("ROLE_USER", "ROLE_ADMIN")
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 //.antMatchers("/").hasRole("USER")
@@ -151,6 +154,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginPage("/login")
                 .permitAll()
                 .successHandler((request, response, authentication) -> {
+                    request.getSession().setAttribute("authenticated", true);
                     // Customize the redirection based on the user's role
                     if (authentication.getAuthorities().stream()
                             .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"))) {
@@ -159,6 +163,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     else {
                         response.sendRedirect("/");
                     }
+
                 })
                 .and()
 
@@ -172,4 +177,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 
     }
+
 }

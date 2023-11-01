@@ -16,15 +16,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.MessagingException;
 import java.security.Principal;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -57,6 +55,12 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private CartRepository cartRepository;
+
+//    @Autowired
+//    private OrderItem orderItem;
+
+    @Autowired
+    private OrderItemRepository orderItemRepository;
 
     @Override
     public User save(UserRegistrationDto registrationDto) {
@@ -196,6 +200,7 @@ public class UserServiceImpl implements UserService {
                 cart = new Cart();
                 cart.setUser(user);
                 user.setCart(cart);
+                cartRepository.save(cart);
             }
 
             CartItem cartItem = new CartItem();
@@ -218,10 +223,11 @@ public class UserServiceImpl implements UserService {
 
                 cart.getCartItem().add(cartItem);
                 userRepository.save(user);
+                return true;
             }
-            return false;//product not found in db
+           return false;//product not present
         }
-        return true;
+        return false;//user not found
     }
 
     @Override
@@ -277,5 +283,34 @@ public class UserServiceImpl implements UserService {
         return totalPrice;
     }
 
+    @Transactional
+    @Override
+    public boolean addOrderItems(Cart cart,PurchaseOrder purchaseOrder) {
+        try {
+            cartRepository.save(cart);
+            List<CartItem> cartItems = cartItemRepository.findByCart(cart);
+
+
+            for (CartItem cartItem : cartItems) {
+                OrderItem orderItem = new OrderItem();
+                orderItem.setItemCount(cartItem.getQuantity());
+                orderItem.setProduct(cartItem.getProduct());
+                orderItem.setOrder(purchaseOrder);
+                orderItem.setOrderStatus("placed");
+                orderItemRepository.save(orderItem);
+            }
+            Optional<Cart> carts = cartRepository.findById(cart.getCartId());
+            if(carts.isPresent()) {
+                //cartRepository.deleteById(cart.getCartId());
+                cartItemRepository.deleteByCart(cart);
+                return true;
+            }
+        }
+        catch (Exception e)
+        {
+            return false;
+        }
+        return false;
+    }
 
 }

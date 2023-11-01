@@ -24,9 +24,9 @@ public class Address {
     @Column(name = "pin_code")
     private String pinCode;
     @Column(name = "Mobile_Number")
-    private Integer number;
+    private String number;
 
-    public Address(User userId, String fullName, String city, String country, String state, String pinCode, Integer number) {
+    public Address(User userId, String fullName, String city, String country, String state, String pinCode, String number) {
         this.userId = userId;
         this.fullName = fullName;
         this.city = city;
@@ -96,11 +96,11 @@ public class Address {
         this.pinCode = pinCode;
     }
 
-    public Integer getNumber() {
+    public String getNumber() {
         return number;
     }
 
-    public void setNumber(Integer number) {
+    public void setNumber(String number) {
         this.number = number;
     }
 }

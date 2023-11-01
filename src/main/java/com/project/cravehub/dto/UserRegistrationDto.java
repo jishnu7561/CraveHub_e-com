@@ -1,6 +1,10 @@
 package com.project.cravehub.dto;
 
+import com.project.cravehub.model.user.Coupon;
 import org.springframework.context.annotation.Bean;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class UserRegistrationDto {
 
@@ -72,4 +76,6 @@ public class UserRegistrationDto {
     public void setOtp(String otp) {
         this.otp = otp;
     }
+
+
 }

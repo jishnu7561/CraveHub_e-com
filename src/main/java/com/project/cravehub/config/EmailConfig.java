@@ -1,5 +1,6 @@
 package com.project.cravehub.config;
 
+import com.project.cravehub.service.dashboardService.DashboardService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,6 +11,8 @@ import java.util.Properties;
 
 @Configuration
 public class EmailConfig {
+
+
     @Value("${spring.mail.host}")
     private String mailHost;
     @Value("${spring.mail.port}")

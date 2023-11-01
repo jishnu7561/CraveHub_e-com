@@ -125,6 +125,12 @@ public class ProductManagement {
     @GetMapping("/deleteProduct/{productId}")
     public String deleteCategory(@PathVariable(value = "productId") Integer productId)
     {
+        boolean isExist = productService.isExist(productId);
+        if(isExist)
+        {
+            return "redirect:/admin/listProducts?cantDelete";
+        }
+
         Product deleteProduct = productService.deleteProductById(productId);
         if(deleteProduct!=null) {
             return "redirect:/admin/listProducts";

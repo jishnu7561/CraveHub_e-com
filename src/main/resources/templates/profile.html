@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http//www.thymeleaf.org">
+<html lang="en" xmlns:th="http//www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml"
+      xmlns="http://www.w3.org/1999/html">
 
 <head>
     <meta charset="UTF-8">
@@ -9,17 +10,7 @@
     <meta name="keywords" content="HTML5 Template">
     <meta name="description" content="Molla - Bootstrap eCommerce Template">
     <meta name="author" content="p-themes">
-    <!-- Favicon -->
-<!--    <link rel="apple-touch-icon" sizes="180x180" href="assets/images/icons/apple-touch-icon.png">-->
-<!--    <link rel="icon" type="image/png" sizes="32x32" href="assets/images/icons/favicon-32x32.png">-->
-<!--    <link rel="icon" type="image/png" sizes="16x16" href="assets/images/icons/favicon-16x16.png">-->
-<!--    <link rel="manifest" href="assets/images/icons/site.html">-->
-<!--    <link rel="mask-icon" href="/images/icons/safari-pinned-tab.svg" color="#666666">-->
-<!--    <meta name="apple-mobile-web-app-title" content="Molla">-->
-<!--    <meta name="application-name" content="Molla">-->
-<!--    <meta name="msapplication-TileColor" content="#cc9966">-->
-<!--    <meta name="msapplication-config" content="assets/images/icons/browserconfig.xml">-->
-<!--    <meta name="theme-color" content="#ffffff">-->
+
     <!-- Plugins CSS File -->
     <link rel="stylesheet" href="/assetsProfile/css/bootstrap.min.css">
     <!-- Main CSS File -->
@@ -78,66 +69,76 @@
 </head>
 
 <body class="goto-here">
-<!--    <div class="page-wrapper">-->
-    <div class="py-1 bg-primary">
-        <div class="container">
-            <div class="row no-gutters d-flex align-items-start align-items-center px-md-0">
-                <div class="col-lg-12 d-block">
-                    <div class="row d-flex">
-                        <div class="col-md pr-4 d-flex topper align-items-center">
-                            <div class="icon mr-2 d-flex justify-content-center align-items-center"><span class="icon-phone2"></span></div>
-                            <span class="text">+ 1235 2355 98</span>
-                        </div>
-                        <div class="col-md pr-4 d-flex topper align-items-center">
-                            <div class="icon mr-2 d-flex justify-content-center align-items-center"><span class="icon-paper-plane"></span></div>
-                            <span class="text">youremail@email.com</span>
-                        </div>
-                        <div class="col-md-5 pr-4 d-flex topper align-items-center text-lg-right">
-                            <span class="text">3-5 Business days delivery &amp; Free Returns</span>
-                        </div>
+<div class="py-1 bg-primary">
+    <div class="container">
+        <div class="row no-gutters d-flex align-items-start align-items-center px-md-0">
+            <div class="col-lg-12 d-block">
+                <div class="row d-flex">
+                    <div class="col-md pr-4 d-flex topper align-items-center">
+                        <div class="icon mr-2 d-flex justify-content-center align-items-center"><span class="icon-phone2"></span></div>
+                        <span class="text">+ 1235 2355 98</span>
+                    </div>
+                    <div class="col-md pr-4 d-flex topper align-items-center">
+                        <div class="icon mr-2 d-flex justify-content-center align-items-center"><span class="icon-paper-plane"></span></div>
+                        <span class="text">youremail@email.com</span>
+                    </div>
+                    <div class="col-md-5 pr-4 d-flex topper align-items-center text-lg-right">
+                        <span class="text">3-5 Business days delivery &amp; Free Returns</span>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
-        <div class="container">
-            <a class="navbar-brand" href="#">CraveHub</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="oi oi-menu"></span> Menu
-            </button>
-            <div class="collapse navbar-collapse" id="ftco-nav">
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item active"><a th:href="@{/}" class="nav-link">Home</a></li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Shop</a>
-                        <div class="dropdown-menu" aria-labelledby="dropdown04">
-                            <a class="dropdown-item" href="shop.html">Shop</a>
-                            <a class="dropdown-item" href="wishlist.html">Wishlist</a>
-                            <a class="dropdown-item" href="product-single.html">Single Product</a>
-                            <a class="dropdown-item" href="cart.html">Cart</a>
-                            <a class="dropdown-item" href="checkout.html">Checkout</a>
-                        </div>
-                    </li>
-                    <li class="nav-item"><a href="about.html" class="nav-link">Order</a></li>
-                    <li class="nav-item cta cta-colored"><a href="cart.html" class="nav-link"><span class="icon-shopping_cart"></span>[0]</a></li>
-                    <li class="nav-item">
-                        <!-- <input class="search_bar" type="search" placeholder="Search" aria-label="Search"> -->
-                        <input type="text" class="search-bar" placeholder="Search...">
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Account</a>
-                        <div class="dropdown-menu" aria-labelledby="dropdown04">
-                            <a class="dropdown-item" href="shop.html">Profile</a>
-                            <a class="dropdown-item" th:href="@{/login}">Login</a>
-                            <a class="dropdown-item" th:href="@{/registration}">Signup</a>
-                            <a class="dropdown-item" href="cart.html">Logout</a>
-                        </div>
-                    </li>
-                </ul>
-            </div>
+</div>
+<nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
+    <div class="container">
+        <a class="navbar-brand" href="#">CraveHub</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="oi oi-menu"></span> Menu
+        </button>
+
+        <div class="collapse navbar-collapse" id="ftco-nav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active"><a th:href="@{/}" class="nav-link">Home</a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Shop</a>
+                    <div class="dropdown-menu" aria-labelledby="dropdown04">
+                        <a class="dropdown-item" href="shop.html">Shop</a>
+                        <a class="dropdown-item" href="wishlist.html">Wishlist</a>
+                        <a class="dropdown-item" th:href="@{/cart}" th:if="${#authorization.expression('isAuthenticated()')}">Cart</a>
+                        <a class="dropdown-item" th:href="@{/login}" th:if="${#authorization.expression('!isAuthenticated()')}">Cart</a>
+                        <a class="dropdown-item" href="checkout.html">Checkout</a>
+                    </div>
+                </li>
+                <li class="nav-item"><a th:href="@{/orders}" class="nav-link">Order</a></li>
+                <li class="nav-item cta cta-colored"><a href="cart.html" class="nav-link"><span class="icon-shopping_cart"></span>[0]</a></li>
+                <li class="nav-item">
+                    <!-- <input class="search_bar" type="search" placeholder="Search" aria-label="Search"> -->
+                    <input type="text" class="search-bar" placeholder="Search...">
+                    <!-- <div class="search-container">
+                        <input type="text" class="search-input" placeholder="Search...">
+                        <button class="search-button">
+                          <i class="fa fa-search"></i>
+                        </button>
+                      </div> -->
+                </li>
+                <li class="nav-item dropdown">
+                    <!--<a href="contact.html" class="nav-link">Contact</a>-->
+                    <!--				<a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"  th:text="${user.userName}">Account</a>-->
+                    <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" th:if="${user != null}" th:text="${user.userName}">Account</a>
+                    <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" th:unless="${user != null}">Account</a>
+
+                    <div class="dropdown-menu" aria-labelledby="dropdown04">
+                        <a class="dropdown-item" sec:authorize="hasRole('USER')" th:href="@{/profile}">Profile</a>
+                        <a class="dropdown-item" sec:authorize="!isAuthenticated()" th:href="@{/login}">Login</a>
+                        <a class="dropdown-item" sec:authorize="!isAuthenticated()" th:href="@{/registration}">Signup</a>
+                        <a class="dropdown-item" sec:authorize="isAuthenticated()" th:href="@{/logout}">Logout</a>
+                    </div>
+                </li>
+            </ul>
         </div>
-    </nav>
+    </div>
+</nav>
     <!-- END nav -->
 
     <main class="main">
@@ -178,7 +179,7 @@
                                     <a class="nav-link" id="tab-changePassword-link" data-toggle="tab" href="#tab-changePassword" role="tab" aria-controls="tab-changePassword" aria-selected="false">Change Password</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" id="tab-orders-link" data-toggle="tab" href="#tab-orders" role="tab" aria-controls="tab-orders" aria-selected="false">Orders</a>
+                                    <a class="nav-link"   th:href="@{/orders}" role="tab" aria-controls="tab-orders" aria-selected="false">Orders</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" href="#">Sign Out</a>
@@ -216,10 +217,10 @@
                                     </div>
                                  </div>
 
-                                <div class="tab-pane fade" id="tab-orders" role="tabpanel" aria-labelledby="tab-orders-link">
-                                    <p>No order has been made yet.</p>
-                                    <a href="category.html" class="btn btn-outline-primary-2"><span>GO SHOP</span><i class="icon-long-arrow-right"></i></a>
-                                </div>
+<!--                                <div class="tab-pane fade" id="tab-orders" role="tabpanel" aria-labelledby="tab-orders-link">-->
+<!--                                    <p>No order has been made yet.</p>-->
+<!--                                    <a href="category.html" class="btn btn-outline-primary-2"><span>GO SHOP</span><i class="icon-long-arrow-right"></i></a>-->
+<!--                                </div>-->
 
 
 <!--=======================================change password=======================================-->
@@ -254,12 +255,13 @@
 
 <!--============================================add Address=============================================-->
 
-                                <div class="tab-pane fade" id="tab-addAddress" role="tabpanel" aria-labelledby="tab-addAaddress-link">
+                                <div class="tab-pane fade" id="tab-addAddress" role="tabpanel" aria-labelledby="tab-addAddress-link">
 
                                     <div class="row p-5">
                                         <div class="col-lg-10 mx-auto">
                                             <div class="card card-dashboard">
                                                 <div class="card-body">
+                                                    <div>
                                                     <h3 class="card-title">Add Address</h3>
                                                     <form th:action="@{/addAddress}" th:object="${address}" method="post">
                                                         <div class="row p-5" >
@@ -285,7 +287,9 @@
                                                             </div>
                                                             <div class="col-sm-6">
                                                                 <label>pin-code *</label>
-                                                                <input type="text" class="form-control" th:field="*{pinCode}" required>
+                                                                <label>
+                                                                    <input type="text" class="form-control" th:field="*{pinCode}" required>
+                                                                </label>
                                                             </div>
 
                                                                 <div class=" col-12 ">
@@ -319,7 +323,7 @@
                                                         <p th:text="${address.country}"><p>
                                                         <p th:text="${address.number}"><p>
                                                         <p th:text="${address.pinCode}"></p>
-                                                        <p style="cursor: pointer; color:green" data-bs-toggle="modal" th:attr="data-bs-target='#modal_' + ${address.address_id}" >Edit <i class="icon-edit text-dark"></i><a th:href="@{'/deleteAddress/'+ ${address.address_id}}" class="text-danger">Delete </a></p>
+                                                        <p style="cursor: pointer; color:green"  ><span data-bs-toggle="modal" th:attr="data-bs-target='#modal_' + ${address.address_id}">Edit</span> <i class="icon-edit text-dark"></i><a th:onclick="'deleteAddress('+ ${address.address_id} + ')'" class="text-danger">Delete </a></p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -549,8 +553,21 @@
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
     <script src="/js/google-map.js"></script>
     <script src="/js/main.js"></script>
+<script>
+    function deleteAddress(addressId) {
+        $.ajax({
+            url: '/deleteAddress',
+            method: 'post',
+            data: { addressId },
+            success: function (response) {
+            alert(response);
+                window.location.href="/profile"
+            }
+        });
+    }
+</script>
 
-    <script>
+<script>
         let addrssBtn = document.getElementById("addressBtn");
         let addreslinkBtn = document.getElementById("tab-addAddress-link");
         addrssBtn.addEventListener('click',()=>{

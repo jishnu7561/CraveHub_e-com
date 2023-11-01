@@ -12,12 +12,12 @@ public class AddressDto {
     private String country;
     private String state;
     private String pinCode;
-    private Integer number;
+    private String number;
 
     public AddressDto() {
     }
 
-    public AddressDto(User userId, String fullName, String city, String country, String state, String pinCode, Integer number) {
+    public AddressDto(User userId, String fullName, String city, String country, String state, String pinCode, String number) {
         this.userId = userId;
         this.fullName = fullName;
         this.city = city;
@@ -83,11 +83,11 @@ public class AddressDto {
         this.pinCode = pinCode;
     }
 
-    public Integer getNumber() {
+    public String getNumber() {
         return number;
     }
 
-    public void setNumber(Integer number) {
+    public void setNumber(String number) {
         this.number = number;
     }
 
