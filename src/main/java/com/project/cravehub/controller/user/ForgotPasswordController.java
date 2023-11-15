@@ -5,11 +5,15 @@ import com.project.cravehub.model.user.User;
 import com.project.cravehub.repository.UserRepository;
 import com.project.cravehub.service.userservice.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 @RequestMapping("")
@@ -55,27 +59,35 @@ public class ForgotPasswordController {
     }
 
     @PostMapping("/verifyOtp")
-    public String verifyOtpPost(@ModelAttribute("otp") OtpDto otpDto, HttpSession session, HttpServletRequest request) {
-        String otp_entered = otpDto.getA()+otpDto.getB()+otpDto.getC()+
-                otpDto.getD()+otpDto.getE()+otpDto.getF();
+    @ResponseBody
+    public Map<String, String> verifyOtpPost(@RequestParam("a") String a, @RequestParam("e") String e,
+                                             @RequestParam("b") String b, @RequestParam("f") String f,
+                                             @RequestParam("c") String c, @RequestParam("d") String d,
+                                             HttpSession session, HttpServletRequest request) {
+        String otp_entered = a+b+c+d+e+f;
         String emailId =  (String) request.getSession().getAttribute("email");
         System.out.println(emailId);
-        if(emailId == null) {
-            return "redirect:/verifyOtp?sessionExpired";
-        }
         boolean flag = userService.verifyAccount(emailId,otp_entered);
-        try{
-            if(flag){
-                return "redirect:/changePassword";
-            }
-            else{
-                return "redirect:/verifyOtp?otpWrong";
-            }
+        Map<String, String> response = new HashMap<>();
+        if(emailId == null) {
+            response.put("valid","false");
+            response.put("message","session have Expired,please try again!!");
+//            return "redirect:/verifyOtp?sessionExpired";
         }
-        catch (Exception e){
-            return "error";
+        else if(flag) {
+            response.put("valid", "true");
+            response.put("message", "successful");
+            session.setAttribute("verification","successful");
+//            return "redirect:/changePassword";
         }
+        else{
+                response.put("valid","true");
+                response.put("message","Entered OTP is wrong!!");
+//            return "redirect:/verifyOtp?otpWrong";
+            }
+        return response;
     }
+
 
     @PostMapping("/regenerateForgotOtp")
     public String regenerateForgotOtp(HttpServletRequest request)
@@ -89,8 +101,13 @@ public class ForgotPasswordController {
     }
 
     @GetMapping("/changePassword")
-    public String changePasswordGet() {
-        return "changePassword";
+    public String changePasswordGet(HttpSession session) {
+        String verify = (String)session.getAttribute("verification");
+        if(verify != null) {
+            session.removeAttribute("verification");
+            return "changePassword";
+        }
+        return "redirect:/verifyOtp";
     }
 
     @PostMapping("/changePassword")

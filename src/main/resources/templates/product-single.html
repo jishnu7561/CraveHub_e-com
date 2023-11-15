@@ -27,10 +27,15 @@
     <link rel="stylesheet" href="/css/flaticon.css">
     <link rel="stylesheet" href="/css/icomoon.css">
     <link rel="stylesheet" href="/css/style.css">
+	  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 	  <script src="https://cdn.lordicon.com/bhenfmcm.js"></script>
 	  <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
 
+	  <link rel="stylesheet" href="/v6.4.2/css/sharp-solid.css">
+	  <link rel="stylesheet" href="/v6.4.2/css/sharp-regular.css">
+	  <link rel="stylesheet" href="/v6.4.2/css/sharp-light.css">
+	  <link rel="stylesheet" href="/v6.4.2/css/all.css">
 	  <style>
 		  .stock_in{
            color:green;
@@ -38,6 +43,16 @@
        .stock_out{
            color:red;
        }
+		.review-border{
+		border: 1px solid black;
+		border-radius: 2px;
+		 }
+		  .review{
+		      width: 2.1rem;
+				height: 1.5rem;
+				color: green;
+				border-radius: 0.2rem;
+		  }
 	  </style>
   </head>
   <body class="goto-here">
@@ -75,19 +90,19 @@
 				  <li class="nav-item dropdown">
 					  <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Shop</a>
 					  <div class="dropdown-menu" aria-labelledby="dropdown04">
-						  <a class="dropdown-item" href="shop.html">Shop</a>
+						  <a class="dropdown-item" th:href="@{/shop}">Shop</a>
 						  <a class="dropdown-item" href="wishlist.html">Wishlist</a>
 						  <a class="dropdown-item" th:href="@{/cart}" th:if="${#authorization.expression('isAuthenticated()')}">Cart</a>
 						  <a class="dropdown-item" th:href="@{/login}" th:if="${#authorization.expression('!isAuthenticated()')}">Cart</a>
-						  <a class="dropdown-item" href="checkout.html">Checkout</a>
 					  </div>
 				  </li>
-				  <li class="nav-item"><a href="about.html" class="nav-link">Order</a></li>
-				  <li class="nav-item cta cta-colored"><a href="cart.html" class="nav-link"><span class="icon-shopping_cart"></span>[0]</a></li>
+				  <li class="nav-item"><a th:href="@{orders}" th:if="${#authorization.expression('isAuthenticated()')}" class="nav-link">Order</a></li>
+				  <li class="nav-item cta cta-colored"><a th:href="@{cart}" class="nav-link"><span class="icon-shopping_cart"></span>[<span th:text="${cartCount} != null ? ${cartCount} : '0'" id="cartCount"></span>]</a></li>
 				  <li class="nav-item">
 					  <!-- <input class="search_bar" type="search" placeholder="Search" aria-label="Search"> -->
-					  <input type="text" class="search-bar" placeholder="Search...">
-					  <!-- <div class="search-container">
+					  <form th:action="@{/search}" method="get">
+						  <input type="text" class="search-bar" name="searchTerm" placeholder="Search..." >
+					  </form>					  <!-- <div class="search-container">
                           <input type="text" class="search-input" placeholder="Search...">
                           <button class="search-button">
                             <i class="fa fa-search"></i>
@@ -134,21 +149,21 @@
     				<h3 th:text="${product.productName}"></h3>
     				<div class="rating d-flex">
 							<p class="text-left mr-4">
-								<a href="#" class="mr-2">5.0</a>
-								<a href="#"><span class="ion-ios-star-outline"></span></a>
-								<a href="#"><span class="ion-ios-star-outline"></span></a>
-								<a href="#"><span class="ion-ios-star-outline"></span></a>
-								<a href="#"><span class="ion-ios-star-outline"></span></a>
-								<a href="#"><span class="ion-ios-star-outline"></span></a>
+								<a href="#" class="mr-2" th:text="${product.averageRating}">5.0</a>
+								<a href="#"><span class="ion-ios-star-outline" th:if="${product.averageRating >=1}"></span></a>
+								<a href="#"><span class="ion-ios-star-outline" th:if="${product.averageRating >=2}"></span></a>
+								<a href="#"><span class="ion-ios-star-outline" th:if="${product.averageRating >=3}"></span></a>
+								<a href="#"><span class="ion-ios-star-outline" th:if="${product.averageRating >=4}"></span></a>
+								<a href="#"><span class="ion-ios-star-outline" th:if="${product.averageRating >=5}"></span></a>
 							</p>
 							<p class="text-left mr-4">
-								<a href="#" class="mr-2" style="color: #000;">100 <span style="color: #bbb;">Rating</span></a>
+								<a href="#" class="mr-2" style="color: #000;" ><span th:text="${rating}"></span> <span style="color: #bbb;">Rating</span></a>
 							</p>
 							<p class="text-left">
-								<a href="#" class="mr-2" style="color: #000;">500 <span style="color: #bbb;">Sold</span></a>
+								<a href="#" class="mr-2" style="color: #000;"><span th:text="${sold}"></span> <span style="color: #bbb;">Sold</span></a>
 							</p>
 						</div>
-    				<p class="price" th:text="'$'+${product.price}" ><span></span></p>
+    				<h4 class="price" th:text="'₹'+${product.price}" ><span></span></h4>
 						<p th:text="${product.description}"></p>
 						<div class="row mt-4">
 							<div class="col-md-6">
@@ -165,6 +180,22 @@
 								</div>
 							</div>
 							<div class="w-100"></div>
+							<div class="col-md-6 review-border ftco-animate p-1">
+								<div>
+									<div class="col-3 mt-3">
+										<div>
+										<span class=" px-0 mx-auto d-flex justify-content-center align-items-center py-1" style="background-color:green ; width:auto; border-radius:7px"><span  style="color:white; font-size:14px">4 </span><i class="fa-sharp fa-solid fa-star " style="color: #ffffff; font-size:11px; margin-bottom:3px"></i></span>
+										<span>basith</span>
+										</div>
+									</div>
+									<div style="padding-left:14px" class="mt-3">
+										<p style="color:black">its too bad</p>
+									</div>
+
+								</div>
+							</div>
+
+
 <!--							<div class="input-group col-md-6 d-flex mb-3">-->
 <!--	             				<span class="input-group-btn mr-2">-->
 <!--	                				<button type="button" class="quantity-left-minus btn"  data-type="minus" data-field="">-->
@@ -198,6 +229,7 @@
 				</div>
     		</div>
     	</div>
+
     </section>
 
     <section class="ftco-section">
@@ -227,10 +259,7 @@
 							</div>
 							<div class="bottom-area d-flex px-3">
 								<div class="m-auto d-flex">
-									<a href="#" class="add-to-cart d-flex justify-content-center align-items-center text-center">
-										<span><i class="ion-ios-menu"></i></span>
-									</a>
-									<a href="#" class="buy-now d-flex justify-content-center align-items-center mx-1">
+									<a href="#" class="buy-now d-flex justify-content-center align-items-center mx-1" th:onclick="'addToCart(\'' + ${item.productId} + '\')'">
 										<span><i class="ion-ios-cart"></i></span>
 									</a>
 									<a href="#" class="heart d-flex justify-content-center align-items-center ">
@@ -386,8 +415,45 @@
           $(document).ready(function() {
               $("#addToCartButton").click(function(event) {
                   event.preventDefault();
+				  let cartCount = document.getElementById('cartCount')
+                  var id = $(this).data("id"); // Replace with the actual product ID
+                  var quantity = 1; // You can allow users to specify the quantity
+                  console.log(id)
+                  $.ajax({
+                      type: "POST",
+                      url: "/addToCart",
+                      data: JSON.stringify({ productId: id, quantity: quantity }),
 
-                  function showAlertBox() {
+                      contentType: "application/json",
+                     success:(response)=>{
+                     var responseData = JSON.parse(response);
+                     console.log(responseData)
+                     if(responseData.productExist){
+                          // Implement code to update the cart UI as needed
+                          showAlertBoxAlready()
+                          }
+                     else if(responseData.added == "true") {
+                     		cartCount.innerHTML = Number(responseData.cartCount)
+                     		console.log(responseData.cartCount)
+                      		showAlertBox()
+                          }
+                     else if(responseData.outOfStock){
+                     	showAlertOutOfStock()
+                     }
+                     else{
+                     	alert("please try again.something went wrong !!")
+                     }
+
+                      },
+                      error: function() {
+                          alert("Failed to add the product to the cart.");
+                      }
+                  });
+              });
+          });
+
+
+         function showAlertBox() {
         console.log("alert fun called...");
         $("#cartAlert").fadeIn();
 
@@ -418,39 +484,43 @@
     }
 
 
-                  var id = $(this).data("id"); // Replace with the actual product ID
-                  var quantity = 1; // You can allow users to specify the quantity
-                  console.log(id)
-                  $.ajax({
-                      type: "POST",
-                      url: "/addToCart",
-                      data: JSON.stringify({ productId: id, quantity: quantity }),
 
-                      contentType: "application/json",
-                     success:(response)=>{
-                     var responseData = JSON.parse(response);
-                     if(responseData.productExist){
-                          // Implement code to update the cart UI as needed
-                          showAlertBoxAlready()
-                          }
-                     else if(responseData.added) {
-                      		showAlertBox()
-                          }
-                     else if(responseData.outOfStock){
-                     	showAlertOutOfStock()
-                     }
-                     else{
-                     	alert("please try again..something went wrong !!")
-                     }
 
-                      },
-                      error: function() {
-                          alert("Failed to add the product to the cart.");
-                      }
-                  });
-              });
-          });
 
+	   function addToCart( productId) {
+    // event.preventDefault(); // Uncomment this line if you want to prevent default behavior
+    console.log("called fn");
+
+    let cartCount = document.getElementById('cartCount');
+    // var quantity = 1; // You can allow users to specify the quantity if needed
+    console.log(productId);
+    $.ajax({
+        type: "POST",
+        url: "/addToCart",
+        data: JSON.stringify({ productId: productId, quantity: 1 }), // You can modify quantity as needed
+        contentType: "application/json",
+        success: function (response) {
+            console.log(response);
+            var responseData = JSON.parse(response);
+
+            if (responseData.productExist) {
+                // Implement code to update the cart UI as needed
+                showAlertBoxAlready();
+            } else if (responseData.added == "true") {
+                cartCount.innerHTML = Number(responseData.cartCount);
+                console.log(responseData.cartCount);
+                showAlertBox();
+            } else if (responseData.outOfStock) {
+                showAlertOutOfStock();
+            } else {
+                alert("Please try again. Something went wrong!");
+            }
+        },
+        error: function () {
+            alert("Failed to add the product to the cart.");
+        }
+    });
+}
   </script>
   <script>
 	  var animation = bodymovin.loadAnimation({

@@ -1,9 +1,11 @@
 package com.project.cravehub.model.admin;
 
+import com.project.cravehub.model.user.Review;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import javax.persistence.*;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name="products")
@@ -28,6 +30,7 @@ public class Product {
     @Transient
     private String status;
 
+
 //    @ManyToMany(mappedBy = "products", cascade = CascadeType.MERGE)
 //    private Set<Category> categories;
 
@@ -50,6 +53,16 @@ public class Product {
     @Column(name="isEnabled",nullable=false)
     private boolean isEnabled;
 
+    @ManyToOne
+    @JoinColumn(name = "product_offer_id")
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
+    private ProductOffer productOffer;
+
+    private Double discountedPrice=0.0;
+
+    private double averageRating;
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private List<Review> reviews;
 
     public Product() {
     }
@@ -189,4 +202,52 @@ public class Product {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    public ProductOffer getProductOffer() {
+        return productOffer;
+    }
+
+    public void setProductOffer(ProductOffer productOffer) {
+        this.productOffer = productOffer;
+    }
+
+    public Double getDiscountedPrice() {
+        return discountedPrice;
+    }
+
+    public void setDiscountedPrice(Double discountedPrice) {
+        this.discountedPrice = discountedPrice;
+    }
+
+    public double getAverageRating() {
+        return averageRating;
+    }
+
+    public void setAverageRating(double averageRating) {
+        this.averageRating = averageRating;
+    }
+
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
+    }
+
+    // New method to add a review to the product
+    public void addReview(Review review) {
+        reviews.add(review);
+        calculateAverageRating();
+    }
+
+    // New method to calculate the average rating
+    public void calculateAverageRating() {
+        if (!reviews.isEmpty()) {
+            double totalRating = reviews.stream().mapToDouble(Review::getRating).sum();
+            averageRating = totalRating / reviews.size();
+            System.out.println("aaaaaaaaaaaaaa"+ averageRating);
+        }
+    }
+
 }

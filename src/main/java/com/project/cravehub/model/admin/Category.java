@@ -22,9 +22,13 @@ public class Category {
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
     private Set<SubCategory> subcategories = new HashSet<>();
 
+    @ManyToOne
+    @JoinColumn(name = "category_offer_id")
+    private CategoryOffer categoryOffer;
 
-//    @ManyToMany(mappedBy = "categories", cascade = CascadeType.MERGE)
-//    private Set<Product> products = new HashSet<>();
+    @ManyToMany
+    private Set<Product> products = new HashSet<>();
+
 
     public Category(){
 
@@ -76,11 +80,20 @@ public class Category {
         this.subcategories = subcategories;
     }
 
-//    public Set<Product> getProducts() {
-//        return products;
-//    }
-//
-//    public void setProducts(Set<Product> products) {
-//        this.products = products;
-//    }
+    public Set<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(Set<Product> products) {
+        this.products = products;
+    }
+
+
+    public CategoryOffer getCategoryOffer() {
+        return categoryOffer;
+    }
+
+    public void setCategoryOffer(CategoryOffer categoryOffer) {
+        this.categoryOffer = categoryOffer;
+    }
 }

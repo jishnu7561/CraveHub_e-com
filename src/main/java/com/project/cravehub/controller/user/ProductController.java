@@ -5,6 +5,7 @@ import com.project.cravehub.model.user.User;
 import com.project.cravehub.repository.ProductRepository;
 import com.project.cravehub.repository.UserRepository;
 import com.project.cravehub.service.productservice.ProductService;
+import com.project.cravehub.service.reviewService.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpSession;
 import java.security.Principal;
 import java.util.List;
 
@@ -27,8 +29,12 @@ public class ProductController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private ReviewService reviewService;
+
     @GetMapping("/singleProduct/{productId}")
-    public String singleProduct(@PathVariable("productId") Integer productId, Model model, Principal principal) {
+    public String singleProduct(@PathVariable("productId") Integer productId, Model model,
+                                Principal principal, HttpSession session) {
         Product product = productService.getProductById(productId);
         model.addAttribute("product",product);
         List<Product> products = productRepository.findAll();
@@ -40,7 +46,14 @@ public class ProductController {
             // User is authenticated, fetch user details and add to the model.
             String user_email = principal.getName();
             User user = userRepository.findByEmail(user_email);
+            int cartCount = (int) session.getAttribute("cartCount");
+            model.addAttribute("cartCount",cartCount);
             model.addAttribute("user", user);
+            int rating = reviewService.getReviewCountForProduct(product);
+            model.addAttribute("rating",rating);
+            Integer sold = productService.totalSold(product,user);
+            model.addAttribute("sold",sold);
+
         }
 
         return "product-single";

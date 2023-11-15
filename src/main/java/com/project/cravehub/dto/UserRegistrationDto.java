@@ -16,6 +16,8 @@ public class UserRegistrationDto {
 
     private String otp;
 
+    private String referralCode;
+
     public UserRegistrationDto()
     {
     }
@@ -77,5 +79,11 @@ public class UserRegistrationDto {
         this.otp = otp;
     }
 
+    public String getReferralCode() {
+        return referralCode;
+    }
 
+    public void setReferralCode(String referralCode) {
+        this.referralCode = referralCode;
+    }
 }

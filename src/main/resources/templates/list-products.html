@@ -101,7 +101,14 @@
                     <span class="menu-title">Dashboard</span>
                 </a>
             </li>
-
+            <li class="nav-item menu-items">
+                <a class="nav-link" th:href="@{/admin/salesReport}">
+              <span class="menu-icon">
+                <i class="mdi mdi-speedometer"></i>
+              </span>
+                    <span class="menu-title">Sales Report</span>
+                </a>
+            </li>
             <li class="nav-item menu-items">
                 <a class="nav-link"  th:href="@{/admin/listUsers}">
               <span class="menu-icon">
@@ -205,37 +212,33 @@
                     <div class="col-12 grid-margin">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">Order Status</h4>
+                                <h4 class="card-title">All Products</h4>
                                 <div class="table-responsive">
                                     <table class="table ">
                                         <thead class="text-white text-center">
                                         <tr >
                                             <th>
-                                                <a th:href="@{'/page/' + ${currentPage} + '?sortField=firstName&sortDir=' + ${reverseSortDir}}" class="btn btn-link text-decoration-none text-dark font-weight-bold">
-                                                    Image</a>
+                                                    Image
                                             </th>
                                             <th>
-                                                <a th:href="@{'/page/' + ${currentPage} + '?sortField=firstName&sortDir=' + ${reverseSortDir}}" class="btn btn-link text-decoration-none text-dark font-weight-bold">
-                                                    Name</a>
+                                                    Name
                                             </th>
                                             <th>
-                                                <a th:href="@{'/page/' + ${currentPage} + '?sortField=firstName&sortDir=' + ${reverseSortDir}}" class="btn btn-link text-decoration-none text-dark font-weight-bold">
-                                                    Category</a>
+                                                    Category
                                             </th>
                                             <th>
-                                                <a th:href="@{'/page/' + ${currentPage} + '?sortField=firstName&sortDir=' + ${reverseSortDir}}" class="btn btn-link text-decoration-none text-dark font-weight-bold">
-                                                    Subcategory</a>
+                                                    Subcategory
                                             </th>
                                             <th>
-                                                <a th:href="@{'/page/' + ${currentPage} + '?sortField=firstName&sortDir=' + ${reverseSortDir}}" class="btn btn-link text-decoration-none text-dark font-weight-bold">
-                                                    price</a>
+                                                    price
                                             </th>
                                             <th>
-                                                <a th:href="@{'/page/' + ${currentPage} + '?sortField=firstName&sortDir=' + ${reverseSortDir}}" class="btn btn-link text-decoration-none text-dark font-weight-bold">
-                                                    Quantity</a>
+                                                    Quantity
                                             </th>
-                                            <th><a class="btn btn-link text-decoration-none text-dark font-weight-bold">Status</a></th>
-                                            <th><a class="btn btn-link text-decoration-none text-dark font-weight-bold">Action</a></th>
+                                            <th><a >Status</a></th>
+                                            <th><a >Edit</a></th>
+                                            <th><a >Action</a></th>
+
                                         </tr>
                                         </thead>
 
@@ -254,8 +257,16 @@
 
                                                     <td th:utext="${product.getStatus()}"></td>
                                                     <td>
-                                                        <a  th:href="@{'/admin/deleteProduct/' + ${product.productId}}" class="delete-button">Delete</a>
                                                         <a  th:href="@{'/admin/editProduct/' + ${product.productId}}" class="edit-button">Edit</a>
+
+                                                    </td>
+                                                    <td>
+                                                        <a  id="blockProduct" th:href="@{/admin/blockProduct/{id}(id=${product.productId})}" data-method="put" class="btn bg-gradient-danger font-weight-bold text-xs mb-0" data-toggle="tooltip" th:if="${!product.isEnabled }">
+                                                            Block
+                                                        </a>
+                                                        <a  id="unblockProduct" th:href="@{/admin/unblockProduct/{id}(id=${product.productId})}" data-method="put" class="btn bg-gradient-warning font-weight-bold text-xs mb-0 ms-2 me-0" data-toggle="tooltip" th:if="${product.isEnabled }">
+                                                            Unblock
+                                                        </a>
                                                     </td>
                                                 </tr>
 
@@ -303,37 +314,26 @@
     <!-- page-body-wrapper ends -->
 </div>
 
-<div id="deleteAlert" class="alert alert-danger fixed-top col-6" th:if="${param.cantDelete}" role="alert" >
-    This product cant be deleted
-    <script>
-        setTimeout(() => {
-			document.getElementById("deleteAlert").style.display="none"
-		}, "5000");
-    </script>
-</div>
-
 <!-- Add this script at the end of your HTML body -->
 <script>
     // Select the Block and Unblock buttons by their IDs
-    var blockButton = document.getElementById("blockButton");
-    var unblockButton = document.getElementById("unblockButton");
+    var blockButton = document.getElementById("blockProduct");
+    var unblockButton = document.getElementById("unblockProduct");
 
     // Add click event listeners to the buttons
     unblockButton.addEventListener("click", function(event) {
         // Show a confirmation dialog and proceed if the user clicks OK
-        if (!confirm("Are you sure you want to block this user?")) {
+        if (!confirm("Are you sure you want to block this product?")) {
             event.preventDefault(); // Prevent the default action if the user clicks Cancel
         }
     });
 
     blockButton.addEventListener("click", function(event) {
         // Show a confirmation dialog and proceed if the user clicks OK
-        if (!confirm("Are you sure you want to unblock this user?")) {
+        if (!confirm("Are you sure you want to unblock this product?")) {
             event.preventDefault(); // Prevent the default action if the user clicks Cancel
         }
     });
-
-
 </script>
 
 

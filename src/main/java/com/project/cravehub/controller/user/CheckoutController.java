@@ -16,9 +16,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -49,6 +51,9 @@ public class CheckoutController {
     @Autowired
     private CouponService couponService;
 
+    @Autowired
+    private CartItemRepository cartItemRepository;
+
     @ModelAttribute("address")
     public AddressDto addressDto() {
         return new AddressDto();
@@ -56,7 +61,7 @@ public class CheckoutController {
 
 
     @GetMapping("/checkout")
-    public String showCheckoutGet(Principal principal, Model model) {
+    public String showCheckoutGet(Principal principal, Model model, HttpSession session) {
         User user = userRepository.findByEmail(principal.getName());
         double totalAmount = userService.totalPrice(user.getEmail());
         model.addAttribute("totalAmount", totalAmount);
@@ -66,6 +71,11 @@ public class CheckoutController {
         model.addAttribute("addresses", addresses);
         Address address = new Address(); // Create a new Address object or fetch it from your database
         model.addAttribute("address", address);
+        int cartCount = (int)session.getAttribute("cartCount");
+        model.addAttribute("cartCount",cartCount);
+        if(user.getWallet()!= null) {
+            model.addAttribute("balance", user.getWallet().getBalance());
+        }
         return "checkout";
     }
 
@@ -85,6 +95,7 @@ public class CheckoutController {
             @RequestParam(value = "couponId", required = false) Integer couponId,
             Principal principal) throws RazorpayException {
             System.out.println("in place an order");
+
 //        if(addressId == null)
 //        {
 //            return ResponseEntity.ok(false);
@@ -104,6 +115,7 @@ public class CheckoutController {
         Address address = addressOptional.get();
         if (coupon != null) {
             purchaseOrder.setCoupon(coupon);
+            couponService.saveCouponAndUser(principal.getName(), coupon);
         }
 
         purchaseOrder.setOrderAmount(totalAmount);
@@ -111,15 +123,20 @@ public class CheckoutController {
 
         purchaseOrder.setUser(user);
         purchaseOrder.setPaymentMethod(paymentMethod);
-
+        if(paymentMethod.equals("wallet"))
+        {
+            userService.addBalanceToWallet(user,totalAmount);
+        }
+        purchaseOrder.setAddress(address);
 
             purchaseOrder.setPaymentStatus("pending");
             response.put("isValid", true);
             purchaseOrderRepository.save(purchaseOrder);
-            userService.addOrderItems(cart, purchaseOrder);
+            boolean added = userService.addOrderItems(cart, purchaseOrder);
+            System.out.println("checkout ---------"+added);
         if(paymentMethod.equals("online")) {
             RazorpayClient razorpay = new RazorpayClient("rzp_test_wGwkqS0TUZJIEr", "0bbu25Q53eoTXXqWyF1gFiOT");
-
+            userService.addTransaction(user,purchaseOrder);
             JSONObject orderRequest = new JSONObject();
             orderRequest.put("amount", totalAmount * 100);
             orderRequest.put("currency", "INR");
@@ -154,7 +171,7 @@ public class CheckoutController {
     @ResponseBody
     public ResponseEntity<String> verifyCouponCode(String couponCode, Principal principal) {
         String userEmail = principal.getName();
-        Coupon coupon = couponRepository.findByCouponCode(couponCode);
+        Coupon coupon = couponRepository.findByCouponCode(couponCode.trim());
         double totalAmount = couponService.totalAmountPurchased(userEmail);
 
         LocalDate currentDate = LocalDate.now();
@@ -163,7 +180,7 @@ public class CheckoutController {
         Map<String, Object> response = new HashMap<>();
 
         int usersCount = couponRepository.countByCouponCodeAndUserIsNotNull(couponCode);
-
+        System.out.println(usersCount+" +++++++++++++++++++++++=");
         if (coupon == null) {
             // Coupon does not exist
             response.put("isValid", false);
@@ -185,7 +202,7 @@ public class CheckoutController {
             response.put("isValid", false);
             response.put("message", "Coupon has reached the maximum usage limit");
         } else {
-            couponService.saveCouponAndUser(userEmail, coupon);
+//            couponService.saveCouponAndUser(userEmail, coupon);
             response.put("isValid", true);
             response.put("couponAmount", coupon.getAmount());
             response.put("couponId", coupon.getCouponId());
@@ -251,8 +268,12 @@ public class CheckoutController {
 
             }
         }
-
         return ResponseEntity.ok(status);
     }
 
+    @GetMapping("/couponRemove")
+    public ResponseEntity<Integer> removeCoupon(Principal principal) {
+        int totalAmount = (int) couponService.totalAmountPurchased(principal.getName());
+        return ResponseEntity.ok(totalAmount);
+    }
 }

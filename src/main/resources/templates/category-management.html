@@ -111,6 +111,14 @@
                     <span class="menu-title">Dashboard</span>
                 </a>
             </li>
+            <li class="nav-item menu-items">
+                <a class="nav-link" th:href="@{/admin/salesReport}">
+              <span class="menu-icon">
+                <i class="mdi mdi-speedometer"></i>
+              </span>
+                    <span class="menu-title">Sales Report</span>
+                </a>
+            </li>
 
             <li class="nav-item menu-items">
                 <a class="nav-link"  th:href="@{/admin/listUsers}">
@@ -223,7 +231,7 @@
                                         <tr >
                                            <th>Category</th>
                                             <th>Edit</th>
-                                            <th>Delete</th>
+<!--                                            <th>Delete</th>-->
                                             <th>Variants</th>
                                         </tr>
                                         </thead>
@@ -237,10 +245,10 @@
                                             <td class="text-center">
                                                 <a  th:href="@{'/admin/editCategory/'+${item.id}}"  class=" edit-button">Edit</a>
                                             </td>
-                                            <td>
-                                                <a  th:href="@{'/admin/deleteCategory/' + ${item.id}}" class="delete-button">Delete</a>
+<!--                                            <td>-->
+<!--                                                <a  th:href="@{'/admin/deleteCategory/' + ${item.id}}" class="delete-button">Delete</a>-->
 
-                                            </td>
+<!--                                            </td>-->
                                             <td>
 
                                                 <!-- Button trigger modal -->
@@ -268,7 +276,13 @@
                                                                     <tr  th:each="variant : ${subCategories}"  th:if="${variant.category != null and   variant.category.id == item.id}">
                                                                        <td  th:text="${variant.subCategoryName}"></td>
                                                                         <td>
-                                                                            <a  th:href="@{'/admin/deleteSubCategory/' + ${variant.subCategoryId}}"  class="delete-button" >Remove</a>
+<!--                                                                            <a  th:href="@{'/admin/deleteSubCategory/' + ${variant.subCategoryId}}"  class="delete-button" >Remove</a>-->
+                                                                            <a  id="blockSub" th:href="@{/admin/blockSubCategory/{id}(id=${variant.subCategoryId})}" data-method="put" class="btn bg-gradient-danger font-weight-bold text-xs mb-0" data-toggle="tooltip" th:if="${!variant.isEnabled }">
+                                                                                Block
+                                                                            </a>
+                                                                            <a  id="unblockSub" th:href="@{/admin/unblockSubCategory/{id}(id=${variant.subCategoryId})}" data-method="put" class="btn bg-gradient-warning font-weight-bold text-xs mb-0 ms-2 me-0" data-toggle="tooltip" th:if="${variant.isEnabled }">
+                                                                                Unblock
+                                                                            </a>
                                                                         </td>
                                                                     </tr>
                                                                     </tbody>
@@ -401,6 +415,27 @@
     unblockButton.addEventListener("click", function(event) {
         // Show a confirmation dialog and proceed if the user clicks OK
         if (!confirm("Are you sure you want to unblock this category?")) {
+            event.preventDefault(); // Prevent the default action if the user clicks Cancel
+        }
+    });
+
+</script>
+<script>
+    // Select the Block and Unblock buttons by their IDs
+    var blockSub = document.getElementById("blockSub");
+    var unblockSub = document.getElementById("unblockSub");
+
+    // Add click event listeners to the buttons
+    blockSub.addEventListener("click", function(event) {
+        // Show a confirmation dialog and proceed if the user clicks OK
+        if (!confirm("Are you sure you want to block this Subcategory?")) {
+            event.preventDefault(); // Prevent the default action if the user clicks Cancel
+        }
+    });
+
+    unblockSub.addEventListener("click", function(event) {
+        // Show a confirmation dialog and proceed if the user clicks OK
+        if (!confirm("Are you sure you want to unblock this Subcategory?")) {
             event.preventDefault(); // Prevent the default action if the user clicks Cancel
         }
     });

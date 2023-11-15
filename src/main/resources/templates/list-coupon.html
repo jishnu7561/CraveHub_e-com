@@ -23,6 +23,11 @@
     <!-- End layout styles -->
     <link rel="shortcut icon" href="/assets/images/favicon.png" />
 
+    <link rel="stylesheet" href="/v6.4.2/css/sharp-solid.css">
+    <link rel="stylesheet" href="/v6.4.2/css/sharp-regular.css">
+    <link rel="stylesheet" href="/v6.4.2/css/sharp-light.css">
+    <link rel="stylesheet" href="/v6.4.2/css/all.css">
+
     <style>
         .stock_in{
             color:green;
@@ -98,6 +103,14 @@
                 <i class="mdi mdi-speedometer"></i>
               </span>
                     <span class="menu-title">Dashboard</span>
+                </a>
+            </li>
+            <li class="nav-item menu-items">
+                <a class="nav-link" th:href="@{/admin/salesReport}">
+              <span class="menu-icon">
+                <i class="mdi mdi-speedometer"></i>
+              </span>
+                    <span class="menu-title">Sales Report</span>
                 </a>
             </li>
 
@@ -231,7 +244,7 @@
                                             <th>
                                                 Maximum users
                                             </th>
-                                            <th>Status</th>
+                                            <th>Action</th>
                                             <th>Edit</th>
                                         </tr>
                                         </thead>
@@ -254,10 +267,7 @@
                                                 </a>
                                             </td>
                                             <td>
-                                                <a  th:href="@{'/admin/deleteProduct/' + ${coupon.couponId}}" class="delete-button">Delete</a>
-                                            </td>
-                                            <td>
-                                                <a  th:href="@{'/admin/editProduct/' + ${coupon.couponId}}" class="edit-button">Edit</a>
+                                                <a  th:href="@{'/admin/editCoupon/' + ${coupon.couponId}}" class="edit-button">Edit</a>
                                             </td>
                                         </tr>
 
@@ -278,7 +288,21 @@
     </div>
     <!-- page-body-wrapper ends -->
 </div>
-
+<div id="myAlert" data-aos="fade-down" class="alert alert-success col-3 fixed-top "
+     style="left: 20px; top:20px; border-radius: 7px; opacity: 0.9; z-index: 10000;" role="alert" th:if="${couponSuccess != null}">
+    <h6 class="alert-heading text-center"><span  th:text="${couponSuccess}"></span><li class="fa-solid fa-badge-check fa-shake" style="color: #009e5a;"></li></h6>
+    <!-- <p class="fs-6 form-text text-white">Your password has been successfully updated.</p> -->
+</div>
+<div id="myAlert" data-aos="fade-down" class="alert alert-danger col-3 fixed-top "
+     style="left: 20px; top:20px; border-radius: 7px; opacity: 0.9; z-index: 10000;" role="alert" th:if="${couponError != null}" >
+    <h6 class="alert-heading text-center"><span th:text="${couponError}"></span><i class="fa-solid fa-circle-xmark fa-shake" style="color: #ff0000;"></i></h6>
+    <!-- <p class="fs-6 form-text text-white">Your password has been successfully updated.</p> -->
+</div>
+<script>
+    setTimeout(function() {
+    document.getElementById('myAlert').style.display = 'none';
+}, 5000);
+</script>
 
 
 <!-- Add this script at the end of your HTML body -->

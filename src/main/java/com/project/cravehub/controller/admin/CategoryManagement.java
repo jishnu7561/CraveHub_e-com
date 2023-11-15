@@ -77,15 +77,15 @@ public class CategoryManagement {
     }
 
 
-    @GetMapping("/deleteCategory/{id}")
-    public String deleteCategory(@PathVariable(value = "id") Integer id)
-    {
-        Category deleteCategory = categoryService.deleteCategoryById(id);
-        if(deleteCategory!=null) {
-            return "redirect:/admin/listCategory";
-        }
-        return "redirect:/admin/listCategory?notExist";
-    }
+//    @GetMapping("/deleteCategory/{id}")
+//    public String deleteCategory(@PathVariable(value = "id") Integer id)
+//    {
+//        Category deleteCategory = categoryService.deleteCategoryById(id);
+//        if(deleteCategory!=null) {
+//            return "redirect:/admin/listCategory";
+//        }
+//        return "redirect:/admin/listCategory?notExist";
+//    }
 
 
     @GetMapping("/editCategory/{id}")
@@ -124,7 +124,7 @@ public class CategoryManagement {
         Category category = categoryRepository.findByCategory(subCategory.getCategory());
         if (category != null) {
             String subCategoryName = subCategory.getSubCategoryName().trim(); // Trim spaces
-            boolean subCategoryExists = subCategoryService.isSubCatogeryExistInCategory(subCategoryName, category);
+            boolean subCategoryExists = subCategoryService.isSubCategoryExistInCategory(subCategoryName, category);
 
             if (!subCategoryExists) {
                 SubCategory newSubCategory = subCategoryService.save(subCategory);
@@ -138,15 +138,15 @@ public class CategoryManagement {
     }
 
 
-    @GetMapping("/deleteSubCategory/{subCategoryId}")
-    public String deleteSubCategory(@PathVariable(value = "subCategoryId") Integer subCategoryId)
-    {
-        SubCategory deleteSubCategory = subCategoryService.deleteSubCategoryById(subCategoryId);
-        if(deleteSubCategory!=null) {
-            return "redirect:/admin/listCategory";
-        }
-        return "redirect:/admin/listCategory?notExist";
-    }
+//    @GetMapping("/deleteSubCategory/{subCategoryId}")
+//    public String deleteSubCategory(@PathVariable(value = "subCategoryId") Integer subCategoryId)
+//    {
+//        SubCategory deleteSubCategory = subCategoryService.deleteSubCategoryById(subCategoryId);
+//        if(deleteSubCategory!=null) {
+//            return "redirect:/admin/listCategory";
+//        }
+//        return "redirect:/admin/listCategory?notExist";
+//    }
 
     @GetMapping("/blockCategory/{id}")
     public String blockCategory(@PathVariable("id") Integer id) {
@@ -159,5 +159,19 @@ public class CategoryManagement {
         categoryService.unBlockCategoryById(id);
         return "redirect:/admin/listCategory";
     }
+
+    @GetMapping("/blockSubCategory/{subCategoryId}")
+    public String blockSubCategory(@PathVariable("subCategoryId") Integer id) {
+        subCategoryService.blockSubCategoryById(id);
+
+        return "redirect:/admin/listCategory";
+    }
+
+    @GetMapping("/unblockSubCategory/{subCategoryId}")
+    public String unblockSubCategory(@PathVariable("subCategoryId") Integer id) {
+        subCategoryService.unBlockSubCategoryById(id);
+        return "redirect:/admin/listCategory";
+    }
+
 
 }

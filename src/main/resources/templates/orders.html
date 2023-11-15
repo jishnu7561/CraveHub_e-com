@@ -52,6 +52,15 @@
 
   <link rel="stylesheet" href="/extra.css">
 
+  <link rel="stylesheet" href="/assets/vendors/mdi/css/materialdesignicons.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@4/dark.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous">
+
+  <link rel="stylesheet" href="/v6.4.2/css/sharp-solid.css">
+  <link rel="stylesheet" href="/v6.4.2/css/sharp-regular.css">
+  <link rel="stylesheet" href="/v6.4.2/css/sharp-light.css">
+  <link rel="stylesheet" href="/v6.4.2/css/all.css">
   <style>
     /* delivery progress bar  */
 
@@ -165,7 +174,7 @@
 
  #progressbar li.active:after,
  #progressbar li.active:before {
-     background: #fc8019
+     background: green
  }
  .delete-button {
             background-color: transparent;
@@ -293,11 +302,15 @@
  #progressbarCancel li.active:before {
      background: red;
  }
-
+  .swal2-popup {
+  background-color: white;
+      width: 27%;
+    height: 42%;
+}
   </style>
-
+  <link rel="stylesheet" href="path/to/sweetalert2.min.css">
+  <link rel="stylesheet" href="path/to/your-custom-styles.css">
 </head>
-
 <body class="goto-here">
 <div class="py-1 bg-primary">
   <div class="container">
@@ -337,15 +350,21 @@
             <a class="dropdown-item" href="wishlist.html">Wishlist</a>
             <a class="dropdown-item" th:href="@{/cart}" th:if="${#authorization.expression('isAuthenticated()')}">Cart</a>
             <a class="dropdown-item" th:href="@{/login}" th:if="${#authorization.expression('!isAuthenticated()')}">Cart</a>
-            <a class="dropdown-item" href="checkout.html">Checkout</a>
           </div>
         </li>
-        <li class="nav-item"><a th:href="@{/orders}" class="nav-link">Order</a></li>
-        <li class="nav-item cta cta-colored"><a href="cart.html" class="nav-link"><span class="icon-shopping_cart"></span>[0]</a></li>
+        <li class="nav-item"><a th:href="@{/orders}"  th:if="${#authorization.expression('isAuthenticated()')}" class="nav-link">Order</a></li>
+        <!--                <li class="nav-item cta cta-colored"><a href="cart.html" class="nav-link"><span class="icon-shopping_cart"></span>[<span th:text="${cartCount} != null ? ${cartCount} : '0'"></span>]</a></li>-->
+        <li class="nav-item cta cta-colored">
+          <a th:href="@{/cart}" class="nav-link" th:if="${#authorization.expression('isAuthenticated()')}">
+            <span class="fa-solid fa-cart-shopping"></span>
+            [<span th:text="${cartCount != null ? cartCount : '0'}"></span>]
+          </a>
+        </li>
         <li class="nav-item">
           <!-- <input class="search_bar" type="search" placeholder="Search" aria-label="Search"> -->
-          <input type="text" class="search-bar" placeholder="Search...">
-          <!-- <div class="search-container">
+          <form th:action="@{/search}" method="get">
+            <input type="text" class="search-bar" name="searchTerm" placeholder="Search..." >
+          </form>          <!-- <div class="search-container">
               <input type="text" class="search-input" placeholder="Search...">
               <button class="search-button">
                 <i class="fa fa-search"></i>
@@ -397,7 +416,7 @@
 
           <div class="col-lg-12 my-1 mx-auto" th:each="purchaseOrder: ${purchaseOrder}" >
             <div style="padding-bottom:1.5rem;" class="col-lg-8  cart-wrap ftco-animate mx-auto"  th:each="orderItem : ${purchaseOrder.orderItems}">
-              <div class="cart-total mb-3" >
+              <div class="cart-total mb-3" style="border:1px solid #b1b1b1" >
 <!--                <div class="container-fluid d-flex flex-column justify-content-center py-5">-->
 <!--                  <div>-->
 <!--                    <div class="card  col-md-6 col-10 my-3 mx-auto p-3"-->
@@ -406,7 +425,7 @@
                         <div class="d-flex flex-column w-100">
                           <p>ORDER PLACED</p>
                           <p class="mt-3" th:text="${#temporals.format(purchaseOrder.orderDate.plusHours(24),  'yyyy-MM-dd hh:mm a')}"></p>
-                          <button type="button" class="btn btn-warning btn-icon-text" th:onclick="'downloadInvoice(\'' + ${orderItem.orderItemId} + '\')'">
+                          <button type="button" class="btn btn-warning btn-icon-text" th:onclick="'downloadInvoice(\'' + ${orderItem.orderItemId} + '\')'" style="width:2rem">
                             <i class="mdi mdi-download "></i> invoice </button>
                         </div>
 
@@ -439,7 +458,11 @@
                           </h5>
                           Placed
                           <div  th:unless="${orderItem.orderStatus == 'cancelled'  or orderItem.orderStatus == 'delivered'}" >
-                            <a th:href="@{'/cancelOrder/'+${orderItem.orderItemId}}" class="btn delete-button py-3 px-4 my-4"  >Cancel Order</a>
+                            <a type="button" th:onclick="'cancelOrder(\'' + ${orderItem.orderItemId} + '\')'" class="btn delete-button py-3 px-4 my-4"  >Cancel Order</a>
+<!--                            th:href="@{'/cancelOrder/'+${orderItem.orderItemId}}"-->
+                          </div>
+                          <div class="my-3" th:if="${orderItem.orderStatus == 'delivered'}">
+                            <a th:href="@{'/orders/addReview/'+ ${orderItem.orderItemId}}" style="font-size:1.5rem;color:orange">+ Add review</a>
                           </div>
                         </div>
                       </div>
@@ -575,15 +598,54 @@
     </div>
   </div>
 </footer>
+<div id="myAlert" data-aos="fade-down" class="alert alert-success col-3 fixed-top "
+     style="left: 20px; top:20px; border-radius: 7px; opacity: 0.9; z-index: 10000;" role="alert" th:if="${reviewSuccessful != null}">
+  <h5 class="alert-heading text-center"><span  th:text="${reviewSuccessful}"></span><li class="fa-solid fa-badge-check fa-shake" style="color: #009e5a;"></li></h5>
+  <!-- <p class="fs-6 form-text text-white">Your password has been successfully updated.</p> -->
+</div>
+<div id="myAlert" data-aos="fade-down" class="alert alert-danger col-3 fixed-top "
+     style="left: 20px; top:20px; border-radius: 7px; opacity: 0.9; z-index: 10000;" role="alert" th:if="${reviewError != null}" >
+  <h5 class="alert-heading text-center"><span th:text="${reviewError}"></span><i class="fa-solid fa-circle-xmark fa-shake" style="color: #ff0000;"></i></h5>
+  <!-- <p class="fs-6 form-text text-white">Your password has been successfully updated.</p> -->
+</div>
+<script>
+  setTimeout(function() {
+  document.getElementById('myAlert').style.display = 'none';
+}, 5000);
+</script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 <script>
   function downloadInvoice(orderItemId) {
-    alert("orderItemId")
     var downloadUrl = '/downloadInvoice?orderItemId=' + orderItemId;
         window.location.href = downloadUrl;
 
    }
+</script>
+<script>
+  function cancelOrder(orderItemId) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't to cancel the order!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: 'red',
+      cancelButtonColor: 'orange',
+      confirmButtonText: 'Yes, cancel it!'
+
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire(
+          'Cancelled!',
+          'Your Order has been Cancelled.',
+          'success'
+        ); // Added a closing parenthesis here
+        var downloadUrl = '/cancelOrder?orderItemId=' + orderItemId;
+        window.location.href = downloadUrl;
+      }
+    });
+  }
 </script>
 
 <!-- Plugins JS File -->

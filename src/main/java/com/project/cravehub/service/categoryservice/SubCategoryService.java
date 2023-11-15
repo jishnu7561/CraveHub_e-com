@@ -11,7 +11,11 @@ public interface SubCategoryService {
 
     SubCategory save(CategoryDto categoryDto);
 
-    public boolean isSubCatogeryExistInCategory(String subcategory ,Category category);
+    public boolean isSubCategoryExistInCategory(String subcategory ,Category category);
 
-    public SubCategory deleteSubCategoryById(Integer id);
+    void blockSubCategoryById(Integer id);
+
+    void unBlockSubCategoryById(Integer id);
+
+//    public SubCategory deleteSubCategoryById(Integer id);
 }

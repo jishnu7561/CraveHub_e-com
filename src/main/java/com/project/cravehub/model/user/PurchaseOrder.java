@@ -34,8 +34,11 @@ public class PurchaseOrder {
 
     private String paymentStatus;
 
+    private boolean refund_used = false;
     @ManyToOne
     private Coupon coupon;
+
+//    private String purpose;
 
     public PurchaseOrder(Address address, User user, String paymentMethod, LocalDateTime orderDate, Double orderAmount) {
         this.address = address;
@@ -136,5 +139,13 @@ public class PurchaseOrder {
 
     public void setPaymentStatus(String paymentStatus) {
         this.paymentStatus = paymentStatus;
+    }
+
+    public boolean isRefund_used() {
+        return refund_used;
+    }
+
+    public void setRefund_used(boolean refund_used) {
+        this.refund_used = refund_used;
     }
 }

@@ -89,6 +89,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -141,12 +142,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         ,"/"
                         ,"/changePassword"
                         ,"/regenerateForgotOtp"
+                        ,"/shop**"
+                        ,"/shop/**"
+                        ,"/search**"
 
                 ).permitAll()
                 //.antMatchers("/").hasAnyRole("USER","ADMIN")
                 .antMatchers("/accessDenied").hasAnyRole("ROLE_USER", "ROLE_ADMIN")
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 //.antMatchers("/").hasRole("USER")
+                .antMatchers("/addToCart").authenticated()
                 .anyRequest().authenticated()
                 .and()
 

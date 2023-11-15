@@ -1,6 +1,6 @@
 
 <!DOCTYPE html>
-<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -22,7 +22,63 @@
     <link rel="stylesheet" href="/assets/css/style.css">
     <!-- End layout styles -->
     <link rel="shortcut icon" href="/assets/images/favicon.png" />
+
+
+    <!-- cropper.js -->
+<!--    <link rel="stylesheet" href="path/to/cropper.css">-->
+<!--    <script src="path/to/cropper.js"></script>-->
+    <!-- EndCropper.js -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.min.css">
+
+
 </head>
+<style>
+
+    .page {
+        margin: 1em auto;
+        max-width: 768px;
+        display: flex;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        height: 100%;
+    }
+
+    .box {
+        padding: 0.5em;
+        width: 100%;
+        margin:0.5em;
+    }
+
+    .box-2 {
+        padding: 0.5em;
+        width: calc(100%/2 - 1em);
+    }
+
+    .options label,
+    .options input{
+        width:4em;
+        padding:0.5em 1em;
+    }
+    .btn{
+        background:white;
+        color:black;
+        border:1px solid black;
+        padding: 0.5em 1em;
+        text-decoration:none;
+        margin:0.8em 0.3em;
+        display:inline-block;
+        cursor:pointer;
+    }
+
+    .hide {
+        display: none;
+    }
+
+    img {
+        max-width: 136px;
+    }
+
+</style>
 <body>
 <div class="container-scroller">
     <!-- partial:partials/_sidebar.html -->
@@ -55,6 +111,14 @@
                 <i class="mdi mdi-speedometer"></i>
               </span>
                     <span class="menu-title">Dashboard</span>
+                </a>
+            </li>
+            <li class="nav-item menu-items">
+                <a class="nav-link" th:href="@{/admin/salesReport}">
+              <span class="menu-icon">
+                <i class="mdi mdi-speedometer"></i>
+              </span>
+                    <span class="menu-title">Sales Report</span>
                 </a>
             </li>
 
@@ -164,7 +228,7 @@
                             <div class="card-body ">
                                 <h4 class="card-title">Add Products</h4>
                                 <hr class="text-light">
-                                <form class="forms-sample col-8 mx-auto" th:action="@{/admin/addProduct2}" method="post" th:object="${product2}" >
+                                <form class="forms-sample col-8 mx-auto" th:action="@{/admin/addProduct2}" method="post" th:object="${product2}" enctype="multipart/form-data" >
                                     <div class="form-group">
                                         <label for="exampleSelectGender">SubCategory</label>
 <!--                                        <select class="form-control" id="exampleSelectGender" th:each="variant : ${subCategories}" th:field="*{subcategories}">-->
@@ -176,16 +240,146 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="exampleInputPassword4">Price</label>
-                                        <input type="password" class="form-control" id="exampleInputPassword4" placeholder="Price" th:field="*{price}">
+                                        <input type="text" class="form-control" id="exampleInputPassword4" placeholder="Price" th:field="*{price}">
                                     </div>
                                     <div class="form-group">
                                         <label for="exampleInputName1">Quantity</label>
                                         <input type="text" class="form-control" id="exampleInputName1" placeholder="Quantity" th:field="*{quantity}">
                                     </div>
-                                    <div class="mb-3">
-                                        <label for="productImage" class="form-label " >Choose file</label>
-                                        <input class="form-control " type="text" name="productImage" id="productImage"  th:field="*{imageName}">
+<!--                                    <div class="mb-3">-->
+<!--                                        <label for="imageUpload" class="form-label " >Choose file</label>-->
+<!--                                        <input type="file" id="imageUpload" name="image" accept="image/*">-->
+<!--                                    </div>-->
+
+
+<!-- ------------------------- cropper.js------------------------------>
+<!--                                    <div class="mb-3 cropperContainer">-->
+<!--                                        <label for="imageUpload" class="form-label">Choose file</label>-->
+<!--                                        <input type="file" id="imageUpload" name="imageUpload" accept="image/*" onchange="handleFileSelect(event)">-->
+<!--                                    </div>-->
+<!--                                    <div id="previewContainer" class="mb-3">-->
+<!--                                        <img id="previewImage" class="img-fluid" alt="Preview">-->
+<!--                                    </div>-->
+<!--                                    <input type="hidden" id="cropX" name="cropX">-->
+<!--                                    <input type="hidden" id="cropY" name="cropY">-->
+<!--                                    <input type="hidden" id="cropWidth" name="cropWidth">-->
+<!--                                    <input type="hidden" id="cropHeight" name="cropHeight">-->
+
+
+<!--                                    <div class="row d-flex justify-content-between ">-->
+
+<!--                                        <div class="col-lg-3 col-md-6 rounded-image-preview">-->
+<!--                                            <label for="imageInput1" class="image-label">image 1-->
+<!--                                                <div class="rounded-image-preview">-->
+<!--                                                    <img id="imagePreview1"-->
+<!--                                                         src="https://www.creativefabrica.com/wp-content/uploads/2021/04/05/Image-Upload-Icon-Graphics-10388650-1-580x386.jpg"-->
+<!--                                                         alt="Preview" />-->
+<!--                                                </div>-->
+<!--                                                <input name="image1" type="file" accept="image/*" id="imageInput1" class="imageInput" hidden>-->
+<!--                                            </label>-->
+<!--                                        </div>-->
+
+<!--                                        <div class="col-lg-3 col-md-6 rounded-image-preview">-->
+<!--                                            <label for="imageInput2" class="image-label">image 2-->
+<!--                                                <div class="rounded-image-preview">-->
+<!--                                                    <img id="imagePreview2"-->
+<!--                                                         src="https://www.creativefabrica.com/wp-content/uploads/2021/04/05/Image-Upload-Icon-Graphics-10388650-1-580x386.jpg"-->
+<!--                                                         alt="Preview" />-->
+<!--                                                </div>-->
+<!--                                                <input name="image2" type="file" accept="image/*" id="imageInput2" class="imageInput" hidden>-->
+<!--                                            </label>-->
+<!--                                        </div>-->
+
+<!--                                        <div class="col-lg-3 col-md-6 rounded-image-preview">-->
+<!--                                            <label for="imageInput3" class="image-label">image 3-->
+<!--                                                <div class="rounded-image-preview">-->
+<!--                                                    <img id="imagePreview3"-->
+<!--                                                         src="https://www.creativefabrica.com/wp-content/uploads/2021/04/05/Image-Upload-Icon-Graphics-10388650-1-580x386.jpg"-->
+<!--                                                         alt="Preview" />-->
+<!--                                                </div>-->
+<!--                                                <input name="image3" type="file" accept="image/*" id="imageInput3" class="imageInput" hidden >-->
+<!--                                            </label>-->
+<!--                                        </div>-->
+
+<!--                                        <div class="col-lg-3 col-md-6 rounded-image-preview">-->
+<!--                                            <label for="imageInput4" class="image-label">image 4-->
+<!--                                                <div class="rounded-image-preview  img-result">-->
+<!--                                                    <img class="cropped" id="imagePreview4"-->
+<!--                                                         src="https://www.creativefabrica.com/wp-content/uploads/2021/04/05/Image-Upload-Icon-Graphics-10388650-1-580x386.jpg"-->
+<!--                                                         alt="Preview" />-->
+<!--                                                </div>-->
+<!--                                                <input name="image4" type="file" accept="image/*" id="imageInput4" class="imageInput" hidden >-->
+<!--                                            </label>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+
+                                    <div class="row d-flex justify-content-between ">
+                                        <div class="col-lg-3 col-md-6 rounded-image-preview">
+                                            <label for="imageInput1" class="image-label">image 1
+                                                <div class="rounded-image-preview">
+                                                    <img id="imagePreview1" src="https://www.creativefabrica.com/wp-content/uploads/2021/04/05/Image-Upload-Icon-Graphics-10388650-1-580x386.jpg" alt="Preview" />
+                                                </div>
+                                                <input name="image1" type="file" accept="image/*" id="imageInput1" class="imageInput" hidden onchange="handleFileInputChange(1)">
+                                            </label>
+                                            <div id="cropperContainer1" class="hide">
+                                                <div class="box">
+                                                    <div class="options">
+                                                        <label> Width</label>
+                                                        <input type="number" class="img-w" value="300" min="100" max="1200" />
+                                                    </div>
+                                                    <button class="btn save" onclick="cropAndSaveImage(1)">Save</button>
+                                                </div>
+                                                <input type="hidden" name="croppedImage" id="croppedImage" />
+
+                                            </div>
+                                            <div id="croppedImagePreview1" class="hide"></div>
+                                        </div>
+
+                                        <!-- Add similar HTML structure for imageInput2, imageInput3, and imageInput4 -->
                                     </div>
+
+
+
+
+
+
+
+
+
+
+
+                                    <!--                                    <input type="hidden" id="croppedImage"  name="croppedImage" th:value="${product.imageName}">-->
+
+<!--                                    &lt;!&ndash; leftbox &ndash;&gt;-->
+<!--                                    <div class="box-2">-->
+<!--                                        <div class="result"></div>-->
+<!--                                    </div>-->
+<!--                                    &lt;!&ndash;rightbox&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <div class="box-2 img-result hide">&ndash;&gt;-->
+<!--&lt;!&ndash;                                        &lt;!&ndash; result of crop &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;                                        <img class="cropped" src="" alt="">&ndash;&gt;-->
+<!--&lt;!&ndash;                                    </div>&ndash;&gt;-->
+<!--                                    &lt;!&ndash; input file &ndash;&gt;-->
+<!--                                    <div class="box">-->
+<!--                                        <div class="options hide">-->
+<!--                                            <label> Width</label>-->
+<!--                                            <input type="number" class="img-w" value="300" min="100" max="1200" />-->
+<!--                                        </div>-->
+<!--                                        &lt;!&ndash; save btn &ndash;&gt;-->
+<!--                                        <button class="btn save hide">Save</button>-->
+<!--                                    </div>-->
+                                    <!-- ------------------------- cropper.js------------------------------>
+
+
+
+
+
+
+
+
+
+
+
                                     <button type="submit" class="btn btn-lg btn-inverse-primary mr-2 mt-5">Add Product</button>
                                 </form>
                             </div>
@@ -204,30 +398,69 @@
     </div>
     <!-- page-body-wrapper ends -->
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.min.js"></script>
 
-
-
-<!-- Add this script at the end of your HTML body -->
 <script>
-    // Select the Block and Unblock buttons by their IDs
-    var blockButton = document.getElementById("blockButton");
-    var unblockButton = document.getElementById("unblockButton");
+    // vars
+    let result = document.querySelector('.result'),
+    img_result = document.querySelector('.img-result'),
+    img_w = document.querySelector('.img-w'),
+    options = document.querySelector('.options'),
+    save = document.querySelector('.save'),
+    cropped = document.querySelector('.cropped'),
+    upload = document.querySelector('#file-input'),
+    cropper = '';
 
-    // Add click event listeners to the buttons
-    unblockButton.addEventListener("click", function(event) {
-        // Show a confirmation dialog and proceed if the user clicks OK
-        if (!confirm("Are you sure you want to block this user?")) {
-            event.preventDefault(); // Prevent the default action if the user clicks Cancel
-        }
-    });
+// on change show image with crop options
+upload.addEventListener('change', (e) => {
+    if (e.target.files.length) {
+        // start file reader
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            if (e.target.result) {
+                // create new image
+                let img = document.createElement('img');
+                img.id = 'image';
+                img.src = e.target.result;
+                // clean result before
+                result.innerHTML = '';
+                // append new image
+                result.appendChild(img);
+                // show save btn and options
+                save.classList.remove('hide');
+                options.classList.remove('hide');
+                // init cropper
+                cropper = new Cropper(img);
+            }
+        };
+        reader.readAsDataURL(e.target.files[0]);
+    }
+});
 
-    blockButton.addEventListener("click", function(event) {
-        // Show a confirmation dialog and proceed if the user clicks OK
-        if (!confirm("Are you sure you want to unblock this user?")) {
-            event.preventDefault(); // Prevent the default action if the user clicks Cancel
-        }
-    });
+// save on click
+save.addEventListener('click', (e) => {
+    e.preventDefault();
+    // get result to data uri
+    let imgSrc = cropper.getCroppedCanvas({
+        width: img_w.value // input value
+    }).toDataURL();
+
+    // Update the hidden input field value with the cropped image data URI
+    document.getElementById('croppedImage').value = imgSrc;
+
+    // remove hide class of img
+    cropped.classList.remove('hide');
+    img_result.classList.remove('hide');
+    // show image cropped
+    cropped.src = imgSrc;
+    dwn.classList.remove('hide');
+    dwn.download = 'imagename.png';
+    dwn.setAttribute('href', imgSrc);
+});
 </script>
+
+
+
 
 
 

@@ -57,7 +57,14 @@
                     <span class="menu-title">Dashboard</span>
                 </a>
             </li>
-
+            <li class="nav-item menu-items">
+                <a class="nav-link" th:href="@{/admin/salesReport}">
+              <span class="menu-icon">
+                <i class="mdi mdi-speedometer"></i>
+              </span>
+                    <span class="menu-title">Sales Report</span>
+                </a>
+            </li>
             <li class="nav-item menu-items">
                 <a class="nav-link"  th:href="@{/admin/listUsers}">
               <span class="menu-icon">
@@ -168,6 +175,7 @@
                                             <div class="card-body ">
                                                 <h4 class="card-title">Add Products</h4>
                                                 <hr class="text-light">
+                                                <p th:if="${error}!= null" th:text="${error}" class="text-light"></p>
                                                 <form class="forms-sample col-8 mx-auto" th:action="@{/admin/addProduct}" method="post" th:object="${product}" required>
                                                     <div class="form-group">
                                                         <label for="exampleInputName1">Name</label>

@@ -17,6 +17,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+//import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.MessagingException;
 import java.security.Principal;
@@ -56,16 +57,37 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private CartRepository cartRepository;
 
-//    @Autowired
-//    private OrderItem orderItem;
-
     @Autowired
     private OrderItemRepository orderItemRepository;
 
+    @Autowired
+    private WishlistRepository wishlistRepository;
+
+    @Autowired
+    private WalletRepository walletRepository;
+
+    @Autowired
+    private PurchaseOrderRepository purchaseOrderRepository;
+
+    @Autowired
+    private TransactionRepository transactionRepository;
+
     @Override
     public User save(UserRegistrationDto registrationDto) {
-        User user = new User(registrationDto.getFirstName(),registrationDto.getLastName(), registrationDto.getUserName(), registrationDto.getEmail(), passwordEncoder.encode(registrationDto.getPassword()), Arrays.asList(new Role("ROLE_USER")));
+        String referralCode = generateReferralCode();
+        System.out.println(referralCode);
+        User user = new User(registrationDto.getFirstName(),registrationDto.getLastName(),
+                registrationDto.getUserName(), registrationDto.getEmail(),
+                passwordEncoder.encode(registrationDto.getPassword()),
+                Arrays.asList(new Role("ROLE_USER")),referralCode);
         return user;
+    }
+
+    public static String generateReferralCode() {
+        UUID uuid = UUID.randomUUID();
+        // Extract the first 8 characters from the UUID
+        String code = uuid.toString().substring(0, 4);
+        return code.toUpperCase();
     }
 
     @Override
@@ -91,7 +113,7 @@ public class UserServiceImpl implements UserService {
 //        otp.setOtpGenerated(otp_generated);
 //        otp.setOtpGeneratedTime(LocalDateTime.now());
 //        otpRepository.save(otp);
-        return "registration Successfull";
+        return "registration Successful";
     }
 
     @Override
@@ -99,11 +121,11 @@ public class UserServiceImpl implements UserService {
         System.out.println(email);
         Otp otp = otpRepository.findByEmail(email);
         if (otp!=null && otp.getOtpGenerated().equals(otp_generated) && Duration.between(otp.getOtpGeneratedTime(),
-                LocalDateTime.now()).getSeconds() < (2 * 60)) {
+                LocalDateTime.now()).getSeconds() < (60)) {
             return true;
         }
         else {
-            System.out.println("regenerate otp,your vefication is failed");
+            System.out.println("regenerate otp,your verification is failed");
             return false;
         }
     }
@@ -126,7 +148,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean isValidEmailId(String email) {
-        return userRepository.findByEmail(email) == null;
+         User user = userRepository.findByEmail(email);
+        return user == null;
     }
 
 
@@ -271,10 +294,14 @@ public class UserServiceImpl implements UserService {
         int totalPrice = 0;
 
         for (CartItem cartItem : cartItems) {
-            int quantity = cartItem.getQuantity();
+            Integer quantity = cartItem.getQuantity();
             Product product = cartItem.getProduct();
-            Double productPrice = product.getPrice(); // Assuming you have a 'price' field in your Product entity
-
+            Double productPrice = 0.0;
+            if(product.getProductOffer() != null && product.getProductOffer().isEnabled()){
+                productPrice = product.getDiscountedPrice();
+            }else {
+                productPrice = product.getPrice(); // Assuming you have a 'price' field in your Product entity
+            }
             // Calculate subtotal for this cart item and add it to the total price
             Double subtotal = quantity * productPrice;
             totalPrice += subtotal;
@@ -283,14 +310,15 @@ public class UserServiceImpl implements UserService {
         return totalPrice;
     }
 
-    @Transactional
+
+//===============  Method for saving ordered items in database and remove them from the cart  =============
     @Override
-    public boolean addOrderItems(Cart cart,PurchaseOrder purchaseOrder) {
+    @Transactional
+    public boolean addOrderItems(Cart cart, PurchaseOrder purchaseOrder) {
         try {
-            cartRepository.save(cart);
-            List<CartItem> cartItems = cartItemRepository.findByCart(cart);
+            List<CartItem> cartItems = new ArrayList<>(cart.getCartItem());
 
-
+            // Saving the cartItems that ordered to the database
             for (CartItem cartItem : cartItems) {
                 OrderItem orderItem = new OrderItem();
                 orderItem.setItemCount(cartItem.getQuantity());
@@ -299,16 +327,172 @@ public class UserServiceImpl implements UserService {
                 orderItem.setOrderStatus("placed");
                 orderItemRepository.save(orderItem);
             }
-            Optional<Cart> carts = cartRepository.findById(cart.getCartId());
-            if(carts.isPresent()) {
-                //cartRepository.deleteById(cart.getCartId());
-                cartItemRepository.deleteByCart(cart);
+
+                cart.clearCartItems(); // Remove cart items from cart after order is placed
+                cartRepository.save(cart);
                 return true;
-            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Exception Message: " + e.getMessage());
+            // Rethrow the exception or throw a new runtime exception
+            throw new RuntimeException("Error processing order items", e);
         }
-        catch (Exception e)
+    }
+
+    @Override
+    public int getCartItemsCount(User user) {
+        Cart cart = cartRepository.findByUser(user);
+        int count = 0;
+        if (cart != null)
         {
-            return false;
+          List<CartItem> cartItemList = cartItemRepository.findByCart(cart);
+          for(CartItem cartItem : cartItemList)
+          {
+              count ++;
+          }
+        }
+        return  count;
+    }
+
+    @Override
+    public boolean addProductToWishlist(Principal principal, ProductDto productDTO) {
+        String userEmail = principal.getName();
+        User user = userRepository.findByEmail(userEmail);
+        if (user != null) {
+            Wishlist wishlist = user.getWishlist();
+            if(wishlist == null) {
+                wishlist = new Wishlist();
+                wishlist.setUser(user);
+                wishlistRepository.save(wishlist);
+            }
+            List<Product> productList = wishlist.getProducts();
+            for(Product product : productList)
+            {
+                if (product.getProductId().equals(productDTO.getProductId())) {
+                    return false;
+                }
+            }
+            Product product = productService.getProductById(productDTO.getProductId());
+            productList.add(product);
+            wishlistRepository.save(wishlist);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void deleteFromWishlist(Product productId,String email) {
+        User user = userRepository.findByEmail(email);
+        Wishlist wishlist = user.getWishlist();
+        List<Product> productList = wishlist.getProducts();
+        productList.remove(productId);
+        wishlistRepository.save(wishlist);
+    }
+
+    @Override
+    public void createWallet(User user) {
+        Wallet wallet = new Wallet();
+        wallet.setUser(user);
+        user.setWallet(wallet);
+
+        // Save user and wallet in a single transaction
+        userRepository.save(user);
+    }
+
+    @Override
+    public List<OrderItem> getAllOrderItem(User user) {
+       List<PurchaseOrder> purchaseOrderList =  purchaseOrderRepository.findByUser(user);
+       List<OrderItem> orderItemList = new ArrayList<>();
+       for(PurchaseOrder purchaseOrder : purchaseOrderList) {
+           orderItemList.addAll(purchaseOrder.getOrderItems());
+       }
+       return orderItemList;
+    }
+
+    @Override
+    public void addTransaction(User user, PurchaseOrder purchaseOrder) {
+        Transactions transactions = new Transactions();
+
+        LocalDateTime date = LocalDateTime.now();
+        transactions.setTransactionDate(date);
+        transactions.setOrderAmount(purchaseOrder.getOrderAmount());
+        transactions.setPaymentMethod(purchaseOrder.getPaymentMethod());
+        transactions.setPurchaseOrder(purchaseOrder);
+        transactions.setPurpose("purchase");
+        transactions.getUser().add(user);
+        user.getTransaction().add(transactions);
+
+        userRepository.save(user);
+        transactionRepository.save(transactions);
+    }
+
+    @Override
+    @Transactional
+    public void addTransactionAndRefund(OrderItem orderItem) {
+        System.out.println("called the refund");
+        Transactions transactions = new Transactions();
+//        Set<User> user = new HashSet<>();
+//        user.add(orderItem.getOrder().getUser());
+//        transactions.setUser(user);
+        transactions.getUser().add(orderItem.getOrder().getUser());
+        LocalDateTime date = LocalDateTime.now();
+        transactions.setTransactionDate(date);
+        Double discount =0.0;
+        if(!orderItem.getOrder().isRefund_used() && orderItem.getOrder().getCoupon() != null)
+        {
+            discount = orderItem.getOrder().getCoupon().getAmount();
+        }
+        transactions.setOrderAmount(orderItem.getOrder().getOrderAmount()-discount);
+        transactions.setPaymentMethod(orderItem.getOrder().getPaymentMethod());
+        transactions.setPurchaseOrder(orderItem.getOrder());
+        transactions.setPurpose("refund");
+//        Set<Transactions> transactionsSet = new HashSet<>();
+        transactionRepository.save(transactions);
+
+// #################       wallet  ######################
+
+        User user1 = orderItem.getOrder().getUser();
+        Wallet wallet = user1.getWallet();
+        if(wallet == null) {
+            wallet = new Wallet();
+            wallet.setUser(user1);
+            user1.setWallet(wallet);
+        }
+             wallet.setBalance(wallet.getBalance()+((orderItem.getItemCount() * orderItem.getProduct().getPrice())- discount));
+             PurchaseOrder purchaseOrder = orderItem.getOrder();
+             purchaseOrder.setRefund_used(true);
+             purchaseOrderRepository.save(purchaseOrder);
+             walletRepository.save(wallet);
+//             transactionsSet.add(transactions);
+//             user1.setTransaction(transactionsSet);
+            user1.getTransaction().add(transactions);
+             userRepository.save(user1);
+    }
+
+    @Override
+    public void addBalanceToWallet(User user,double totalAmount) {
+        Double balance = user.getWallet().getBalance();
+        Wallet wallet = user.getWallet();
+        wallet.setBalance(balance-totalAmount);
+        walletRepository.save(wallet);
+    }
+
+    @Override
+    public boolean verifyReferralCode(String referralCode, String email) {
+        User user = userRepository.findByEmail(email);
+        String  referral = user.getReferralCode();
+        User referralUser = userRepository.findByReferralCode(referralCode);
+        System.out.println(user);
+        if (referralUser != null && !referral.equals(referralCode)) {
+            Wallet walletOfUser = user.getWallet();
+            Wallet walletOfReferralUser = referralUser.getWallet();
+            walletOfUser.setBalance(walletOfUser.getBalance()+50);
+            walletOfReferralUser.setBalance(walletOfReferralUser.getBalance()+100);
+            walletOfUser.setReferralUsed(true);
+            walletRepository.save(walletOfUser);
+            walletRepository.save(walletOfReferralUser);
+            return true;
         }
         return false;
     }

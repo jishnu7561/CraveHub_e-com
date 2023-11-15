@@ -3,12 +3,14 @@ package com.project.cravehub.controller.user;
 import com.project.cravehub.dto.OtpDto;
 import com.project.cravehub.dto.UserRegistrationDto;
 import com.project.cravehub.model.user.User;
+import com.project.cravehub.model.user.Wallet;
 import com.project.cravehub.repository.UserRepository;
 import com.project.cravehub.service.userservice.UserService;
 import com.project.cravehub.util.EmailUtil;
 import com.project.cravehub.util.OtpUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -38,7 +40,11 @@ private UserRepository userRepository;
     private UserRegistrationDto registrationDto;
 
     @GetMapping("/verify-account")
-    public String showOtp(){
+    public String showOtp(HttpSession session,Model model){
+        String registration = (String) session.getAttribute("registration");
+        String email = (String)session.getAttribute("validEmailId");
+        model.addAttribute("email",email);
+        model.addAttribute("reg",registration);
         return "otp";
     }
 
@@ -47,25 +53,28 @@ private UserRepository userRepository;
         return new OtpDto();
     }
 
-
     @PostMapping("/verify-account")
-    public String verificationPage(@ModelAttribute("otp") OtpDto otpDto, HttpServletRequest request, HttpSession session) {
-        String result = otpDto.getA()+otpDto.getB()+otpDto.getC()+otpDto.getD()+otpDto.getE()+otpDto.getF();
+    public ResponseEntity<Boolean> verificationPage(@RequestParam("a") String a, @RequestParam("e") String e,
+                                                    @RequestParam("b") String b, @RequestParam("f") String f,
+                                                    @RequestParam("c") String c, @RequestParam("d") String d,
+                                                    HttpServletRequest request, HttpSession session, Model model) {
+        String result = a+b+c+d+e+f;
         String emailid = session.getAttribute("validEmailId").toString();
         boolean flag = userService.verifyAccount(emailid,result);
         if(flag)
         {
             User verifyCustomer = (User) session.getAttribute("verifyCustomer");
+            userService.createWallet(verifyCustomer);
             userRepository.save(verifyCustomer);
             System.out.println("successfully verified and regisrered");
-            return "redirect:/login";
+            return ResponseEntity.ok(true);
         }
-        return "redirect:/verify-account?error";
+        return ResponseEntity.ok(false);
     }
 
 
-    @PostMapping("/regenerate-otp")
-    public String regenerateOtp(HttpServletRequest request)
+    @GetMapping("/regenerate-otp")
+    public String regenerateOtp( HttpServletRequest request)
     {
         System.out.println("regenerate otp");
         String email = (String) request.getSession().getAttribute("validEmailId");

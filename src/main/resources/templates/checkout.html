@@ -30,6 +30,8 @@
 	  <link rel="stylesheet" href="/css/flaticon.css">
     <link rel="stylesheet" href="/css/icomoon.css">
     <link rel="stylesheet" href="/css/style.css">
+
+	  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous">
 	  <style>
 		  .form-group {
               display: flex;
@@ -116,15 +118,21 @@
 						  <a class="dropdown-item" href="wishlist.html">Wishlist</a>
 						  <a class="dropdown-item" th:href="@{/cart}" th:if="${#authorization.expression('isAuthenticated()')}">Cart</a>
 						  <a class="dropdown-item" th:href="@{/login}" th:if="${#authorization.expression('!isAuthenticated()')}">Cart</a>
-						  <a class="dropdown-item" href="checkout.html">Checkout</a>
 					  </div>
 				  </li>
-				  <li class="nav-item"><a href="about.html" class="nav-link">Order</a></li>
-				  <li class="nav-item cta cta-colored"><a href="cart.html" class="nav-link"><span class="icon-shopping_cart"></span>[0]</a></li>
+				  <li class="nav-item"><a th:href="@{/orders}"  th:if="${#authorization.expression('isAuthenticated()')}" class="nav-link">Order</a></li>
+				  <!--                <li class="nav-item cta cta-colored"><a href="cart.html" class="nav-link"><span class="icon-shopping_cart"></span>[<span th:text="${cartCount} != null ? ${cartCount} : '0'"></span>]</a></li>-->
+				  <li class="nav-item cta cta-colored">
+					  <a th:href="@{/cart}" class="nav-link" th:if="${#authorization.expression('isAuthenticated()')}">
+						  <span class="icon-shopping_cart"></span>
+						  [<span th:text="${cartCount != null ? cartCount : '0'}"></span>]
+					  </a>
+				  </li>
 				  <li class="nav-item">
 					  <!-- <input class="search_bar" type="search" placeholder="Search" aria-label="Search"> -->
-					  <input type="text" class="search-bar" placeholder="Search...">
-					  <!-- <div class="search-container">
+					  <form th:action="@{/search}" method="get">
+						  <input type="text" class="search-bar" name="searchTerm" placeholder="Search..." >
+					  </form>					  <!-- <div class="search-container">
                           <input type="text" class="search-input" placeholder="Search...">
                           <button class="search-button">
                             <i class="fa fa-search"></i>
@@ -132,15 +140,15 @@
                         </div> -->
 				  </li>
 				  <li class="nav-item dropdown">
-					  <!--					  <a href="contact.html" class="nav-link"  th:text="${session.userName}">Contact</a>-->
-					  <!--					  				<a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"  th:text="${user.userName}">Account</a>-->
-					  <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"  th:text="${userName}">Account</a>
-					  <!--					  <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" th:unless="${user != null}">Account</a>-->
+					  <!--<a href="contact.html" class="nav-link">Contact</a>-->
+					  <!--				<a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"  th:text="${user.userName}">Account</a>-->
+					  <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" th:if="${user != null}" th:text="${user.userName}">Account</a>
+					  <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" th:unless="${user != null}">Account</a>
 
 					  <div class="dropdown-menu" aria-labelledby="dropdown04">
 						  <a class="dropdown-item" sec:authorize="hasRole('USER')" th:href="@{/profile}">Profile</a>
-						  <a class="dropdown-item" th:href="@{/login}">Login</a>
-						  <a class="dropdown-item" th:href="@{/registration}">Signup</a>
+						  <a class="dropdown-item" sec:authorize="!isAuthenticated()" th:href="@{/login}">Login</a>
+						  <a class="dropdown-item" sec:authorize="!isAuthenticated()" th:href="@{/registration}">Signup</a>
 						  <a class="dropdown-item" sec:authorize="isAuthenticated()" th:href="@{/logout}">Logout</a>
 					  </div>
 				  </li>
@@ -168,6 +176,8 @@
 				  <div class="form-group">
 					  <input type="text" id="couponForm" class="form-control text-left px-3" placeholder="Coupon code" style="border: none;" onkeyup="this.value = this.value.toUpperCase()">
 					  <button id="couponBtn" class="btn btn-primary py-3 px-4" >Apply Coupon</button>
+					  <button id="couponRemoveBTN" class="btn btn-primary py-3 px-4" style="display:none" ><i class="fa-solid fa-trash"></i></button>
+
 				  </div>
 <!--			  </form>-->
 		  </div>
@@ -253,14 +263,24 @@
 											</div>
 										</div>
 									</div>
-
 									<div class="form-group">
 										<div class="col-md-12">
-											<div class="checkbox">
-											   <label><input type="checkbox" value="" class="mr-2"> I have read and accept the terms and conditions</label>
+											<div class="radio">
+												<label><input type="radio" th:if="${balance >= totalAmount}"
+															  th:disabled="${balance < totalAmount}"
+															  name="optradio"
+															  th:value="wallet"  class="mr-2"> Wallet</label>
 											</div>
 										</div>
 									</div>
+
+<!--									<div class="form-group">-->
+<!--										<div class="col-md-12">-->
+<!--											<div class="checkbox">-->
+<!--											   <label><input type="checkbox" value="" class="mr-2"> I have read and accept the terms and conditions</label>-->
+<!--											</div>-->
+<!--										</div>-->
+<!--									</div>-->
 <!--									<p><a href="#" class="btn btn-primary py-3 px-4">Place an order</a></p>-->
 						<button th:if="${#lists.size(addresses) > 0}" class="btn btn-primary py-3 px-4">Place an order</button>
 								</div>
@@ -451,6 +471,8 @@
 
     document.getElementById("couponBtn").addEventListener("click",()=>{
           let couponCode = document.getElementById("couponForm").value
+          const couponRemoveBTN = document.getElementById('couponRemoveBTN')
+          const couponBtn = document.getElementById('couponBtn')
           let discount = document.getElementById("discount")
           let couponId = document.getElementById("couponId")
           let totalAmount = document.getElementById("totalAmount")
@@ -473,10 +495,11 @@
                couponId.value = Number(responseData.couponId)
                DAmount.value = Number(amount) - Number(responseData.couponAmount )
                console.log(Number(amount),Number(responseData.couponAmount ))
+               couponBtn.style.display = 'none'
+               couponRemoveBTN.style.display = 'block'
 				alert("success")
                }
                else{
-<!--               couponMessage.innerHTML = responseData.message-->
 				alert(responseData.message)
                }
 
@@ -484,6 +507,30 @@
           })
       })
 
+	  document.getElementById("couponRemoveBTN").addEventListener("click",()=>{
+          const couponRemoveBTN = document.getElementById('couponRemoveBTN')
+          const couponBtn = document.getElementById('couponBtn')
+		  let couponCode = document.getElementById("couponForm")
+
+          let discount = document.getElementById("discount")
+          let totalAmount = document.getElementById("totalAmount")
+          let couponMessage = document.getElementById("couponMessage")
+          let alertSuccess = document.getElementById("alertSuccess")
+          $.ajax({
+              url:"/couponRemove",
+              method:'get',
+              success:(response)=>{
+               console.log(response)
+               discount.innerHTML = "₹"+0.00
+               totalAmount.innerHTML = "₹"+Number(response)
+				couponCode.value = ""
+               	couponRemoveBTN.style.display = 'none'
+               	couponBtn.style.display = 'block'
+
+				alert("success")
+              }
+          })
+      })
   </script>
   <script>
 	  $('#addressForm').submit((e) => {

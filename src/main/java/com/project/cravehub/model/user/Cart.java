@@ -50,5 +50,8 @@ public class Cart {
         this.cartItem = cartItem;
     }
 
+    public void clearCartItems() {
+        this.cartItem.clear();
+    }
 
 }

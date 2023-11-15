@@ -9,9 +9,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/admin")
@@ -28,9 +30,15 @@ public class CouponManagement {
     private CouponService couponService;
 
     @GetMapping("/listCoupons")
-    public String listCoupons(Model model) {
+    public String listCoupons(Model model,HttpSession session) {
         List<Coupon> coupons = couponRepository.findAll();
         model.addAttribute("coupons",coupons);
+        model.addAttribute("couponSuccess",(String)session.getAttribute("couponSuccess"));
+        model.addAttribute("couponError",(String)session.getAttribute("couponError"));
+
+        session.removeAttribute("couponError");
+        session.removeAttribute("couponSuccess");
+
         return "list-coupon";
     }
 
@@ -39,16 +47,16 @@ public class CouponManagement {
         return "add-coupon";
     }
 
-
-
-
+    
     @PostMapping("/addCoupon")
-    public String addCouponPost(@ModelAttribute("coupon") CouponDto couponDto) {
+    public String addCouponPost(@ModelAttribute("coupon") CouponDto couponDto,
+                                HttpSession session) {
         System.out.println("in coupon controller");
-            couponService.saveCoupon(couponDto);
+        couponService.saveCoupon(couponDto);
         System.out.println("saved");
 
-        return "redirect:/admin/addCoupon?successful";
+        session.setAttribute("couponSuccess","Coupon added successfully ");
+        return "redirect:/admin/listCoupons";
     }
 
     @GetMapping ("/inactive/{id}")
@@ -67,5 +75,26 @@ public class CouponManagement {
         return "redirect:/admin/listCoupons";
     }
 
+    @GetMapping("/editCoupon/{couponId}")
+    public String editCouponGet(@PathVariable("couponId") Integer id, Model model) {
+        model.addAttribute("couponId", id);
+        Optional<Coupon> couponOptional = couponRepository.findById(id);
+        couponOptional.ifPresent(coupon -> model.addAttribute("coupon", coupon));
+        model.addAttribute("error","Something went wrong ");
+        return "edit_coupon";
+    }
 
+    @PostMapping("/editCoupon/{couponId}")
+    public String editCouponPost(@PathVariable("couponId") Integer id,
+                                 @ModelAttribute("coupon") CouponDto couponDto,
+                                 HttpSession session) {
+        boolean added = couponService.editCouponById(couponDto,id);
+        if(added)
+        {
+            session.setAttribute("couponSuccess","Coupon details edited successfully ");
+            return "redirect:/admin/listCoupons";
+        }
+        session.setAttribute("couponError","Failed to edit coupon details ");
+        return "redirect:/admin/listCoupons";
+    }
 }

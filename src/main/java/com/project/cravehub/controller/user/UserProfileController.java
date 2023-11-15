@@ -5,16 +5,11 @@ import com.project.cravehub.dto.AddressDto;
 import com.project.cravehub.dto.ProductDto;
 import com.project.cravehub.dto.UserRegistrationDto;
 import com.project.cravehub.model.admin.Product;
-import com.project.cravehub.model.user.Address;
-import com.project.cravehub.model.user.OrderItem;
-import com.project.cravehub.model.user.PurchaseOrder;
-import com.project.cravehub.model.user.User;
-import com.project.cravehub.repository.AddressRepository;
-import com.project.cravehub.repository.OrderItemRepository;
-import com.project.cravehub.repository.PurchaseOrderRepository;
-import com.project.cravehub.repository.UserRepository;
+import com.project.cravehub.model.user.*;
+import com.project.cravehub.repository.*;
 import com.project.cravehub.service.InvoiceService;
 import com.project.cravehub.service.addressService.AddressService;
+import com.project.cravehub.service.couponService.CouponService;
 import com.project.cravehub.service.userservice.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -26,8 +21,10 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.security.Principal;
+import java.time.LocalDate;
 import java.util.*;
 
 @Controller
@@ -57,6 +54,12 @@ public class UserProfileController {
     @Autowired
     private InvoiceService invoiceService;
 
+    @Autowired
+    private CouponService couponService;
+
+    @Autowired
+    private ReviewRepository reviewRepository;
+
     @ModelAttribute("user")
     public UserRegistrationDto userRegistrationDto() {
         return  new UserRegistrationDto();
@@ -73,13 +76,22 @@ public class UserProfileController {
     }
 
     @GetMapping("/profile")
-    public String showProfileGet(Model model, Principal principal) {
+    public String showProfileGet(Model model, Principal principal, HttpSession session) {
         String user_email = principal.getName();
         System.out.println("name of authenticated "+user_email);
         User user = userRepository.findByEmail(user_email);
         model.addAttribute("user",user);
+        Wallet wallet = user.getWallet();
+        model.addAttribute("wallet",wallet);
         List<Address> addresses = addressRepository.findByUserId(user);
         model.addAttribute("addresses",addresses);
+        int cartCount = (int)session.getAttribute("cartCount");
+        model.addAttribute("cartCount",cartCount);
+        model.addAttribute("userName",(String)session.getAttribute("userName"));
+        model.addAttribute("referralSuccess",(String)session.getAttribute("referralSuccess"));
+        model.addAttribute("referralError",(String)session.getAttribute("referralError"));
+        session.removeAttribute("referralSuccess");
+        session.removeAttribute("referralError");
         return "profile";
     }
 
@@ -172,22 +184,31 @@ public class UserProfileController {
     }
 
     @GetMapping("/orders")
-    public String orders(Principal principal,Model model) {
+    public String orders(Principal principal,Model model,HttpSession session) {
         User user = userRepository.findByEmail(principal.getName());
         model.addAttribute("userName",user.getUserName());
         List<PurchaseOrder> purchaseOrders = purchaseOrderRepository.findByUser(user);
         Collections.reverse(purchaseOrders);
         model.addAttribute("purchaseOrder",purchaseOrders);
+        int cartCount = (int)session.getAttribute("cartCount");
+        model.addAttribute("cartCount",cartCount);
+        model.addAttribute("reviewSuccessful",(String)session.getAttribute("reviewSuccessful"));
+        session.removeAttribute("reviewSuccessful");
+        model.addAttribute("reviewError",(String)session.getAttribute("reviewError"));
+        session.removeAttribute("reviewError");
         return "orders";
     }
 
-    @GetMapping("/cancelOrder/{orderItemId}")
-    public String cancelOrderItem(@PathVariable Integer orderItemId) {
+    @GetMapping("/cancelOrder")
+    public String cancelOrderItem(@RequestParam(name = "orderItemId") Integer orderItemId) {
         Optional<OrderItem> orderItemOptional = orderItemRepository.findById(orderItemId);
         if(orderItemOptional.isPresent())
         {
             OrderItem orderItem = orderItemOptional.get();
             orderItem.setOrderStatus("cancelled");
+            if(orderItem.getOrder().getPaymentStatus().equals("success")) {
+                userService.addTransactionAndRefund(orderItem);
+            }
             orderItemRepository.save(orderItem);
             return "redirect:/orders";
         }
@@ -206,4 +227,50 @@ public class UserProfileController {
         return ResponseEntity.ok().headers(headers).body(pdfBytes);
     }
 
+    @GetMapping("/offers")
+    public String showOffers(Model model,HttpSession session,Principal principal) {
+        LocalDate date = LocalDate.now();
+        List<Coupon> couponList = couponService.getAllValidCoupons(date);
+        User user = userRepository.findByEmail(principal.getName());
+        model.addAttribute("couponList",couponList);
+        model.addAttribute("currentUser",user);
+        model.addAttribute("cartCount",(int)session.getAttribute("cartCount"));
+        return "offers";
+    }
+
+    @GetMapping("/wallet")
+    public String showWallet(Principal principal,Model model) {
+        User user = userRepository.findByEmail(principal.getName());
+        if(user.getWallet() == null) {
+            userService.createWallet(user);
+        }
+        Wallet wallet = user.getWallet();
+        Set<Transactions> transactions = user.getTransaction();
+        for (Transactions transactions1 : transactions)
+        {
+            System.out.println("transaction are  "+transactions1);
+        }
+        if(wallet != null)
+        {
+            model.addAttribute("wallet",wallet);
+            model.addAttribute("transaction",transactions);
+        }
+        return "wallet";
+    }
+
+    @GetMapping("/redeemOffer")
+    public String redeemReferralOffer(@RequestParam("referral") String referralCode,
+                                      Principal principal,HttpSession session)
+    {
+        System.out.println(referralCode);
+        boolean verifyReferralCode = userService.verifyReferralCode(referralCode,principal.getName());
+        if(verifyReferralCode)
+        {
+            session.setAttribute("referralSuccess","Congratulations! Your referral was successful, and your rewards are on the way");
+        }
+        else {
+            session.setAttribute("referralError", "Oops! It seems there was an issue processing your referral. Please double-check the details and try again");
+        }
+        return "redirect:/profile";
+    }
 }

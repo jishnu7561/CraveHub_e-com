@@ -3,6 +3,7 @@ package com.project.cravehub.model.user;
 import com.project.cravehub.model.admin.Product;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class OrderItem {
@@ -22,6 +23,10 @@ public class OrderItem {
     private PurchaseOrder order;
 
     private String orderStatus;
+
+    @OneToMany(mappedBy = "orderItem", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Review> reviews;
+
 
     public Integer getOrderItemId() {
         return orderItemId;
@@ -61,5 +66,13 @@ public class OrderItem {
 
     public void setOrderStatus(String orderStatus) {
         this.orderStatus = orderStatus;
+    }
+
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
     }
 }

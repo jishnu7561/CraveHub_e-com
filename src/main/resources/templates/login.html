@@ -19,6 +19,9 @@
 			.signup{
 				margin-top:2em;
 			}
+			.errorMessage{
+				color:red;
+			}
 		</style>
 
 	</head>
@@ -30,21 +33,7 @@
 				<div class="image-holder">
 					<img src="/images/backrem.png" alt="">
 				</div>
-<!--				<form th:action="@{/login}" method="post">-->
-<!--					<h3>Login</h3>-->
-<!--					<div class="form-wrapper">-->
-<!--						<input type="text" placeholder="Username" class="form-control" >-->
-<!--						<i class="zmdi zmdi-account"></i>-->
-<!--					</div>-->
-<!--					<div class="form-wrapper">-->
-<!--						<input type="password" placeholder="Password" class="form-control" >-->
-<!--						<i class="zmdi zmdi-lock"></i>-->
-<!--					</div>-->
-<!--					<button>Login-->
-<!--						<i class="zmdi zmdi-arrow-right">-></i>-->
-<!--					</button>-->
-<!--				</form>-->
-				<form class="form-horizontal" th:action="@{/login}" method="post">
+				<form class="form-horizontal" th:action="@{/login}" method="post" onsubmit="return validateForm()">
 					<div th:if="${param.logout}" class="alert alert-info" style="color:red">
 						You have been logged out.
 					</div>
@@ -55,11 +44,14 @@
 						<label for="username" class="col-sm-4 form-label">Username:</label>
 						<input type="text" class="form-control" id="username" name="username"
 							   placeholder="Enter Email ID" autofocus="autofocus" required>
+						<span id="usernameError" class="errorMessage"></span>
 					</div>
 					<div>
 						<label for="password" class="col-sm-4 form-label">Password:</label>
 						<input type="password" id="password" name="password" class="form-control"
 							   placeholder="Enter Password" required/>
+						<span id="passwordError" class="errorMessage"></span>
+
 					</div>
 					<div class="forgot"  style="text-align: right;">
 						<p><a th:href="@{/confirmEmail}" class="signup-link">Forgot Password</a></p>
@@ -75,5 +67,57 @@
 				</form>
 			</div>
 		</div>
+		<script>
+			var regexEmail = /^[a-z0-9._-]+@[a-z0-9.-]+\.[a-z]{2,4}$/;
+
+            function validateUsername() {
+                var username = document.getElementById("username").value;
+                var usernameError = document.getElementById("usernameError");
+
+                // Clear previous error message
+                usernameError.innerHTML = "";
+
+                // Validate username (must match email pattern)
+                if (username.trim() === "") {
+                    usernameError.innerHTML = "Username cannot be empty.";
+                    return false;
+                } else if (!regexEmail.test(username)) {
+                    usernameError.innerHTML = "Invalid email format.";
+                    return false;
+                }
+
+                return true;
+            }
+
+            function validatePassword() {
+                var password = document.getElementById("password").value;
+                var passwordError = document.getElementById("passwordError");
+
+                // Clear previous error message
+                passwordError.innerHTML = "";
+
+                // Validate password (no spaces allowed)
+                if (password.trim() === "") {
+                    passwordError.innerHTML = "Password cannot be empty.";
+                    return false;
+                } else if (password.includes(" ")) {
+                    passwordError.innerHTML = "Password cannot contain spaces.";
+                    return false;
+                }
+
+                return true;
+            }
+
+            // Attach event listeners to input fields
+            document.getElementById("username").addEventListener("input", validateUsername);
+            document.getElementById("password").addEventListener("input", validatePassword);
+
+            function validateForm() {
+                // Check both username and password validations
+                return validateUsername() && validatePassword();
+            }
+		</script>
+
+
 	</body><!-- This templates was made by Colorlib (https://colorlib.com) -->
 </html>

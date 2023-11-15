@@ -1,8 +1,8 @@
 package com.project.cravehub.service.categoryservice;
 
 import com.project.cravehub.dto.CategoryDto;
-import com.project.cravehub.model.admin.Category;
-import com.project.cravehub.model.admin.SubCategory;
+import com.project.cravehub.dto.OfferDto;
+import com.project.cravehub.model.admin.*;
 
 import java.util.List;
 
@@ -19,4 +19,16 @@ public interface CategoryService {
 
     void editCategoryByID(Integer categoryId, CategoryDto categoryDto);
 
-}
+    CategoryOffer saveCategoryOffer(OfferDto offerDto);
+
+    void inactiveCategoryOffer(Integer id);
+
+    void activeCategoryOffer(Integer id);
+
+    boolean editCategoryOfferById(Integer id,OfferDto offerDto);
+
+    List<Category> getCategoriesByPartialCategory(String searchTerm);
+
+    String addCategoryToOffer(Integer categoryId, Integer offerId);
+
+    boolean removeCategoryFromOffer(Integer offerId, Integer categoryId);}

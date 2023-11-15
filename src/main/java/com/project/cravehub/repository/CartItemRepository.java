@@ -5,6 +5,7 @@ import com.project.cravehub.model.user.Cart;
 import com.project.cravehub.model.user.CartItem;
 import com.project.cravehub.model.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,4 +20,6 @@ public interface CartItemRepository extends JpaRepository<CartItem,Integer> {
     void deleteByCart(Cart cart);
 
     CartItem findByProduct(Product product);
+
+
 }

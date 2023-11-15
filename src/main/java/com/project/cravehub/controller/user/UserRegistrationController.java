@@ -28,7 +28,9 @@ public class UserRegistrationController {
 
 
     @GetMapping("/registration")
-    public String ShowRegistrationForm() {
+    public String ShowRegistrationForm(HttpSession session, Model model) {
+        model.addAttribute("reg",(String)session.getAttribute("regError"));
+        session.removeAttribute("regError");
         return "signup";
     }
 
@@ -44,20 +46,21 @@ public class UserRegistrationController {
 //            session.setAttribute("validEmailId", "Email Id already exists");
 //            session.removeAttribute("validUserName");
 //            session.setAttribute("newUser", userRegistrationDto);
-            return "redirect:/registration?email";
+            session.setAttribute("regError","You have already an account,please login");
+
+            return "redirect:/registration";
         }
+        else {
+            // Register the user
+            User verifyCustomer = userService.save(userRegistrationDto);
+            userService.register(userRegistrationDto);
+            System.out.println("service" + email);
+            // Store the email in the session
+            session.setAttribute("validEmailId", email);
+            session.setAttribute("verifyCustomer", verifyCustomer);
+            session.setAttribute("registration","Congratulations , you have successfully completed the 1 step for account creation.");
 
-        // Register the user
-        User verifyCustomer = userService.save(userRegistrationDto);
-                userService.register(userRegistrationDto);
-
-        System.out.println("service"+ email);
-        // Store the email in the session
-        session.setAttribute("validEmailId", email);
-        session.setAttribute("verifyCustomer", verifyCustomer);
-
-        return "redirect:/verify-account";
+            return "redirect:/verify-account";
+        }
     }
-
-
 }

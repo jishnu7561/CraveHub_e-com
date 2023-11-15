@@ -29,6 +29,9 @@ public class User {
 
     private boolean isBlocked;
 
+    @Column(name = "ref_code")
+    private String referralCode;
+
     @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL)
     private List<Address> addresses;
 
@@ -42,6 +45,12 @@ public class User {
     @OneToOne(mappedBy = "user" , cascade = CascadeType.ALL , orphanRemoval = true)
     private Cart cart;
 
+    @OneToOne(mappedBy = "user" , cascade = CascadeType.ALL , orphanRemoval = true)
+    private Wishlist wishlist;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Wallet wallet;
+
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "user_coupon",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -50,6 +59,15 @@ public class User {
 
     @OneToMany(mappedBy="user",cascade=CascadeType.REMOVE)
     private List<PurchaseOrder> orders;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "user_transaction",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "transaction_id"))
+    private Set<Transactions> transaction = new HashSet<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Review> reviews;
 
     public User()
     {
@@ -62,13 +80,14 @@ public class User {
     }
 
     public User(String firstName, String lastName, String userName, String email,
-                String password, Collection<Role> roles) {
+                String password, Collection<Role> roles,String referralCode) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.userName = userName;
         this.email = email;
         this.password = password;
         this.roles = roles;
+        this.referralCode = referralCode;
     }
 
     public Integer getId() {
@@ -165,5 +184,45 @@ public class User {
 
     public void setOrders(List<PurchaseOrder> orders) {
         this.orders = orders;
+    }
+
+    public Wishlist getWishlist() {
+        return wishlist;
+    }
+
+    public void setWishlist(Wishlist wishlist) {
+        this.wishlist = wishlist;
+    }
+
+    public Wallet getWallet() {
+        return wallet;
+    }
+
+    public void setWallet(Wallet wallet) {
+        this.wallet = wallet;
+    }
+
+    public Set<Transactions> getTransaction() {
+        return transaction;
+    }
+
+    public void setTransaction(Set<Transactions> transaction) {
+        this.transaction = transaction;
+    }
+
+    public String getReferralCode() {
+        return referralCode;
+    }
+
+    public void setReferralCode(String referralCode) {
+        this.referralCode = referralCode;
+    }
+
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
     }
 }

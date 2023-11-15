@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
   <head>
     <title>Vegefoods - Free Bootstrap 4 Template by Colorlib</title>
     <meta charset="utf-8">
@@ -9,79 +9,118 @@
     <link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700,700i&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Amatic+SC:400,700&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="../static/css/open-iconic-bootstrap.min.css">
-    <link rel="stylesheet" href="/../static/css/animate.css">
+    <link rel="stylesheet" href="/css/open-iconic-bootstrap.min.css">
+    <link rel="stylesheet" href="/css/animate.css">
     
-    <link rel="stylesheet" href="/../static/css/owl.carousel.min.css">
-    <link rel="stylesheet" href="/../static/css/owl.theme.default.min.css">
-    <link rel="stylesheet" href="/../static/css/magnific-popup.css">
+    <link rel="stylesheet" href="/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="/css/owl.theme.default.min.css">
+    <link rel="stylesheet" href="/css/magnific-popup.css">
 
-    <link rel="stylesheet" href="/../static/css/aos.css">
+    <link rel="stylesheet" href="/css/aos.css">
 
-    <link rel="stylesheet" href="../static/css/ionicons.min.css">
+    <link rel="stylesheet" href="/css/ionicons.min.css">
 
-    <link rel="stylesheet" href="/../static/css/bootstrap-datepicker.css">
-    <link rel="stylesheet" href="/../static/css/jquery.timepicker.css">
+<!--    <link rel="stylesheet" href="/css/bootstrap-datepicker.css">-->
+<!--    <link rel="stylesheet" href="/css/jquery.timepicker.css">-->
 
     
-    <link rel="stylesheet" href="../static/css/flaticon.css">
-    <link rel="stylesheet" href="../static/css/icomoon.css">
-    <link rel="stylesheet" href="/../static/css/style.css">
+    <link rel="stylesheet" href="/css/flaticon.css">
+    <link rel="stylesheet" href="/css/icomoon.css">
+    <link rel="stylesheet" href="/css/style.css">
+	  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous">
+<!--	  <script src="https://cdn.lordicon.com/bhenfmcm.js"></script>-->
+	  <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
+
+	  <style>
+		  .stock_in{
+             color:green;
+         }
+         .stock_out{
+             color:red;
+         }
+	</style>
+
   </head>
   <body class="goto-here">
-		<div class="py-1 bg-primary">
-    	<div class="container">
-    		<div class="row no-gutters d-flex align-items-start align-items-center px-md-0">
-	    		<div class="col-lg-12 d-block">
-		    		<div class="row d-flex">
-		    			<div class="col-md pr-4 d-flex topper align-items-center">
-					    	<div class="icon mr-2 d-flex justify-content-center align-items-center"><span class="icon-phone2"></span></div>
-						    <span class="text">+ 1235 2355 98</span>
-					    </div>
-					    <div class="col-md pr-4 d-flex topper align-items-center">
-					    	<div class="icon mr-2 d-flex justify-content-center align-items-center"><span class="icon-paper-plane"></span></div>
-						    <span class="text">youremail@email.com</span>
-					    </div>
-					    <div class="col-md-5 pr-4 d-flex topper align-items-center text-lg-right">
-						    <span class="text">3-5 Business days delivery &amp; Free Returns</span>
-					    </div>
-				    </div>
-			    </div>
-		    </div>
+  <div class="py-1 bg-primary">
+	  <div class="container">
+		  <div class="row no-gutters d-flex align-items-start align-items-center px-md-0">
+			  <div class="col-lg-12 d-block">
+				  <div class="row d-flex">
+					  <div class="col-md pr-4 d-flex topper align-items-center">
+						  <div class="icon mr-2 d-flex justify-content-center align-items-center"><span class="icon-phone2"></span></div>
+						  <span class="text">+ 1235 2355 98</span>
+					  </div>
+					  <div class="col-md pr-4 d-flex topper align-items-center">
+						  <div class="icon mr-2 d-flex justify-content-center align-items-center"><span class="icon-paper-plane"></span></div>
+						  <span class="text">youremail@email.com</span>
+					  </div>
+					  <div class="col-md-5 pr-4 d-flex topper align-items-center text-lg-right">
+						  <span class="text">3-5 Business days delivery &amp; Free Returns</span>
+					  </div>
+				  </div>
+			  </div>
 		  </div>
-    </div>
-    <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
-	    <div class="container">
-	      <a class="navbar-brand" href="index.html">Vegefoods</a>
-	      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
-	        <span class="oi oi-menu"></span> Menu
-	      </button>
+	  </div>
+  </div>
+  <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
+	  <div class="container">
+		  <a class="navbar-brand" href="#">CraveHub</a>
+		  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+			  <span class="oi oi-menu"></span> Menu
+		  </button>
 
-	      <div class="collapse navbar-collapse" id="ftco-nav">
-	        <ul class="navbar-nav ml-auto">
-	          <li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
-	          <li class="nav-item active dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Shop</a>
-              <div class="dropdown-menu" aria-labelledby="dropdown04">
-              	<a class="dropdown-item" href="shop.html">Shop</a>
-              	<a class="dropdown-item" href="wishlist.html">Wishlist</a>
-                <a class="dropdown-item" href="product-single.html">Single Product</a>
-                <a class="dropdown-item" href="cart.html">Cart</a>
-                <a class="dropdown-item" href="checkout.html">Checkout</a>
-              </div>
-            </li>
-	          <li class="nav-item"><a href="about.html" class="nav-link">About</a></li>
-	          <li class="nav-item"><a href="blog.html" class="nav-link">Blog</a></li>
-	          <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
-	          <li class="nav-item cta cta-colored"><a href="cart.html" class="nav-link"><span class="icon-shopping_cart"></span>[0]</a></li>
+		  <div class="collapse navbar-collapse" id="ftco-nav">
+			  <ul class="navbar-nav ml-auto">
+				  <li class="nav-item active"><a th:href="@{/}" class="nav-link">Home</a></li>
+				  <li class="nav-item dropdown">
+					  <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Shop</a>
+					  <div class="dropdown-menu" aria-labelledby="dropdown04">
+						  <a class="dropdown-item" href="shop.html">Shop</a>
+						  <a class="dropdown-item" href="wishlist.html">Wishlist</a>
+						  <a class="dropdown-item" th:href="@{/cart}" th:if="${#authorization.expression('isAuthenticated()')}">Cart</a>
+						  <a class="dropdown-item" th:href="@{/login}" th:if="${#authorization.expression('!isAuthenticated()')}">Cart</a>
+					  </div>
+				  </li>
+				  <li class="nav-item"><a th:href="@{/orders}"  th:if="${#authorization.expression('isAuthenticated()')}" class="nav-link">Order</a></li>
+				  <!--                <li class="nav-item cta cta-colored"><a href="cart.html" class="nav-link"><span class="icon-shopping_cart"></span>[<span th:text="${cartCount} != null ? ${cartCount} : '0'"></span>]</a></li>-->
+				  <li class="nav-item cta cta-colored">
+					  <a th:href="@{/cart}" class="nav-link" th:if="${#authorization.expression('isAuthenticated()')}">
+						  <span class="icon-shopping_cart"></span>
+						  [<span th:text="${cartCount != null ? cartCount : '0'}" id="cartCount"></span>]
+					  </a>
+				  </li>
+				  <li class="nav-item">
+					  <!-- <input class="search_bar" type="search" placeholder="Search" aria-label="Search"> -->
+					  <input type="text" class="search-bar" placeholder="Search...">
+					  <!-- <div class="search-container">
+                          <input type="text" class="search-input" placeholder="Search...">
+                          <button class="search-button">
+                            <i class="fa fa-search"></i>
+                          </button>
+                        </div> -->
+				  </li>
+				  <li class="nav-item dropdown">
+					  <!--<a href="contact.html" class="nav-link">Contact</a>-->
+					  <!--				<a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"  th:text="${user.userName}">Account</a>-->
+					  <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" th:if="${user != null}" th:text="${user.userName}">Account</a>
+					  <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" th:unless="${user != null}">Account</a>
 
-	        </ul>
-	      </div>
-	    </div>
-	  </nav>
+					  <div class="dropdown-menu" aria-labelledby="dropdown04">
+						  <a class="dropdown-item" sec:authorize="hasRole('USER')" th:href="@{/profile}">Profile</a>
+						  <a class="dropdown-item" sec:authorize="!isAuthenticated()" th:href="@{/login}">Login</a>
+						  <a class="dropdown-item" sec:authorize="!isAuthenticated()" th:href="@{/registration}">Signup</a>
+						  <a class="dropdown-item" sec:authorize="isAuthenticated()" th:href="@{/logout}">Logout</a>
+					  </div>
+				  </li>
+			  </ul>
+		  </div>
+	  </div>
+  </nav>
     <!-- END nav -->
 
-    <div class="hero-wrap hero-bread" style="background-image: url('../static/images/bg_1.jpg');">
+    <div class="hero-wrap hero-bread" style="background-image: url('/images/bg_1.jpg');">
       <div class="container">
         <div class="row no-gutters slider-text align-items-center justify-content-center">
           <div class="col-md-9 ftco-animate text-center">
@@ -102,138 +141,32 @@
 						      <tr class="text-center">
 						        <th>&nbsp;</th>
 						        <th>Product List</th>
-						        <th>&nbsp;</th>
 						        <th>Price</th>
-						        <th>Quantity</th>
-						        <th>Total</th>
+						        <th>Stock Status</th>
+						        <th>Add to Cart</th>
 						      </tr>
 						    </thead>
 						    <tbody>
-						      <tr class="text-center">
-						        <td class="product-remove"><a href="#"><span class="ion-ios-close"></span></a></td>
-						        
-						        <td class="image-prod"><div class="img" style="background-image:url(../static/images/product-1.jpg);"></div></td>
-						        
-						        <td class="product-name">
-						        	<h3>Bell Pepper</h3>
-						        	<p>Far far away, behind the word mountains, far from the countries</p>
-						        </td>
-						        
-						        <td class="price">$4.90</td>
-						        
-						        <td class="quantity">
-						        	<div class="input-group mb-3">
-					             	<input type="text" name="quantity" class="quantity form-control input-number" value="1" min="1" max="100">
-					          	</div>
-					          </td>
-						        
-						        <td class="total">$4.90</td>
-						      </tr><!-- END TR-->
+						      <tr th:each="product : ${productList}">
+						        <td class="product-remove"><a th:href="@{'/deleteFromWishlist/'+ ${product.productId}}"><span class="ion-ios-close"></span></a></td>
 
-						      <tr class="text-center">
-						        <td class="product-remove"><a href="#"><span class="ion-ios-close"></span></a></td>
-						        
-						        <td class="image-prod"><div class="img" style="background-image:url(../static/images/product-2.jpg);"></div></td>
-						        
-						        <td class="product-name">
-						        	<h3>Bell Pepper</h3>
-						        	<p>Far far away, behind the word mountains, far from the countries</p>
-						        </td>
-						        
-						        <td class="price">$15.70</td>
-						        
-						        <td class="quantity">
-						        	<div class="input-group mb-3">
-					             	<input type="text" name="quantity" class="quantity form-control input-number" value="1" min="1" max="100">
-					          	</div>
-					          </td>
-						        
-						        <td class="total">$15.70</td>
-						      </tr><!-- END TR-->
+								  <td class="image-prod"><div  >
+									  <img class="img" th:src="${product.imageName}" alt="">
+								  </div>
+									  <span th:text="${product.productName}"></span>
+								  </td>
 
-						      <tr class="text-center">
-						        <td class="product-remove"><a href="#"><span class="ion-ios-close"></span></a></td>
-						        
-						        <td class="image-prod"><div class="img" style="background-image:url(../static/images/product-3.jpg);"></div></td>
-						        
-						        <td class="product-name">
-						        	<h3>Bell Pepper</h3>
-						        	<p>Far far away, behind the word mountains, far from the countries</p>
-						        </td>
-						        
-						        <td class="price">$15.70</td>
-						        
-						        <td class="quantity">
-						        	<div class="input-group mb-3">
-					             	<input type="text" name="quantity" class="quantity form-control input-number" value="1" min="1" max="100">
-					          	</div>
-					          </td>
-						        
-						        <td class="total">$15.70</td>
-						      </tr><!-- END TR-->
+								  <td class="price" th:text="'₹'+ ${product.price}">$4.90</td>
 
-						      <tr class="text-center">
-						        <td class="product-remove"><a href="#"><span class="ion-ios-close"></span></a></td>
-						        
-						        <td class="image-prod"><div class="img" style="background-image:url(../static/images/product-4.jpg);"></div></td>
-						        
-						        <td class="product-name">
-						        	<h3>Bell Pepper</h3>
-						        	<p>Far far away, behind the word mountains, far from the countries</p>
-						        </td>
-						        
-						        <td class="price">$15.70</td>
-						        
-						        <td class="quantity">
-						        	<div class="input-group mb-3">
-					             	<input type="text" name="quantity" class="quantity form-control input-number" value="1" min="1" max="100">
-					          	</div>
-					          </td>
-						        
-						        <td class="total">$15.70</td>
-						      </tr><!-- END TR-->
+								  <td th:utext="${product.getStatus()}"></td>
 
-						      <tr class="text-center">
-						        <td class="product-remove"><a href="#"><span class="ion-ios-close"></span></a></td>
-						        
-						        <td class="image-prod"><div class="img" style="background-image:url(../static/images/product-5.jpg);"></div></td>
-						        
-						        <td class="product-name">
-						        	<h3>Bell Pepper</h3>
-						        	<p>Far far away, behind the word mountains, far from the countries</p>
-						        </td>
-						        
-						        <td class="price">$15.70</td>
-						        
-						        <td class="quantity">
-						        	<div class="input-group mb-3">
-					             	<input type="text" name="quantity" class="quantity form-control input-number" value="1" min="1" max="100">
-					          	</div>
-					          </td>
-						        
-						        <td class="total">$15.70</td>
-						      </tr><!-- END TR-->
 
-						      <tr class="text-center">
-						        <td class="product-remove"><a href="#"><span class="ion-ios-close"></span></a></td>
-						        
-						        <td class="image-prod"><div class="img" style="background-image:url(../static/images/product-6.jpg);"></div></td>
-						        
-						        <td class="product-name">
-						        	<h3>Bell Pepper</h3>
-						        	<p>Far far away, behind the word mountains, far from the countries</p>
-						        </td>
-						        
-						        <td class="price">$15.70</td>
-						        
-						        <td class="quantity">
-						        	<div class="input-group mb-3">
-					             	<input type="text" name="quantity" class="quantity form-control input-number" value="1" min="1" max="100">
-					          	</div>
-					          </td>
-						        
-						        <td class="total">$15.70</td>
-						      </tr><!-- END TR-->
+								  <td class="total">
+
+										<button  class="btn py-3 px-5" th:onclick="'addToCart(\'' + ${product.productId} + '\')'" style="border:1px solid #ff8929; color:#ff8929" ><i class="fa-solid fa-cart-shopping" style="color: #ff8929;"></i> Add to Cart</button>
+
+								</td>
+						      </tr>
 						    </tbody>
 						  </table>
 					  </div>
@@ -333,66 +266,116 @@
         </div>
       </div>
     </footer>
-    
+  <div id="cartAlert" data-aos="fade-up" class="alert col-md-3 col-4 text-white fixed-bottom" style="display: none; left: 40%; bottom: 80px; border-radius: 7px; opacity: 0.9; background-color: #fc8019;" role="alert">
+	  <div class="d-flex justify-content-center">
+		  <dotlottie-player src="https://lottie.host/b0e85bf2-581b-4d27-8dd5-0c0e4b495dc2/QjXQ7zZA3T.json" background="transparent" speed="0.7" style="width: 50px; height: 50px;" direction="1" loop autoplay></dotlottie-player>
+		  <p class="alert-heading d-flex align-items-center">Product Added to Your Cart</p>
+	  </div>
+  </div>
+
+
+  <div id="cartAlertAlready" data-aos="fade-up" class="alert col-md-3 col-4 text-white fixed-bottom" style="display: none; left: 40%; bottom: 80px; border-radius: 7px; background-color: #fc8019 ;" role="alert">
+	  <div class="d-flex justify-content-center">
+		  <dotlottie-player src="https://lottie.host/675b522a-b663-4399-9a90-0f4800918a0f/JWak9AXJkj.json" background="transparent" speed="1" style="width: 50px; height: 50px;" direction="1" loop autoplay></dotlottie-player>
+		  <p class="alert-heading d-flex align-items-center " >This product Already in Your Cart</p>
+	  </div>
+  </div>
+
+  <div id="cartAlertOutOfStock" data-aos="fade-up" class="alert col-md-3 col-4 text-danger fixed-bottom" style="border : 1px solid #fc8019; display: none; left: 40%; bottom: 80px; border-radius: 7px; background-color:#fff;" role="alert">
+	  <div class="d-flex justify-content-center">
+		  <dotlottie-player src="https://lottie.host/550e589a-18c1-48fc-b037-39a383a50eef/1Mf2miy7rS.json" background="transparent" speed="1" style="width: 100px; height: 100px;" direction="1" loop autoplay></dotlottie-player>
+		  <p class="alert-heading d-flex align-items-center " >This product is out of stock</p>
+	  </div>
+  </div>
   
 
   <!-- loader -->
   <div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00"/></svg></div>
 
 
-  <script src="../static/js/jquery.min.js"></script>
-  <script src="../static/js/jquery-migrate-3.0.1.min.js"></script>
-  <script src="../static/js/popper.min.js"></script>
-  <script src="../static/js/bootstrap.min.js"></script>
-  <script src="../static/js/jquery.easing.1.3.js"></script>
-  <script src="../static/js/jquery.waypoints.min.js"></script>
-  <script src="../static/js/jquery.stellar.min.js"></script>
-  <script src="../static/js/owl.carousel.min.js"></script>
-  <script src="../static/js/jquery.magnific-popup.min.js"></script>
-  <script src="../static/js/aos.js"></script>
-  <script src="../static/js/jquery.animateNumber.min.js"></script>
-  <script src="../static/js/bootstrap-datepicker.js"></script>
-  <script src="../static/js/scrollax.min.js"></script>
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
-  <script src="../static/js/google-map.js"></script>
-  <script src="../static/js/main.js"></script>
+  <script>
+
+		function showAlertBox() {
+		console.log("alert fun called...");
+		$("#cartAlert").fadeIn();
+
+		// Hide the alert box after 5 seconds
+		setTimeout(function () {
+		$("#cartAlert").fadeOut();
+		}, 3000);
+		}
+
+		function showAlertBoxAlready() {
+		console.log("alert fun called...");
+		$("#cartAlertAlready").fadeIn();
+
+		// Hide the alert box after 5 seconds
+		setTimeout(function () {
+		$("#cartAlertAlready").fadeOut();
+		}, 3000);
+		}
+
+		function showAlertOutOfStock() {
+		console.log("alert fun called...");
+		$("#cartAlertOutOfStock").fadeIn();
+
+		// Hide the alert box after 5 seconds
+		setTimeout(function () {
+		$("#cartAlertOutOfStock").fadeOut();
+		}, 3000);
+		}
+
+  </script>
 
   <script>
-		$(document).ready(function(){
+	  function addToCart(id){
+	                   $.ajax({
+                      type: "POST",
+                      url: "/addToCart",
+                      data: JSON.stringify({ productId: id, quantity: 1 }),
 
-		var quantitiy=0;
-		   $('.quantity-right-plus').click(function(e){
-		        
-		        // Stop acting like a button
-		        e.preventDefault();
-		        // Get the field name
-		        var quantity = parseInt($('#quantity').val());
-		        
-		        // If is not undefined
-		            
-		            $('#quantity').val(quantity + 1);
+                      contentType: "application/json",
+                     success:(response)=>{
+                     var responseData = JSON.parse(response);
+                     console.log(responseData)
+                     if(responseData.productExist){
+                          // Implement code to update the cart UI as needed
+                          showAlertBoxAlready()
+                          }
+                     else if(responseData.added) {
+                     		cartCount.innerHTML = Number(responseData.cartCount)
+                     		console.log(responseData.cartCount)
+                      		showAlertBox()
+                          }
+                     else if(responseData.outOfStock){
+                     	showAlertOutOfStock()
+                     }
+                     else{
+                     	alert("please try again.something went wrong !!")
+                     }
 
-		          
-		            // Increment
-		        
-		    });
+                      },
+                      error: function() {
+                          alert("Failed to add the product to the cart.");
+                      }
+                  });
+	  }
+  </script>
+  <script src="/js/jquery.min.js"></script>
+  <script src="/js/jquery-migrate-3.0.1.min.js"></script>
+  <script src="/js/popper.min.js"></script>
+  <script src="/js/bootstrap.min.js"></script>
+  <script src="/js/jquery.easing.1.3.js"></script>
+  <script src="/js/jquery.waypoints.min.js"></script>
+  <script src="/js/jquery.stellar.min.js"></script>
+  <script src="/js/owl.carousel.min.js"></script>
+  <script src="/js/jquery.magnific-popup.min.js"></script>
+  <script src="/js/aos.js"></script>
+  <script src="/js/jquery.animateNumber.min.js"></script>
+  <script src="/js/scrollax.min.js"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
+  <script src="/js/google-map.js"></script>
+  <script src="/js/main.js"></script>
 
-		     $('.quantity-left-minus').click(function(e){
-		        // Stop acting like a button
-		        e.preventDefault();
-		        // Get the field name
-		        var quantity = parseInt($('#quantity').val());
-		        
-		        // If is not undefined
-		      
-		            // Increment
-		            if(quantity>0){
-		            $('#quantity').val(quantity - 1);
-		            }
-		    });
-		    
-		});
-	</script>
-    
   </body>
 </html>
