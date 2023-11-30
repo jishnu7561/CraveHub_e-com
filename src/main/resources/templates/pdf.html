@@ -44,12 +44,6 @@
             width: 5px;
         }
 
-<!--        table {-->
-<!--            margin: 0 auto;-->
-<!--            border-collapse: collapse;-->
-<!--            width: 70%;-->
-<!--        }-->
-
         th, td {
             border: 1px solid #ddd;
             padding: 10px;
@@ -79,6 +73,11 @@
 
     <div class="date" th:if="${start != null}">
         <span  th:text="${start}"></span> to <span th:text="${end}"></span>
+    </div>
+
+    <div>
+        <h4><span style="">Total Revenue :</span><span style=" font-weight: bold;" th:text="'₹'+${totalRevenue}"></span></h4>
+        <h4><span style="">Total Sales :</span><span style=" font-weight: bold;" th:text="${totalSales}"></span></h4>
     </div>
 
     <div style="margin-top:50px;width:100%;">

@@ -38,7 +38,7 @@
     <!-- partial:partials/_sidebar.html -->
     <nav class="sidebar sidebar-offcanvas" id="sidebar">
         <div class="sidebar-brand-wrapper d-none d-lg-flex align-items-center justify-content-center fixed-top">
-            <a class="sidebar-brand brand-logo" href="index.html"><img src="/assets/images/logo.svg" alt="logo" /></a>
+            <a class="sidebar-brand brand-logo" th:href="@{/admin/adminHome}">CRAVEHUB</a>
             <a class="sidebar-brand brand-logo-mini" href="index.html"><img src="/assets/images/logo-mini.svg" alt="logo" /></a>
         </div>
         <ul class="nav">
@@ -50,7 +50,7 @@
                             <span class="count bg-success"></span>
                         </div>
                         <div class="profile-name">
-                            <h5 class="mb-0 font-weight-normal">Henry Klein</h5>
+                            <h5 class="mb-0 font-weight-normal" th:text="${session.userName}">Henry Klein</h5>
                             <span>Gold Member</span>
                         </div>
                     </div>
@@ -62,19 +62,21 @@
             <li class="nav-item menu-items">
                 <a class="nav-link" th:href="@{/admin/adminHome}">
               <span class="menu-icon">
-                <i class="mdi mdi-speedometer"></i>
+                <i class="mdi mdi-view-grid"></i>
               </span>
                     <span class="menu-title">Dashboard</span>
                 </a>
             </li>
+
             <li class="nav-item menu-items">
                 <a class="nav-link" th:href="@{/admin/salesReport}">
               <span class="menu-icon">
-                <i class="mdi mdi-speedometer"></i>
+                <i class="mdi mdi-chart-line"></i>
               </span>
                     <span class="menu-title">Sales Report</span>
                 </a>
             </li>
+
             <li class="nav-item menu-items">
                 <a class="nav-link"  th:href="@{/admin/listUsers}">
               <span class="menu-icon">
@@ -112,7 +114,7 @@
             <li class="nav-item menu-items">
                 <a class="nav-link" th:href="@{/admin/listOrders}">
               <span class="menu-icon">
-                <i class="mdi mdi-playlist-play"></i>
+                <i class="mdi mdi-truck-delivery"></i>
               </span>
                     <span class="menu-title">Order</span>
                 </a>
@@ -120,9 +122,17 @@
             <li class="nav-item menu-items">
                 <a class="nav-link" th:href="@{/admin/listCoupons}">
               <span class="menu-icon">
-                <i class="mdi mdi-playlist-play"></i>
+                <i class="mdi mdi-gift"></i>
               </span>
                     <span class="menu-title">Coupon</span>
+                </a>
+            </li>
+            <li class="nav-item menu-items">
+                <a class="nav-link" th:href="@{/admin/offers}">
+              <span class="menu-icon">
+                <i class="mdi mdi-wallet-giftcard"></i>
+              </span>
+                    <span class="menu-title">Offers</span>
                 </a>
             </li>
         </ul>
@@ -143,7 +153,7 @@
                         <a class="nav-link" id="profileDropdown" href="#" data-toggle="dropdown">
                             <div class="navbar-profile">
                                 <img class="img-xs rounded-circle" src="/assets/images/faces/face15.jpg" alt="">
-                                <p class="mb-0 d-none d-sm-block navbar-profile-name">Henry Klein</p>
+                                <p class="mb-0 d-none d-sm-block navbar-profile-name" th:text="${session.userName}">Henry Klein</p>
                                 <i class="mdi mdi-menu-down d-none d-sm-block"></i>
                             </div>
                         </a>
@@ -158,8 +168,8 @@
                                         <i class="mdi mdi-logout text-danger"></i>
                                     </div>
                                 </div>
-                                <div class="preview-item-content">
-                                    <p class="preview-subject mb-1">Log out</p>
+                                <div class="preview-item-content" onclick="logOut()">
+                                    <p class="preview-subject mb-1" >Log out</p>
                                 </div>
                             </a>
                             <div class="dropdown-divider"></div>
@@ -183,27 +193,31 @@
                             <div class="card-body ">
                                 <h4 class="card-title">Add Coupon</h4>
                                 <hr class="text-light">
-                                <form class="forms-sample col-8 mx-auto" th:action="@{/admin/addCoupon}" method="post" th:object="${coupon}" required>
+                                <form class="forms-sample col-8 mx-auto" th:action="@{/admin/addCoupon}" method="post" th:object="${coupon}" onsubmit="return validateAddCouponForm()">
                                     <div class="form-group">
-                                        <label for="exampleInputName1">Coupon Code</label>
-                                        <input type="text" onkeyup="this.value = this.value.toUpperCase()" class="form-control " id="exampleInputName1" placeholder="Name" th:field="*{couponCode}" required >
+                                        <label for="couponCode">Coupon Code</label>
+                                        <input type="text" onkeyup="this.value = this.value.toUpperCase()" class="form-control " id="couponCode" placeholder="Coupon Code" th:field="*{couponCode}"  >
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="datepicker"></label><input type="text" autocomplete="off" id="datepicker"  class="form-control text-light" name="validTo" placeholder="Select Expiring Date" th:field="*{expiryDate}" required>
+                                        <label for="datepicker"></label><input type="text" autocomplete="off" id="datepicker"  class="form-control text-light" name="validTo" placeholder="Select Expiring Date" th:field="*{expiryDate}" >
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="exampleInputName3">Amount</label>
-                                        <input type="text" class="form-control" id="exampleInputName3" placeholder="Name" th:field="*{amount}" required>
+                                        <label for="amount">Amount</label>
+                                        <input type="number" class="form-control" id="amount" placeholder="Amount" th:field="*{amount}" >
                                     </div>
                                     <div class="form-group">
-                                        <label for="exampleInputName4">Minimum Purchase Amount</label>
-                                        <input type="text" class="form-control" id="exampleInputName4" placeholder="Name" th:field="*{minimumPurchaseAmount}" required>
+                                        <label for="minAmount">Minimum Purchase Amount</label>
+                                        <input type="number" class="form-control" id="minAmount" placeholder="Minimum Purchase Amount" th:field="*{minimumPurchaseAmount}" >
                                     </div>
                                     <div class="form-group">
-                                        <label for="exampleTextarea1">Description</label>
-                                        <textarea class="form-control" id="exampleTextarea1" rows="4" th:field="*{description}" required></textarea>
+                                        <label for="maxUsers">Maximum Users</label>
+                                        <input type="number" class="form-control" id="maxUsers" placeholder="Maximum Users" th:field="*{usageCount}" >
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="description">Description</label>
+                                        <textarea class="form-control" id="description" rows="4" th:field="*{description}" ></textarea>
                                     </div>
                                     <button type="submit" class="btn btn-lg btn-inverse-primary mr-2 mt-5">Add Now</button>
                                 </form>
@@ -222,9 +236,17 @@
     </div>
     <!-- page-body-wrapper ends -->
 </div>
+<div id="validateAlert" data-aos="fade-down" class="alert alert-danger col-3 fixed-top mx-auto"
+     style="top:20px; border-radius: 7px; opacity: 0.9; z-index: 10000;display:none;" role="alert" >
+    <h4 class="alert-heading text-center" ><i class="fa-solid fa-circle-exclamation" style="color: #ff0000;"></i> <span id="ValidErrMess"></span></h4>
+    <!-- <p class="fs-6 form-text text-white">Your password has been successfully updated.</p> -->
+</div>
+
+<script src="/assetsProfile/js/validation.js"></script>
 <script>
       $( "#datepicker" ).datepicker();
 </script>
+<script src="/assets/js/adminjs.js"></script>
 
 <!-- container-scroller -->
 <!-- plugins:js -->

@@ -3,10 +3,7 @@ package com.project.cravehub.service.categoryservice;
 import com.project.cravehub.dto.CategoryDto;
 import com.project.cravehub.dto.OfferDto;
 import com.project.cravehub.model.admin.*;
-import com.project.cravehub.repository.CategoryOfferRepository;
-import com.project.cravehub.repository.CategoryRepository;
-import com.project.cravehub.repository.ProductRepository;
-import com.project.cravehub.repository.SubCategoryRepository;
+import com.project.cravehub.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +28,9 @@ public class CategoryServiceImpl implements CategoryService{
 
     @Autowired
     private CategoryOfferRepository categoryOfferRepository;
+
+    @Autowired
+    private ProductOfferRepository productOfferRepository;
 
 
     @Override
@@ -109,6 +109,7 @@ public class CategoryServiceImpl implements CategoryService{
 //        categoryRepository.save(category);
     }
 
+
     @Override
     public CategoryOffer saveCategoryOffer(OfferDto offerDto) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -159,32 +160,50 @@ public class CategoryServiceImpl implements CategoryService{
 
     @Transactional
     @Override
-    public String addCategoryToOffer(Integer productId, Integer offerId) {
+    public String addCategoryToOffer(Integer categoryId, Integer offerId) {
+        System.out.println("addCategoryToOffer called successfully");
         Optional<CategoryOffer> categoryOfferOptional = categoryOfferRepository.findById(offerId);
-        Optional<Category> categoryOptional = categoryRepository.findById(productId);
+        Optional<Category> categoryOptional = categoryRepository.findById(categoryId);
         if(categoryOfferOptional.isPresent() && categoryOptional.isPresent())
         {
             Category category = categoryOptional.get();
             CategoryOffer categoryOffer = categoryOfferOptional.get();
             Set<Product> productSet = category.getProducts();
+            for(Product product:productSet)
+            {
+                System.out.println(product.getProductName());
+            }
             if(categoryOffer.getCategories().contains(category))
             {
                 return "exist";
             }
             for(Product product : productSet) {
+                if(product.getProductOffer() != null)
+                {
+                    Optional<ProductOffer> productOffers = productOfferRepository.findById(product.getProductOffer().getProductOfferId());
+                    if(productOffers.isPresent())
+                    {
+                        productOffers.get().getProductList().remove(product);
+                        productOfferRepository.save(productOffers.get());
+                    }
+                    product.setDiscountedPrice(0.0);
+                    product.setProductOffer(null);
+                }
                 double discountAmount = (product.getPrice() * categoryOffer.getDiscountPercentage()) / 100;
                 double discountedPrice = product.getPrice() - discountAmount;
                 product.setDiscountedPrice(discountedPrice);
+                System.out.println("products category "+ discountedPrice);
                 productRepository.save(product);
             }
                 categoryOffer.getCategories().add(category);
                 category.setCategoryOffer(categoryOffer);
-                categoryRepository.save(category);
+//                categoryRepository.save(category);
                 categoryOfferRepository.save(categoryOffer);
             return "success";
         }
         return "failed";
     }
+
 
     @Override
     public boolean removeCategoryFromOffer(Integer offerId, Integer productId) {
@@ -206,6 +225,29 @@ public class CategoryServiceImpl implements CategoryService{
             return true;
         }
         return false;
+    }
+
+    public void updateIsEnabled() {
+        List<CategoryOffer> categoryOfferList = categoryOfferRepository.findAll();
+        LocalDate currentDate = LocalDate.now();
+
+        for(CategoryOffer categoryOffer : categoryOfferList) {
+                boolean isBeforeOrEqualExpiryDate = currentDate.isBefore(categoryOffer.getExpiryDate()) || currentDate.isEqual(categoryOffer.getExpiryDate());
+                boolean isAfterOrEqualStartDate = currentDate.isAfter(categoryOffer.getStartDate()) || currentDate.isEqual(categoryOffer.getStartDate());
+                System.out.println("isBeforeOrEqualExpiry"+ isBeforeOrEqualExpiryDate);
+                System.out.println("isAfterOrEqualStartDate"+ isAfterOrEqualStartDate);
+                if (categoryOffer.isActive() && isBeforeOrEqualExpiryDate && isAfterOrEqualStartDate) {
+                    System.out.println(categoryOffer.getCategories());
+                    categoryOffer.setEnabled(true);
+                } else {
+                    categoryOffer.setEnabled(false);
+                }
+                try {
+                    categoryOfferRepository.save(categoryOffer);
+                } catch (Exception e) {
+                    e.printStackTrace(); // Log the exception
+                }
+        }
     }
 
 

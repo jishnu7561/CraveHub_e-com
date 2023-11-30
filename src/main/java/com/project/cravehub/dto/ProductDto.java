@@ -1,9 +1,12 @@
 package com.project.cravehub.dto;
 
 import com.project.cravehub.model.admin.Category;
+import com.project.cravehub.model.admin.ProductImages;
 import com.project.cravehub.model.admin.SubCategory;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 public class ProductDto {
@@ -15,8 +18,15 @@ public class ProductDto {
     private Integer quantity;
     private Category categories;
     private SubCategory subcategories ;
-    private String imageName;
+    private List<ProductImages> productImages = new ArrayList<>();
+
+    private String productImage ;
+
     private boolean isEnabled;
+
+
+    public ProductDto() {
+    }
 
     //
 //    private Set<Category> category;
@@ -77,13 +87,6 @@ public class ProductDto {
         this.subcategories = subcategories;
     }
 
-    public String getImageName() {
-        return imageName;
-    }
-
-    public void setImageName(String imageName) {
-        this.imageName = imageName;
-    }
 
     public boolean isEnabled() {
         return isEnabled;
@@ -92,21 +95,41 @@ public class ProductDto {
     public void setEnabled(boolean enabled) {
         isEnabled = enabled;
     }
-//
-//    public Set<Category> getCategory() {
-//        return category;
+
+
+//    public void addImage(String imageName) {
+//        this.images.add(imageName);
 //    }
 //
-//    public void setCategory(Set<Category> category) {
-//        this.category = category;
+//
+//    // New method to remove an image from the product
+//    public void removeImage(String imageName) {
+//        images.remove(imageName);
 //    }
 
-//    public Set<SubCategory> getSubcategory() {
-//        return subcategory;
-//    }
-//
-//    public void setSubcategory(Set<SubCategory> subcategory) {
-//        this.subcategory = subcategory;
-//    }
 
+    public List<ProductImages> getImages() {
+        return productImages;
+    }
+
+    public void setImages(List<ProductImages> images) {
+        this.productImages = images;
+    }
+
+    public String getProductImage() {
+        return productImage;
+    }
+
+    public void setProductImage(String productImage) {
+        this.productImage = productImage;
+    }
+
+    public void addProductImage(ProductImages productImage) {
+        productImages.add(productImage);
+    }
+
+    // New method to remove a product image from the product
+    public void removeProductImage(ProductImages productImage) {
+        productImages.remove(productImage);
+    }
 }

@@ -31,6 +31,11 @@
     <link rel="stylesheet" href="/css/icomoon.css">
     <link rel="stylesheet" href="/css/style.css">
 
+	  <link rel="stylesheet" href="/v6.4.2/css/sharp-solid.css">
+	  <link rel="stylesheet" href="/v6.4.2/css/sharp-regular.css">
+	  <link rel="stylesheet" href="/v6.4.2/css/sharp-light.css">
+	  <link rel="stylesheet" href="/v6.4.2/css/all.css">
+
 	  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous">
 	  <style>
 		  .form-group {
@@ -114,8 +119,8 @@
 				  <li class="nav-item dropdown">
 					  <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Shop</a>
 					  <div class="dropdown-menu" aria-labelledby="dropdown04">
-						  <a class="dropdown-item" href="shop.html">Shop</a>
-						  <a class="dropdown-item" href="wishlist.html">Wishlist</a>
+						  <a class="dropdown-item" th:href="@{/shop}">Shop</a>
+						  <a class="dropdown-item" th:href="@{/wishlist}">Wishlist</a>
 						  <a class="dropdown-item" th:href="@{/cart}" th:if="${#authorization.expression('isAuthenticated()')}">Cart</a>
 						  <a class="dropdown-item" th:href="@{/login}" th:if="${#authorization.expression('!isAuthenticated()')}">Cart</a>
 					  </div>
@@ -142,8 +147,8 @@
 				  <li class="nav-item dropdown">
 					  <!--<a href="contact.html" class="nav-link">Contact</a>-->
 					  <!--				<a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"  th:text="${user.userName}">Account</a>-->
-					  <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" th:if="${user != null}" th:text="${user.userName}">Account</a>
-					  <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" th:unless="${user != null}">Account</a>
+					  <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" th:if="${userName != null}" th:text="${userName}">Account</a>
+					  <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" th:if="${userName == null}">Account</a>
 
 					  <div class="dropdown-menu" aria-labelledby="dropdown04">
 						  <a class="dropdown-item" sec:authorize="hasRole('USER')" th:href="@{/profile}">Profile</a>
@@ -299,26 +304,26 @@
 						  <button style="background: none; border: none;" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">x</button>
 					  </div>
 					  <div class="modal-body">
-						  <form th:action="@{/checkout/addAddress}" th:object="${address}" method="post">
+						  <form th:action="@{/checkout/addAddress}" th:object="${address}" method="post" onsubmit="return validateUserAddressForm()">
 							  <div class="row px-5" >
 								  <div class="col-sm-12 mb-4">
-									  <input type="text" class="form-control" th:field="*{fullName}" placeholder="Full Name" required>
+									  <input type="text" class="form-control" th:field="*{fullName}" placeholder="Full Name" id="fullNameadd">
 								  </div>
 								  <div class="col-sm-6 mb-4">
-									  <input type="text" class="form-control" th:field="*{city}" placeholder="City" required>
+									  <input type="text" class="form-control" th:field="*{city}" placeholder="City" id="cityadd">
 								  </div>
 								  <div class="col-sm-6 mb-4">
-									  <input type="text" class="form-control" th:field="*{state}" placeholder="State" required>
+									  <input type="text" class="form-control" th:field="*{state}" placeholder="State" id="stateadd">
 								  </div>
 								  <div class="col-sm-12 mb-4">
-									  <input type="text" class="form-control" th:field="*{country}" placeholder="Country" required>
+									  <input type="text" class="form-control" th:field="*{country}" placeholder="Country" id="Countryadd">
 								  </div>
 								  <div class="col-sm-6 ">
-									  <input type="text" class="form-control" th:field="*{number}" placeholder="Mobile no." required>
+									  <input type="text" class="form-control" th:field="*{number}" placeholder="Mobile no." id="mobileNumberadd">
 								  </div>
 								  <div class="col-sm-6 ">
 									  <label>
-										  <input type="text" class="form-control" th:field="*{pinCode}" placeholder="pin-code" required>
+										  <input type="text" class="form-control" th:field="*{pinCode}" placeholder="pin-code" id="pincodeadd">
 									  </label>
 								  </div>
 
@@ -340,114 +345,94 @@
     </section> <!-- .section -->
 
 
-		<section class="ftco-section ftco-no-pt ftco-no-pb py-5 bg-light">
-      <div class="container py-4">
-        <div class="row d-flex justify-content-center py-5">
-          <div class="col-md-6">
-          	<h2 style="font-size: 22px;" class="mb-0">Subcribe to our Newsletter</h2>
-          	<span>Get e-mail updates about our latest shops and special offers</span>
-          </div>
-          <div class="col-md-6 d-flex align-items-center">
-            <form action="#" class="subscribe-form">
-              <div class="form-group d-flex">
-                <input type="text" class="form-control" placeholder="Enter email address">
-                <input type="submit" value="Subscribe" class="submit px-3">
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </section>
-    <footer class="ftco-footer ftco-section">
-      <div class="container">
-      	<div class="row">
-      		<div class="mouse">
-						<a href="#" class="mouse-icon">
-							<div class="mouse-wheel"><span class="ion-ios-arrow-up"></span></div>
-						</a>
-					</div>
-      	</div>
-        <div class="row mb-5">
-          <div class="col-md">
-            <div class="ftco-footer-widget mb-4">
-              <h2 class="ftco-heading-2">Vegefoods</h2>
-              <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia.</p>
-              <ul class="ftco-footer-social list-unstyled float-md-left float-lft mt-5">
-                <li class="ftco-animate"><a href="#"><span class="icon-twitter"></span></a></li>
-                <li class="ftco-animate"><a href="#"><span class="icon-facebook"></span></a></li>
-                <li class="ftco-animate"><a href="#"><span class="icon-instagram"></span></a></li>
-              </ul>
-            </div>
-          </div>
-          <div class="col-md">
-            <div class="ftco-footer-widget mb-4 ml-md-5">
-              <h2 class="ftco-heading-2">Menu</h2>
-              <ul class="list-unstyled">
-                <li><a href="#" class="py-2 d-block">Shop</a></li>
-                <li><a href="#" class="py-2 d-block">About</a></li>
-                <li><a href="#" class="py-2 d-block">Journal</a></li>
-                <li><a href="#" class="py-2 d-block">Contact Us</a></li>
-              </ul>
-            </div>
-          </div>
-          <div class="col-md-4">
-             <div class="ftco-footer-widget mb-4">
-              <h2 class="ftco-heading-2">Help</h2>
-              <div class="d-flex">
-	              <ul class="list-unstyled mr-l-5 pr-l-3 mr-4">
-	                <li><a href="#" class="py-2 d-block">Shipping Information</a></li>
-	                <li><a href="#" class="py-2 d-block">Returns &amp; Exchange</a></li>
-	                <li><a href="#" class="py-2 d-block">Terms &amp; Conditions</a></li>
-	                <li><a href="#" class="py-2 d-block">Privacy Policy</a></li>
-	              </ul>
-	              <ul class="list-unstyled">
-	                <li><a href="#" class="py-2 d-block">FAQs</a></li>
-	                <li><a href="#" class="py-2 d-block">Contact</a></li>
-	              </ul>
-	            </div>
-            </div>
-          </div>
-          <div class="col-md">
-            <div class="ftco-footer-widget mb-4">
-            	<h2 class="ftco-heading-2">Have a Questions?</h2>
-            	<div class="block-23 mb-3">
-	              <ul>
-	                <li><span class="icon icon-map-marker"></span><span class="text">203 Fake St. Mountain View, San Francisco, California, USA</span></li>
-	                <li><a href="#"><span class="icon icon-phone"></span><span class="text">+2 392 3929 210</span></a></li>
-	                <li><a href="#"><span class="icon icon-envelope"></span><span class="text">info@yourdomain.com</span></a></li>
-	              </ul>
-	            </div>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-12 text-center">
+  <section class="ftco-section ftco-no-pt ftco-no-pb py-5 bg-light">
+	  <div class="container py-4">
 
-            <p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-						  Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="icon-heart color-danger" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
-						  <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-						</p>
-          </div>
-        </div>
-      </div>
-    </footer>
-
-<!--  <div id="couponAlert " data-aos="fade-up" class="alert col-md-3 col-4 text-white fixed-bottom" style="display: none; left: 40%; bottom: 80px; border-radius: 7px; opacity: 0.9; background-color:red ;" role="alert">-->
-<!--	  <div class="d-flex justify-content-center">-->
-<!--		  <dotlottie-player src="https://lottie.host/763347c6-f0b3-4f69-8448-2c1186b30fc5/sEU9OT0DYb.json" background="transparent" speed="0.7" style="width: 50px; height: 50px;" direction="1" loop autoplay></dotlottie-player>-->
-<!--		  <p class="alert-heading d-flex align-items-center" id="couponMessage">Product Added to Your Cart</p>-->
-<!--	  </div>-->
-<!--  </div>-->
-<!--  <div id="couponAlertSuccess " data-aos="fade-up" class="alert col-md-3 col-4 text-white fixed-bottom" style="display: none; left: 40%; bottom: 80px; border-radius: 7px; opacity: 0.9; background-color:red ;" role="alert">-->
-<!--	  <div class="d-flex justify-content-center">-->
-<!--		  <dotlottie-player src="https://lottie.host/763347c6-f0b3-4f69-8448-2c1186b30fc5/sEU9OT0DYb.json" background="transparent" speed="0.7" style="width: 50px; height: 50px;" direction="1" loop autoplay></dotlottie-player>-->
-<!--		  <p class="alert-heading d-flex align-items-center" id="alertSuccess">Product Added to Your Cart</p>-->
-<!--	  </div>-->
-<!--  </div>-->
-
+	  </div>
+  </section>
+  <footer class="ftco-footer ftco-section">
+	  <div class="container">
+		  <div class="row">
+			  <div class="mouse">
+				  <a href="#" class="mouse-icon">
+					  <div class="mouse-wheel"><span class="ion-ios-arrow-up"></span></div>
+				  </a>
+			  </div>
+		  </div>
+		  <div class="row mb-5">
+			  <div class="col-md">
+				  <div class="ftco-footer-widget mb-4">
+					  <h2 class="ftco-heading-2">CraveHUB</h2>
+					  <p>Indulge in a gastronomic adventure with our junk food delivery – a delicious escape into a world of irresistible flavors.</p>
+					  <ul class="ftco-footer-social list-unstyled float-md-left float-lft mt-5">
+						  <li class="ftco-animate"><a href="#"><span class="icon-twitter"></span></a></li>
+						  <li class="ftco-animate"><a href="#"><span class="icon-facebook"></span></a></li>
+						  <li class="ftco-animate"><a href="#"><span class="icon-instagram"></span></a></li>
+					  </ul>
+				  </div>
+			  </div>
+			  <div class="col-md">
+				  <div class="ftco-footer-widget mb-4 ml-md-5">
+					  <h2 class="ftco-heading-2">Menu</h2>
+					  <ul class="list-unstyled">
+						  <li><a href="#" class="py-2 d-block">Shop</a></li>
+						  <li><a href="#" class="py-2 d-block">About</a></li>
+						  <li><a href="#" class="py-2 d-block">Journal</a></li>
+						  <li><a href="#" class="py-2 d-block">Contact Us</a></li>
+					  </ul>
+				  </div>
+			  </div>
+			  <div class="col-md-4">
+				  <div class="ftco-footer-widget mb-4">
+					  <h2 class="ftco-heading-2">Help</h2>
+					  <div class="d-flex">
+						  <ul class="list-unstyled mr-l-5 pr-l-3 mr-4">
+							  <li><a href="#" class="py-2 d-block">Shipping Information</a></li>
+							  <li><a href="#" class="py-2 d-block">Returns &amp; Exchange</a></li>
+							  <li><a href="#" class="py-2 d-block">Terms &amp; Conditions</a></li>
+							  <li><a href="#" class="py-2 d-block">Privacy Policy</a></li>
+						  </ul>
+						  <ul class="list-unstyled">
+							  <li><a href="#" class="py-2 d-block">FAQs</a></li>
+							  <li><a href="#" class="py-2 d-block">Contact</a></li>
+						  </ul>
+					  </div>
+				  </div>
+			  </div>
+			  <div class="col-md">
+				  <div class="ftco-footer-widget mb-4">
+					  <h2 class="ftco-heading-2">Have a Questions?</h2>
+					  <div class="block-23 mb-3">
+						  <ul>
+							  <li><span class="icon icon-map-marker"></span><span class="text">203 Fake St. Mountain View, San Francisco, California, USA</span></li>
+							  <li><a href="#"><span class="icon icon-phone"></span><span class="text">+2 392 3929 210</span></a></li>
+							  <li><a href="#"><span class="icon icon-envelope"></span><span class="text">info@cravehub.online</span></a></li>
+						  </ul>
+					  </div>
+				  </div>
+			  </div>
+		  </div>
+	  </div>
+  </footer>
+  <div id="couponAlertSuccess" data-aos="fade-down" class="alert alert-success col-3 fixed-top "
+	   style="left: 20px; top:20px; border-radius: 7px; opacity: 0.9; z-index: 10000;display:none" role="alert" >
+	  <h6 class="alert-heading text-center"><span>Coupon successfully redeemed. ✨ Happy savings </span><li class="fa-solid fa-badge-check fa-shake" style="color: #009e5a;"></li></h6>
+	  <!-- <p class="fs-6 form-text text-white">Your password has been successfully updated.</p> -->
+  </div>
+  <div id="couponAlertError" data-aos="fade-down" class="alert alert-danger col-3 fixed-top "
+	   style="left: 20px; top:20px; border-radius: 7px; opacity: 0.9; z-index: 10000;display:none" role="alert" >
+	  <h6 class="alert-heading text-center"><span id="couponError"></span><i class="fa-solid fa-circle-xmark fa-shake" style="color: #ff0000;"></i></h6>
+	  <!-- <p class="fs-6 form-text text-white">Your password has been successfully updated.</p> -->
+  </div>
   <!-- loader -->
   <div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00"/></svg></div>
+  <div id="validateAlert" data-aos="fade-down" class="alert alert-danger col-3 fixed-top mx-auto"
+	   style="top:20px; border-radius: 7px; opacity: 0.9; z-index: 10000;display:none;" role="alert" >
+	  <h4 class="alert-heading text-center" id="ValidErrMess"><i class="fa-solid fa-circle-xmark fa-shake" style="color: #ff0000;"></i></h4>
+	  <!-- <p class="fs-6 form-text text-white">Your password has been successfully updated.</p> -->
+  </div>
 
+  <script src="assetsProfile/js/validation.js"></script>
 
   <script src="/js/jquery.min.js"></script>
   <script src="/js/jquery-migrate-3.0.1.min.js"></script>
@@ -497,10 +482,21 @@
                console.log(Number(amount),Number(responseData.couponAmount ))
                couponBtn.style.display = 'none'
                couponRemoveBTN.style.display = 'block'
-				alert("success")
+<!--				alert("success")-->
+				$("#couponAlertSuccess").fadeIn()
+				setTimeout(function(){
+				 $("#couponAlertSuccess").fadeOut();
+
+				},3000)
+
                }
                else{
-				alert(responseData.message)
+               document.getElementById("couponError").innerHTML=responseData.message
+				$("#couponAlertError").fadeIn()
+				setTimeout(function(){
+				 $("#couponAlertError").fadeOut();
+
+				},3000)
                }
 
               }

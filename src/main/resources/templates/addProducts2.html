@@ -30,61 +30,66 @@
     <!-- EndCropper.js -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.min.css">
 
-
 </head>
 <style>
-
-    .page {
-        margin: 1em auto;
-        max-width: 768px;
-        display: flex;
-        align-items: flex-start;
-        flex-wrap: wrap;
-        height: 100%;
+    .errorMessage{
+        color:red;
+    }
+    .img-size{
+        width:9rem;
+        height:8rem;
     }
 
-    .box {
-        padding: 0.5em;
-        width: 100%;
-        margin:0.5em;
-    }
+.page {
+	margin: 1em auto;
+	max-width: 768px;
+	display: flex;
+	align-items: flex-start;
+	flex-wrap: wrap;
+	height: 100%;
+}
 
-    .box-2 {
-        padding: 0.5em;
-        width: calc(100%/2 - 1em);
-    }
+.box {
+	padding: 0.5em;
+	width: 100%;
+	margin:0.5em;
+}
 
-    .options label,
-    .options input{
-        width:4em;
-        padding:0.5em 1em;
-    }
-    .btn{
-        background:white;
-        color:black;
-        border:1px solid black;
-        padding: 0.5em 1em;
-        text-decoration:none;
-        margin:0.8em 0.3em;
-        display:inline-block;
-        cursor:pointer;
-    }
+.box-2 {
+	padding: 0.5em;
+	width: calc(100%/2 - 1em);
+}
 
-    .hide {
-        display: none;
-    }
+.options label,
+.options input{
+	width:4em;
+	padding:0.5em 1em;
+}
+<!--.btn{-->
+<!--	background:white;-->
+<!--	color:black;-->
+<!--	border:1px solid black;-->
+<!--	padding: 0.5em 1em;-->
+<!--	text-decoration:none;-->
+<!--	margin:0.8em 0.3em;-->
+<!--	display:inline-block;-->
+<!--	cursor:pointer;-->
+<!--}-->
 
-    img {
-        max-width: 136px;
-    }
+.hide {
+	display: none;
+}
 
+img {
+	max-width: 100%;
+}
 </style>
 <body>
 <div class="container-scroller">
     <!-- partial:partials/_sidebar.html -->
     <nav class="sidebar sidebar-offcanvas" id="sidebar">
         <div class="sidebar-brand-wrapper d-none d-lg-flex align-items-center justify-content-center fixed-top">
-            <a class="sidebar-brand brand-logo" href="index.html"><img src="/assets/images/logo.svg" alt="logo" /></a>
+            <a class="sidebar-brand brand-logo" th:href="@{/admin/adminHome}">CRAVEHUB</a>
             <a class="sidebar-brand brand-logo-mini" href="index.html"><img src="/assets/images/logo-mini.svg" alt="logo" /></a>
         </div>
         <ul class="nav">
@@ -96,7 +101,7 @@
                             <span class="count bg-success"></span>
                         </div>
                         <div class="profile-name">
-                            <h5 class="mb-0 font-weight-normal">Henry Klein</h5>
+                            <h5 class="mb-0 font-weight-normal" th:text="${session.userName}">Henry Klein</h5>
                             <span>Gold Member</span>
                         </div>
                     </div>
@@ -108,15 +113,16 @@
             <li class="nav-item menu-items">
                 <a class="nav-link" th:href="@{/admin/adminHome}">
               <span class="menu-icon">
-                <i class="mdi mdi-speedometer"></i>
+                <i class="mdi mdi-view-grid"></i>
               </span>
                     <span class="menu-title">Dashboard</span>
                 </a>
             </li>
+
             <li class="nav-item menu-items">
                 <a class="nav-link" th:href="@{/admin/salesReport}">
               <span class="menu-icon">
-                <i class="mdi mdi-speedometer"></i>
+                <i class="mdi mdi-chart-line"></i>
               </span>
                     <span class="menu-title">Sales Report</span>
                 </a>
@@ -159,7 +165,7 @@
             <li class="nav-item menu-items">
                 <a class="nav-link" th:href="@{/admin/listOrders}">
               <span class="menu-icon">
-                <i class="mdi mdi-playlist-play"></i>
+                <i class="mdi mdi-truck-delivery"></i>
               </span>
                     <span class="menu-title">Order</span>
                 </a>
@@ -167,9 +173,17 @@
             <li class="nav-item menu-items">
                 <a class="nav-link" th:href="@{/admin/listCoupons}">
               <span class="menu-icon">
-                <i class="mdi mdi-playlist-play"></i>
+                <i class="mdi mdi-gift"></i>
               </span>
                     <span class="menu-title">Coupon</span>
+                </a>
+            </li>
+            <li class="nav-item menu-items">
+                <a class="nav-link" th:href="@{/admin/offers}">
+              <span class="menu-icon">
+                <i class="mdi mdi-wallet-giftcard"></i>
+              </span>
+                    <span class="menu-title">Offers</span>
                 </a>
             </li>
         </ul>
@@ -190,7 +204,7 @@
                         <a class="nav-link" id="profileDropdown" href="#" data-toggle="dropdown">
                             <div class="navbar-profile">
                                 <img class="img-xs rounded-circle" src="/assets/images/faces/face15.jpg" alt="">
-                                <p class="mb-0 d-none d-sm-block navbar-profile-name">Henry Klein</p>
+                                <p class="mb-0 d-none d-sm-block navbar-profile-name" th:text="${session.userName}">Henry Klein</p>
                                 <i class="mdi mdi-menu-down d-none d-sm-block"></i>
                             </div>
                         </a>
@@ -205,8 +219,8 @@
                                         <i class="mdi mdi-logout text-danger"></i>
                                     </div>
                                 </div>
-                                <div class="preview-item-content">
-                                    <p class="preview-subject mb-1">Log out</p>
+                                <div class="preview-item-content" onclick="logOut()">
+                                    <p class="preview-subject mb-1" >Log out</p>
                                 </div>
                             </a>
                             <div class="dropdown-divider"></div>
@@ -228,7 +242,7 @@
                             <div class="card-body ">
                                 <h4 class="card-title">Add Products</h4>
                                 <hr class="text-light">
-                                <form class="forms-sample col-8 mx-auto" th:action="@{/admin/addProduct2}" method="post" th:object="${product2}" enctype="multipart/form-data" >
+                                <form class="forms-sample col-8 mx-auto" th:action="@{/admin/addProduct2}" method="post" th:object="${product2}" enctype="multipart/form-data" onsubmit="return validateForm()">
                                     <div class="form-group">
                                         <label for="exampleSelectGender">SubCategory</label>
 <!--                                        <select class="form-control" id="exampleSelectGender" th:each="variant : ${subCategories}" th:field="*{subcategories}">-->
@@ -239,153 +253,86 @@
                                         </select>
                                     </div>
                                     <div class="form-group">
-                                        <label for="exampleInputPassword4">Price</label>
-                                        <input type="text" class="form-control" id="exampleInputPassword4" placeholder="Price" th:field="*{price}">
+                                        <label for="price">Price</label>
+                                        <input type="number" class="form-control mb-2" id="price" placeholder="Price" th:field="*{price}">
+                                        <span id="priceError" class="errorMessage"></span>
                                     </div>
                                     <div class="form-group">
-                                        <label for="exampleInputName1">Quantity</label>
-                                        <input type="text" class="form-control" id="exampleInputName1" placeholder="Quantity" th:field="*{quantity}">
+                                        <label for="quantity">Quantity</label>
+                                        <input type="number" class="form-control mb-2" id="quantity" placeholder="Quantity" th:field="*{quantity}">
+                                        <span id="quantityError" class="errorMessage"></span>
                                     </div>
-<!--                                    <div class="mb-3">-->
-<!--                                        <label for="imageUpload" class="form-label " >Choose file</label>-->
-<!--                                        <input type="file" id="imageUpload" name="image" accept="image/*">-->
-<!--                                    </div>-->
 
+<!--                     =====================================  images ================================-->
+                                    <div class="row d-flex justify-content-center ">
 
-<!-- ------------------------- cropper.js------------------------------>
-<!--                                    <div class="mb-3 cropperContainer">-->
-<!--                                        <label for="imageUpload" class="form-label">Choose file</label>-->
-<!--                                        <input type="file" id="imageUpload" name="imageUpload" accept="image/*" onchange="handleFileSelect(event)">-->
-<!--                                    </div>-->
-<!--                                    <div id="previewContainer" class="mb-3">-->
-<!--                                        <img id="previewImage" class="img-fluid" alt="Preview">-->
-<!--                                    </div>-->
-<!--                                    <input type="hidden" id="cropX" name="cropX">-->
-<!--                                    <input type="hidden" id="cropY" name="cropY">-->
-<!--                                    <input type="hidden" id="cropWidth" name="cropWidth">-->
-<!--                                    <input type="hidden" id="cropHeight" name="cropHeight">-->
+                                        <div class="row d-flex justify-content-between ">
 
-
-<!--                                    <div class="row d-flex justify-content-between ">-->
-
-<!--                                        <div class="col-lg-3 col-md-6 rounded-image-preview">-->
-<!--                                            <label for="imageInput1" class="image-label">image 1-->
-<!--                                                <div class="rounded-image-preview">-->
-<!--                                                    <img id="imagePreview1"-->
-<!--                                                         src="https://www.creativefabrica.com/wp-content/uploads/2021/04/05/Image-Upload-Icon-Graphics-10388650-1-580x386.jpg"-->
-<!--                                                         alt="Preview" />-->
-<!--                                                </div>-->
-<!--                                                <input name="image1" type="file" accept="image/*" id="imageInput1" class="imageInput" hidden>-->
-<!--                                            </label>-->
-<!--                                        </div>-->
-
-<!--                                        <div class="col-lg-3 col-md-6 rounded-image-preview">-->
-<!--                                            <label for="imageInput2" class="image-label">image 2-->
-<!--                                                <div class="rounded-image-preview">-->
-<!--                                                    <img id="imagePreview2"-->
-<!--                                                         src="https://www.creativefabrica.com/wp-content/uploads/2021/04/05/Image-Upload-Icon-Graphics-10388650-1-580x386.jpg"-->
-<!--                                                         alt="Preview" />-->
-<!--                                                </div>-->
-<!--                                                <input name="image2" type="file" accept="image/*" id="imageInput2" class="imageInput" hidden>-->
-<!--                                            </label>-->
-<!--                                        </div>-->
-
-<!--                                        <div class="col-lg-3 col-md-6 rounded-image-preview">-->
-<!--                                            <label for="imageInput3" class="image-label">image 3-->
-<!--                                                <div class="rounded-image-preview">-->
-<!--                                                    <img id="imagePreview3"-->
-<!--                                                         src="https://www.creativefabrica.com/wp-content/uploads/2021/04/05/Image-Upload-Icon-Graphics-10388650-1-580x386.jpg"-->
-<!--                                                         alt="Preview" />-->
-<!--                                                </div>-->
-<!--                                                <input name="image3" type="file" accept="image/*" id="imageInput3" class="imageInput" hidden >-->
-<!--                                            </label>-->
-<!--                                        </div>-->
-
-<!--                                        <div class="col-lg-3 col-md-6 rounded-image-preview">-->
-<!--                                            <label for="imageInput4" class="image-label">image 4-->
-<!--                                                <div class="rounded-image-preview  img-result">-->
-<!--                                                    <img class="cropped" id="imagePreview4"-->
-<!--                                                         src="https://www.creativefabrica.com/wp-content/uploads/2021/04/05/Image-Upload-Icon-Graphics-10388650-1-580x386.jpg"-->
-<!--                                                         alt="Preview" />-->
-<!--                                                </div>-->
-<!--                                                <input name="image4" type="file" accept="image/*" id="imageInput4" class="imageInput" hidden >-->
-<!--                                            </label>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
-
-                                    <div class="row d-flex justify-content-between ">
-                                        <div class="col-lg-3 col-md-6 rounded-image-preview">
-                                            <label for="imageInput1" class="image-label">image 1
-                                                <div class="rounded-image-preview">
-                                                    <img id="imagePreview1" src="https://www.creativefabrica.com/wp-content/uploads/2021/04/05/Image-Upload-Icon-Graphics-10388650-1-580x386.jpg" alt="Preview" />
-                                                </div>
-                                                <input name="image1" type="file" accept="image/*" id="imageInput1" class="imageInput" hidden onchange="handleFileInputChange(1)">
-                                            </label>
-                                            <div id="cropperContainer1" class="hide">
-                                                <div class="box">
-                                                    <div class="options">
-                                                        <label> Width</label>
-                                                        <input type="number" class="img-w" value="300" min="100" max="1200" />
+                                            <div class="col-lg-3 col-md-6 rounded-image-preview ">
+                                                <label for="file-input1" class="image-label ">image 1
+                                                    <div class="rounded-image-preview img-result1">
+                                                        <img class="cropped1" id="imagePreview1" src="https://www.creativefabrica.com/wp-content/uploads/2021/04/05/Image-Upload-Icon-Graphics-10388650-1-580x386.jpg"
+                                                             alt="Preview" style="width:10rem;height:6.4rem" />
                                                     </div>
-                                                    <button class="btn save" onclick="cropAndSaveImage(1)">Save</button>
-                                                </div>
-                                                <input type="hidden" name="croppedImage" id="croppedImage" />
+                                                    <input type="file" id="file-input1" th:onclick="crop(1)" hidden name="croppedImage1" required>
 
+                                                </label>
                                             </div>
-                                            <div id="croppedImagePreview1" class="hide"></div>
-                                        </div>
 
-                                        <!-- Add similar HTML structure for imageInput2, imageInput3, and imageInput4 -->
+                                            <div class="col-lg-3 col-md-6 rounded-image-preview">
+                                                <label for="file-input2" class="image-label">image 2
+                                                    <div class="rounded-image-preview img-result2">
+                                                        <img class="cropped2" id="imagePreview2" src="https://www.creativefabrica.com/wp-content/uploads/2021/04/05/Image-Upload-Icon-Graphics-10388650-1-580x386.jpg"
+                                                             alt="Preview" style="width:10rem;height:6.4rem" />
+                                                    </div>
+                                                    <input type="file" id="file-input2" th:onclick="crop(2)" hidden name="croppedImage2" required>
+                                                </label>
+                                            </div>
+
+                                            <div class="col-lg-3 col-md-6 rounded-image-preview ">
+                                                <label for="file-input3" class="image-label">image 3
+                                                    <div class="rounded-image-preview img-result3">
+                                                        <img class="cropped3" id="imagePreview3" src="https://www.creativefabrica.com/wp-content/uploads/2021/04/05/Image-Upload-Icon-Graphics-10388650-1-580x386.jpg"
+                                                             alt="Preview" style="width:10rem;height:6.4rem" />
+                                                    </div>
+                                                    <input type="file" id="file-input3" th:onclick="crop(3)" hidden name="croppedImage3" required>
+                                                </label>
+                                            </div>
+
+                                            <div class="col-lg-3 col-md-6 rounded-image-preview ">
+                                                <label for="file-input4" class="image-label">image 4
+                                                    <div class="rounded-image-preview img-result4">
+                                                        <img class="cropped4" id="imagePreview4" src="https://www.creativefabrica.com/wp-content/uploads/2021/04/05/Image-Upload-Icon-Graphics-10388650-1-580x386.jpg"
+                                                             alt="Preview" style="width:10rem;height:6.4rem" />
+                                                    </div>
+                                                    <input type="file" id="file-input4" th:onclick="crop(4)" hidden name="croppedImage4">
+                                                </label>
+                                            </div>
+
+                                        </div>
                                     </div>
 
+                                    <main class="page">
+                                        <div class="box-2">
+                                            <div class="result"></div>
+                                        </div>
+                                        <div class="box">
+                                            <div class="options hide ">
+                                                <label> Width</label>
+                                                <input type="number" class="img-w" value="300" min="100" max="1200" />
+                                            </div>
+                                            <!-- save btn -->
+                                            <button class="btn btn-inverse-success save hide">Save</button>
+                                        </div>
+                                    </main>
 
+<!--        ========================================= /images =====================================-->
 
-
-
-
-
-
-
-
-
-                                    <!--                                    <input type="hidden" id="croppedImage"  name="croppedImage" th:value="${product.imageName}">-->
-
-<!--                                    &lt;!&ndash; leftbox &ndash;&gt;-->
-<!--                                    <div class="box-2">-->
-<!--                                        <div class="result"></div>-->
-<!--                                    </div>-->
-<!--                                    &lt;!&ndash;rightbox&ndash;&gt;-->
-<!--&lt;!&ndash;                                    <div class="box-2 img-result hide">&ndash;&gt;-->
-<!--&lt;!&ndash;                                        &lt;!&ndash; result of crop &ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;                                        <img class="cropped" src="" alt="">&ndash;&gt;-->
-<!--&lt;!&ndash;                                    </div>&ndash;&gt;-->
-<!--                                    &lt;!&ndash; input file &ndash;&gt;-->
-<!--                                    <div class="box">-->
-<!--                                        <div class="options hide">-->
-<!--                                            <label> Width</label>-->
-<!--                                            <input type="number" class="img-w" value="300" min="100" max="1200" />-->
-<!--                                        </div>-->
-<!--                                        &lt;!&ndash; save btn &ndash;&gt;-->
-<!--                                        <button class="btn save hide">Save</button>-->
-<!--                                    </div>-->
-                                    <!-- ------------------------- cropper.js------------------------------>
-
-
-
-
-
-
-
-
-
-
-
-                                    <button type="submit" class="btn btn-lg btn-inverse-primary mr-2 mt-5">Add Product</button>
+                                    <button type="submit" class="btn btn-lg btn-inverse-primary mr-2 mt-5">+ Add product</button>
                                 </form>
                             </div>
                         </div>
                     </div>
-
 
                 </div>
             </div>
@@ -398,73 +345,195 @@
     </div>
     <!-- page-body-wrapper ends -->
 </div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+
+
+
+<!--===================   cropper.js chatGPT  ===============-->
 
 <script>
-    // vars
+
+       // Function to trigger file input click
+  function crop(index) {
+    // Store the index value in the variable
+    currentIndex = index;
+    upload = document.querySelector('#file-input' + currentIndex);
+    img_result = document.querySelector('.img-result' + currentIndex),
+    cropped = document.querySelector('.cropped' + currentIndex);
+
+    upload.click();
+}
+     // vars
     let result = document.querySelector('.result'),
-    img_result = document.querySelector('.img-result'),
-    img_w = document.querySelector('.img-w'),
-    options = document.querySelector('.options'),
-    save = document.querySelector('.save'),
-    cropped = document.querySelector('.cropped'),
-    upload = document.querySelector('#file-input'),
-    cropper = '';
+        img_w = document.querySelector('.img-w'),
+        img_h = document.querySelector('.img-h'),
+        options = document.querySelector('.options'),
+        save = document.querySelector('.save'),
+        dwn = document.querySelector('.download'),
+        cropper = '';
 
-// on change show image with crop options
-upload.addEventListener('change', (e) => {
-    if (e.target.files.length) {
-        // start file reader
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            if (e.target.result) {
-                // create new image
-                let img = document.createElement('img');
-                img.id = 'image';
-                img.src = e.target.result;
-                // clean result before
-                result.innerHTML = '';
-                // append new image
-                result.appendChild(img);
-                // show save btn and options
-                save.classList.remove('hide');
-                options.classList.remove('hide');
-                // init cropper
-                cropper = new Cropper(img);
-            }
-        };
-        reader.readAsDataURL(e.target.files[0]);
-    }
-});
+         // Variable to store the index value
+        let currentIndex = null;
 
-// save on click
-save.addEventListener('click', (e) => {
+document.body.addEventListener('change', function (e) {
+   if (e.target.id === 'file-input' + currentIndex) {
+        alert(currentIndex)
+            // start file reader
+            const reader = new FileReader();
+            reader.onload = (e)=> {
+                if(e.target.result){
+                    // create new image
+                    let img = document.createElement('img');
+                    img.id = 'image';
+                    img.src = e.target.result
+                    // clean result before
+                    result.innerHTML = '';
+                    // append new image
+                    result.appendChild(img);
+                    // show save btn and options
+                    save.classList.remove('hide');
+                    options.classList.remove('hide');
+                    // init cropper
+                    cropper = new Cropper(img);
+                }
+            };
+            reader.readAsDataURL(e.target.files[0]);
+
+            // Reset the currentIndex after processing the file input
+            currentIndex = null;
+        }
+    });
+
+    // save on click
+    save.addEventListener('click', (e) => {
     e.preventDefault();
-    // get result to data uri
+
+    // Get result as data URI
     let imgSrc = cropper.getCroppedCanvas({
         width: img_w.value // input value
     }).toDataURL();
 
-    // Update the hidden input field value with the cropped image data URI
-    document.getElementById('croppedImage').value = imgSrc;
+    // Create a Blob object from the data URI
+    const blob = dataURItoBlob(imgSrc);
 
-    // remove hide class of img
+    // Create a File object from the Blob
+    const file = new File([blob], 'imagename.png', { type: 'image/png' });
+
+    // Set the File object to the input element
+    setFileInput(file);
+
+    // Remove hide class of img
     cropped.classList.remove('hide');
     img_result.classList.remove('hide');
-    // show image cropped
+
+    // Show image cropped
     cropped.src = imgSrc;
+
     dwn.classList.remove('hide');
     dwn.download = 'imagename.png';
     dwn.setAttribute('href', imgSrc);
 });
+
+// Function to convert data URI to Blob
+function dataURItoBlob(dataURI) {
+    const byteString = atob(dataURI.split(',')[1]);
+    const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+    const ab = new ArrayBuffer(byteString.length);
+    const ia = new Uint8Array(ab);
+
+    for (let i = 0; i < byteString.length; i++) {
+        ia[i] = byteString.charCodeAt(i);
+    }
+
+    return new Blob([ab], { type: mimeString });
+}
+
+// Function to set File object to input element
+function setFileInput(file) {
+    const inputElement = upload;
+    const dataTransfer = new DataTransfer();
+    dataTransfer.items.add(file);
+    inputElement.files = dataTransfer.files;
+}
 </script>
 
 
 
+<!--===================   /cropper.js chatGPT  ===============-->
 
 
+<script>
+    $(document).ready(function() {
+    $(".imageInput").change(function() {
+      var input = this;
+      var imagePreview = $(input).siblings('.rounded-image-preview').children('img')[0];
+
+      if (input.files && input.files[0]) {
+        var reader = new FileReader();
+
+        reader.onload = function(e) {
+          imagePreview.src = e.target.result;
+          $(imagePreview).show();
+        };
+
+        reader.readAsDataURL(input.files[0]);
+      }
+    });
+  });
+</script>
+<script>
+
+       function validatePrice() {
+           var price = document.getElementById("price").value;
+           var priceError = document.getElementById("priceError");
+
+           // Clear previous error message
+           priceError.innerHTML = "";
+
+           // Validate username (must match email pattern)
+           if (price.trim() === "") {
+               priceError.innerHTML = "Price cannot be empty.";
+               return false;
+           }
+            else if (price <1) {
+                priceError.innerHTML = "Price should be min 1.";
+                return false;
+            }
+
+           return true;
+       }
 
 
+       function validateQuantity() {
+           var quantity = document.getElementById("quantity").value;
+           var quantityError = document.getElementById("quantityError");
+
+           // Clear previous error message
+           quantityError.innerHTML = "";
+
+           // Validate password (no spaces allowed)
+           if (quantity.trim() === "") {
+               quantityError.innerHTML = "quantity cannot be empty.";
+               return false;
+           } else if (quantity < 0) {
+               quantityError.innerHTML = "Quantity should not be a negative value";
+               return false;
+           }
+
+           return true;
+       }
+
+       // Attach event listeners to input fields
+       document.getElementById("price").addEventListener("input", validatePrice);
+       document.getElementById("quantity").addEventListener("input", validateQuantity);
+
+       function validateForm() {
+           // Check both username and password validations
+           return validatePrice() && validateQuantity();
+       }
+</script>
+<script src="/assets/js/adminjs.js"></script>
 
 <!-- container-scroller -->
 <!-- plugins:js -->

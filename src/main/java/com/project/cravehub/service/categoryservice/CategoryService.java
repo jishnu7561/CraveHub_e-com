@@ -31,4 +31,7 @@ public interface CategoryService {
 
     String addCategoryToOffer(Integer categoryId, Integer offerId);
 
-    boolean removeCategoryFromOffer(Integer offerId, Integer categoryId);}
+    boolean removeCategoryFromOffer(Integer offerId, Integer categoryId);
+
+    void updateIsEnabled();
+}

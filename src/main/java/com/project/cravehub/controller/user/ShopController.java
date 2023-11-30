@@ -40,6 +40,8 @@ public class ShopController {
         String userName = (String) session.getAttribute("userName");
         model.addAttribute("userName ",userName);
         List<Category> categoryList = categoryRepository.findAll();
+        productService.updateIsEnabled();
+        categoryService.updateIsEnabled();
 //        List<Product> productList = productService.findAllProducts();
         Page<Product> productsPage;
         if (category != null && !category.isEmpty()) {
@@ -52,8 +54,12 @@ public class ShopController {
         model.addAttribute("products", productsPage.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", productsPage.getTotalPages());
-        int cartCount = (int)session.getAttribute("cartCount");
-        model.addAttribute("cartCount",cartCount);
+//        int cartCount = (Integer) session.getAttribute("cartCount");
+//        model.addAttribute("cartCount",cartCount);
+        Integer cartCount = (Integer) session.getAttribute("cartCount");
+        int cartCountValue = (cartCount != null) ? cartCount.intValue() : 0;
+        model.addAttribute("cartCount", cartCountValue);
+
         return "shop";
     }
     @GetMapping("/search")
@@ -67,8 +73,9 @@ public class ShopController {
         model.addAttribute("products", productsPage.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", productsPage.getTotalPages());
-        int cartCount = (int)session.getAttribute("cartCount");
-        model.addAttribute("cartCount",cartCount);
+        Integer cartCount = (Integer) session.getAttribute("cartCount");
+        int cartCountValue = (cartCount != null) ? cartCount.intValue() : 0;
+        model.addAttribute("cartCount", cartCountValue);
         return "shop";
     }
 }

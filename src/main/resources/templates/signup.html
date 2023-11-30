@@ -50,23 +50,24 @@
 				<form   th:action="@{/registration}" method="post" th:object="${user}" onsubmit="return validateForm()" >
 					<h3>Sign up</h3>
 					<div class="form-group">
-							<input type="text" placeholder="First Name" class="form-control" th:field="*{firstName}" id="firstName" required>
-							<input type="text" placeholder="Last Name" class="form-control" th:field="*{lastName}" id="lastName" required>
+							<input type="text" placeholder="First Name" class="form-control" th:field="*{firstName}" id="firstName" >
+							<input type="text" placeholder="Last Name" class="form-control" th:field="*{lastName}" id="lastName" >
 					</div>
+					<input type="hidden" name="referralCode" th:value="${param.referralCode}">
 					<p id="firstNameError" class="error-message errorMessage"></p>
 					<p id="lastNameError" class="error-message errorMessage"></p>
 					<div class="form-wrapper">
-						<input type="text" placeholder="Username" class="form-control" th:field="*{userName}"  id="username" required>
+						<input type="text" placeholder="Username" class="form-control" th:field="*{userName}"  id="username" >
 						<i class="zmdi zmdi-account"></i>
 						<p id="usernameError" class="error-message errorMessage"></p>
 					</div>
 					<div class="form-wrapper">
-						<input type="text" placeholder="Email Address" class="form-control" th:field="*{email}" required>
+						<input type="text" placeholder="Email Address" class="form-control" th:field="*{email}" >
 						<i class="zmdi zmdi-email"></i>
 						<p id="emailError" class="error-message errorMessage"></p>
 					</div>
 					<div class="form-wrapper">
-						<input type="password" placeholder="Password" class="form-control" th:field="*{password}" required>
+						<input type="password" placeholder="Password" class="form-control" th:field="*{password}" >
 						<i class="zmdi zmdi-lock"></i>
 						<p id="passwordError" class="error-message errorMessage"></p>
 					</div>
@@ -76,130 +77,8 @@
 					<p  th:if="${param.email}" class="email"  >email or username already exist</p>
 
 				</form>
-
-<!--				<form th:action="@{/registration}" method="post" th:object="${user}" onsubmit="return validateForm()">-->
-<!--					<h3>Sign up</h3>-->
-<!--					<div class="form-group">-->
-<!--						<input type="text" placeholder="First Name" class="form-control" th:field="*{firstName}" id="firstName" name="firstName" required>-->
-<!--						<input type="text" placeholder="Last Name" class="form-control" th:field="*{lastName}" id="lastName" name="lastName" required>-->
-<!--					</div>-->
-<!--					<p class="error-message  id="firstnameFeedback"></p>-->
-<!--					<p class="text-danger" id="lastnameFeedback"></p>-->
-<!--					<div class="form-wrapper">-->
-<!--						<input type="text" placeholder="Username" class="form-control" th:field="*{userName}" id="username" name="userName" required>-->
-<!--						<i class="zmdi zmdi-account"></i>-->
-<!--						<p class="text-danger" id="usernameFeedback"></p>-->
-<!--					</div>-->
-<!--					<div class="form-wrapper">-->
-<!--						<input type="email" placeholder="Email Address" class="form-control" th:field="*{email}" id="email" name="email" required>-->
-<!--						<i class="zmdi zmdi-email"></i>-->
-<!--						<p class="text-danger" id="emailFeedback"></p>>-->
-<!--					</div>-->
-<!--					<div class="form-wrapper">-->
-<!--						<input type="password" placeholder="Password" class="form-control" th:field="*{password}" id="password" name="password" required>-->
-<!--						<i class="zmdi zmdi-lock"></i>-->
-<!--						<p class="text-danger" id="passwordFeedback"></p>-->
-<!--					</div>-->
-<!--					<button>Register <i class="zmdi zmdi-arrow-right"></i></button>-->
-<!--					<p th:if="${param.email}" class="email">Email or username already exists</p>-->
-<!--				</form>-->
-
-
 			</div>
 		</div>
-
-
-<!--		<script>-->
-<!--			var firstNameInput = document.getElementById("firstName");-->
-<!--            var lastNameInput = document.getElementById("lastName");-->
-<!--            var usernameInput = document.getElementById("username");-->
-<!--            var emailInput = document.getElementById("email");-->
-<!--            var passwordInput = document.getElementById("password");-->
-
-<!--            var firstNameError = document.getElementById("firstNameError");-->
-<!--            var lastNameError = document.getElementById("lastNameError");-->
-<!--            var usernameError = document.getElementById("usernameError");-->
-<!--            var emailError = document.getElementById("emailError");-->
-<!--            var passwordError = document.getElementById("passwordError");-->
-
-<!--           	var regexFirstName = /^[A-Za-z]{4,15}$/; // First name should be between 4 and 15 characters-->
-<!--			var regexLastName = /^[A-Za-z]{1,15}$/;-->
-<!--			var regexEmail = /^[a-z0-9._%+-]{3,}@[a-z0-9.-]+\.[a-z]{2,}$/;-->
-<!--            var regexPassword = /^[A-Za-z0-9]{4,8}$/;-->
-<!--    		var regexUsername = /^[A-Za-z0-9!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]{4,10}$/;-->
-
-<!--            firstNameInput.addEventListener("input", function() {-->
-<!--                validateInput(this, "First name", regexFirstName, firstNameError);-->
-<!--            });-->
-
-<!--            lastNameInput.addEventListener("input", function() {-->
-<!--                validateInput(this, "Last name", regexLastName, lastNameError);-->
-<!--            });-->
-
-<!--            usernameInput.addEventListener("input", function() {-->
-<!--                validateInput(this, "Username", regexUsername, usernameError);-->
-<!--            });-->
-
-<!--            emailInput.addEventListener("input", function() {-->
-<!--                validateInput(this, "Email", regexEmail, emailError);-->
-<!--            });-->
-
-<!--            passwordInput.addEventListener("input", function() {-->
-<!--                validateInput(this, "Password", regexPassword, passwordError);-->
-<!--            });-->
-
-<!--            function validateInput(input, nameType, regex, errorElement) {-->
-<!--                var value = input.value;-->
-<!--                if (!regex.test(value)) {-->
-<!--                    errorElement.textContent = nameType + " is not valid.";-->
-<!--                } else {-->
-<!--                    errorElement.textContent = "";-->
-<!--                }-->
-<!--            }-->
-
-<!--				function validateForm() {-->
-<!--					var isValid = true;-->
-
-<!--					// Validation logic for each input field-->
-<!--					if (!regexFirstName.test(firstNameInput.value)) {-->
-<!--						firstNameError.textContent = "First name must contain min 5 and max 15 alphabets.";-->
-<!--						isValid = false;-->
-<!--					} else {-->
-<!--						firstNameError.textContent = "";-->
-<!--					}-->
-
-<!--					if (!regexLastName.test(lastNameInput.value)) {-->
-<!--						lastNameError.textContent = "Last name must contain max 15 alphabets.";-->
-<!--						isValid = false;-->
-<!--					} else {-->
-<!--						lastNameError.textContent = "";-->
-<!--					}-->
-
-<!--					if (!regexUsername.test(usernameInput.value)) {-->
-<!--						usernameError.textContent = "Username must contain min 4 and max 10 characters.";-->
-<!--						isValid = false;-->
-<!--					} else {-->
-<!--						usernameError.textContent = "";-->
-<!--					}-->
-
-<!--					if (!regexEmail.test(emailInput.value)) {-->
-<!--						emailError.textContent = "Email is not valid.";-->
-<!--						isValid = false;-->
-<!--					} else {-->
-<!--						emailError.textContent = "";-->
-<!--					}-->
-
-<!--					if (!regexPassword.test(passwordInput.value)) {-->
-<!--						passwordError.textContent = "Password must contain min 4 and max 8 alphabets or numbers.";-->
-<!--						isValid = false;-->
-<!--					} else {-->
-<!--						passwordError.textContent = "";-->
-<!--					}-->
-
-<!--					return isValid;-->
-<!--				}-->
-
-<!--		</script>-->
 
 <script>
 	    var firstNameInput = document.getElementById("firstName");
@@ -266,14 +145,6 @@
 			}
         });
 
-<!--        function validateInput(input, nameType, regex, errorElement) {-->
-<!--            var value = input.value;-->
-<!--            if (!regex.test(value)) {-->
-<!--                errorElement.textContent = nameType + " is not valid.";-->
-<!--            } else {-->
-<!--                errorElement.textContent = "";-->
-<!--            }-->
-<!--        }-->
 
             function validateForm() {
                 var isValid = true;
@@ -318,51 +189,6 @@
             }
 
 </script>
-
-<!--<script>-->
-<!--		function setupValidation(inputId, feedbackId, pattern, title) {-->
-<!--		const inputElem = document.getElementById(inputId);-->
-<!--		const feedbackElem = document.getElementById(feedbackId);-->
-
-<!--		inputElem.addEventListener('input', function () {-->
-<!--		if (!inputElem.checkValidity()) {-->
-<!--		feedbackElem.textContent = title;-->
-<!--		} else {-->
-<!--		feedbackElem.textContent = '';-->
-<!--		}-->
-<!--		});-->
-
-<!--		inputElem.pattern = pattern;-->
-<!--		inputElem.title = title;-->
-<!--		}-->
-
-<!--		setupValidation('firstName', 'firstnameFeedback', '^[A-Za-z]{5,15}$', 'First name must contain only alphabets and be between 5-15 characters');-->
-<!--		setupValidation('lastName', 'lastnameFeedback', '^[A-Za-z]{1,15}$', 'Last name must contain only alphabets and be up to 15 characters');-->
-<!--		setupValidation('username', 'usernameFeedback', '^[A-Za-z0-9]{4,10}$', 'Username must contain only alphabets and numbers and be between 4-10 characters');-->
-<!--		setupValidation('email', 'emailFeedback', '^[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$', 'Please enter a valid email address');-->
-<!--		setupValidation('phoneNumber', 'numberFeedBack', '^[0-9\\s\\-\\(\\)]+$', 'Please enter a valid phone number');-->
-<!--		setupValidation('password', 'passwordFeedback', '^[A-Za-z0-9]{4,8}$', 'Password must contain alphanumeric characters and be between 4-8 characters');-->
-
-<!--		function validateForm() {-->
-<!--		const formError = document.getElementById('formError');-->
-<!--		formError.style.display = 'none'; // Hide the global error message initially-->
-
-<!--		const firstName = document.getElementById('firstName').value;-->
-<!--		const lastName = document.getElementById('lastName').value;-->
-<!--		const username = document.getElementById('username').value;-->
-<!--		const email = document.getElementById('email').value;-->
-<!--		const phoneNumber = document.getElementById('phoneNumber').value;-->
-<!--		const password = document.getElementById('password').value;-->
-
-<!--		if (firstName.trim() === "" || lastName.trim() === "" || username.trim() === "" || email.trim() === "" || phoneNumber.trim() === "" || password.trim() === "") {-->
-<!--		formError.style.display = 'block'; // Show the global error message-->
-<!--		return false; // Prevent form submission-->
-<!--		}-->
-
-<!--		return true; // Allow form submission if all fields are filled-->
-<!--		}-->
-<!--</script>-->
-
 
 	</body><!-- This templates was made by Colorlib (https://colorlib.com) -->
 </html>

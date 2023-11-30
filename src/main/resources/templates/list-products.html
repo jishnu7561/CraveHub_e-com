@@ -72,7 +72,7 @@
     <!-- partial:partials/_sidebar.html -->
     <nav class="sidebar sidebar-offcanvas" id="sidebar">
         <div class="sidebar-brand-wrapper d-none d-lg-flex align-items-center justify-content-center fixed-top">
-            <a class="sidebar-brand brand-logo" href="index.html"><img src="/assets/images/logo.svg" alt="logo" /></a>
+            <a class="sidebar-brand brand-logo" th:href="@{/admin/adminHome}">CRAVEHUB</a>
             <a class="sidebar-brand brand-logo-mini" href="index.html"><img src="/assets/images/logo-mini.svg" alt="logo" /></a>
         </div>
         <ul class="nav">
@@ -84,7 +84,7 @@
                             <span class="count bg-success"></span>
                         </div>
                         <div class="profile-name">
-                            <h5 class="mb-0 font-weight-normal">Henry Klein</h5>
+                            <h5 class="mb-0 font-weight-normal" th:text="${session.userName}">Henry Klein</h5>
                             <span>Gold Member</span>
                         </div>
                     </div>
@@ -96,19 +96,21 @@
             <li class="nav-item menu-items">
                 <a class="nav-link" th:href="@{/admin/adminHome}">
               <span class="menu-icon">
-                <i class="mdi mdi-speedometer"></i>
+                <i class="mdi mdi-view-grid"></i>
               </span>
                     <span class="menu-title">Dashboard</span>
                 </a>
             </li>
+
             <li class="nav-item menu-items">
                 <a class="nav-link" th:href="@{/admin/salesReport}">
               <span class="menu-icon">
-                <i class="mdi mdi-speedometer"></i>
+                <i class="mdi mdi-chart-line"></i>
               </span>
                     <span class="menu-title">Sales Report</span>
                 </a>
             </li>
+
             <li class="nav-item menu-items">
                 <a class="nav-link"  th:href="@{/admin/listUsers}">
               <span class="menu-icon">
@@ -146,7 +148,7 @@
             <li class="nav-item menu-items">
                 <a class="nav-link" th:href="@{/admin/listOrders}">
               <span class="menu-icon">
-                <i class="mdi mdi-playlist-play"></i>
+                <i class="mdi mdi-truck-delivery"></i>
               </span>
                     <span class="menu-title">Order</span>
                 </a>
@@ -154,9 +156,17 @@
             <li class="nav-item menu-items">
                 <a class="nav-link" th:href="@{/admin/listCoupons}">
               <span class="menu-icon">
-                <i class="mdi mdi-playlist-play"></i>
+                <i class="mdi mdi-gift"></i>
               </span>
                     <span class="menu-title">Coupon</span>
+                </a>
+            </li>
+            <li class="nav-item menu-items">
+                <a class="nav-link" th:href="@{/admin/offers}">
+              <span class="menu-icon">
+                <i class="mdi mdi-wallet-giftcard"></i>
+              </span>
+                    <span class="menu-title">Offers</span>
                 </a>
             </li>
         </ul>
@@ -177,7 +187,7 @@
                         <a class="nav-link" id="profileDropdown" href="#" data-toggle="dropdown">
                             <div class="navbar-profile">
                                 <img class="img-xs rounded-circle" src="/assets/images/faces/face15.jpg" alt="">
-                                <p class="mb-0 d-none d-sm-block navbar-profile-name">Henry Klein</p>
+                                <p class="mb-0 d-none d-sm-block navbar-profile-name" th:text="${session.userName}">Henry Klein</p>
                                 <i class="mdi mdi-menu-down d-none d-sm-block"></i>
                             </div>
                         </a>
@@ -192,8 +202,8 @@
                                         <i class="mdi mdi-logout text-danger"></i>
                                     </div>
                                 </div>
-                                <div class="preview-item-content">
-                                    <p class="preview-subject mb-1">Log out</p>
+                                <div class="preview-item-content" onclick="logOut()">
+                                    <p class="preview-subject mb-1" >Log out</p>
                                 </div>
                             </a>
                             <div class="dropdown-divider"></div>
@@ -245,7 +255,9 @@
                                         <tbody class="text-center">
 
                                                 <tr th:each="product : ${products}">
-                                                    <td ><img height="100px" width="100px" th:src="${product.imageName}" alt="" src=""/></td>
+                                                    <td >
+                                                        <img height="100px" width="100px" th:src="${product.productImages[0].imageName}" alt="" src=""/>
+                                                    </td>
                                                     <td th:text="${product.productName}"></td>
                                                     <td th:if="${product.categories != null}" th:text="${product.categories.category}">----</td> <!-- Access categoryName property of Category entity -->
                                                     <td th:unless="${product.categories != null}">&nbsp;</td>
@@ -279,11 +291,11 @@
                                             Total Rows: [[${totalItems}]]
                                         </div>
                                         <div class="col-sm-1">
-            <span th:each="i: ${#numbers.sequence(1, totalPages)}">
-                <a th:if="${currentPage != i}"
-                   th:href="@{'/page/' + ${i} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">[[${i}]]</a>
-                <span th:unless="${currentPage != i}">[[${i}]]</span> &nbsp; &nbsp;
-            </span>
+                                            <span th:each="i: ${#numbers.sequence(1, totalPages)}">
+                                                <a th:if="${currentPage != i}"
+                                                   th:href="@{'/page/' + ${i} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">[[${i}]]</a>
+                                                <span th:unless="${currentPage != i}">[[${i}]]</span> &nbsp; &nbsp;
+                                            </span>
                                         </div>
                                         <div class="col-sm-1">
                                             <a th:if="${currentPage < totalPages}"
@@ -339,6 +351,7 @@
 
 
 
+<script src="/assets/js/adminjs.js"></script>
 
 <!-- container-scroller -->
 <!-- plugins:js -->

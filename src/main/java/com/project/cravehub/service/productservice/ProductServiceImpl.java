@@ -13,7 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.PostLoad;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -46,10 +45,11 @@ public class ProductServiceImpl implements ProductService{
     private PurchaseOrderRepository purchaseOrderRepository;
 
     @Override
-    public void save(ProductDto productDto) {
+    public Product save(ProductDto productDto) {
         Product products = new Product(productDto.getProductName(),productDto.getDescription(),
-                productDto.getCategories(), productDto.getImageName(), productDto.getPrice(),productDto.getQuantity(),productDto.getSubcategories());
+                productDto.getCategories(), productDto.getPrice(),productDto.getQuantity(),productDto.getSubcategories(),productDto.getImages());
         productRepository.save(products);
+        return products;
     }
 
 //    @Override
@@ -69,13 +69,12 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public void editProductByID(Integer productId, ProductDto productDto, String croppedImageFileName) {
+    public void editProductByID(Integer productId, ProductDto productDto) {
         Product product = productRepository.findById(productId).orElse(null);
         if(product!=null)
         {
             product.setProductName(productDto.getProductName());
             product.setDescription(productDto.getDescription());
-            product.setImageName(croppedImageFileName);
             product.setPrice(productDto.getPrice());
             product.setQuantity(productDto.getQuantity());
             productRepository.save(product);
@@ -216,6 +215,10 @@ public class ProductServiceImpl implements ProductService{
         if(productOfferOptional.isPresent() && productOptional.isPresent())
         {
             Product product = productOptional.get();
+            if(product.getCategories().getCategoryOffer()!= null && product.getCategories().getCategoryOffer().isEnabled())
+            {
+                return "categoryExist";
+            }
             ProductOffer productOffer = productOfferOptional.get();
             double discountAmount = (product.getPrice() * productOffer.getDiscountPercentage())/100;
             double discountedPrice = product.getPrice() - discountAmount;
@@ -257,7 +260,7 @@ public class ProductServiceImpl implements ProductService{
 
     @Override
     public Integer totalSold(Product product, User user) {
-        List<PurchaseOrder> purchaseOrderList = purchaseOrderRepository.findByUser(user);
+        List<PurchaseOrder> purchaseOrderList = purchaseOrderRepository.findAll();
         int count=0;
         if(!purchaseOrderList.isEmpty())
         {
@@ -297,4 +300,16 @@ public class ProductServiceImpl implements ProductService{
                }
         }
     }
+
+    @Override
+    public boolean findProductNameExist(String productName) {
+        return productRepository.existsByProductNameIgnoreCase(productName);
+    }
+
+    @Override
+    public Product findByProductId(Integer id) {
+        Optional<Product> productOptional = productRepository.findById(id);
+        return productOptional.orElse(null);
+    }
+
 }

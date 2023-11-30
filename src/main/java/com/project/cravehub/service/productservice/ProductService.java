@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface ProductService {
 
-    public void save(ProductDto productDto);
+    public Product save(ProductDto productDto);
 
     //Product deleteProductById(Integer productId);
 
@@ -21,7 +21,7 @@ public interface ProductService {
 
     Product getProductById(Integer productId);
 
-    void editProductByID(Integer productId, ProductDto productDto, String croppedImageFileName);
+    void editProductByID(Integer productId, ProductDto productDto);
 
     boolean isExist(Integer productId);
 
@@ -55,4 +55,8 @@ public interface ProductService {
     Integer totalSold(Product product,User user);
 
     void updateIsEnabled();
+
+    boolean findProductNameExist(String productName);
+
+    Product findByProductId(Integer id);
 }

@@ -22,7 +22,7 @@ public class CategoryOffer {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate expiryDate;
 
-//    private boolean isEnabled=true;
+    private boolean isEnabled =true;
 
     private boolean isActive=true;
 
@@ -95,5 +95,13 @@ public class CategoryOffer {
 
     public void setCategories(Set<Category> categories) {
         this.categories = categories;
+    }
+
+    public boolean isEnabled() {
+        return isEnabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        isEnabled = enabled;
     }
 }

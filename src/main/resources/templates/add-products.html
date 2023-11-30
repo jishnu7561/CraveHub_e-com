@@ -22,13 +22,25 @@
     <link rel="stylesheet" href="/assets/css/style.css">
     <!-- End layout styles -->
     <link rel="shortcut icon" href="/assets/images/favicon.png" />
+
+    <link rel="stylesheet" href="/v6.4.2/css/sharp-solid.css">
+    <link rel="stylesheet" href="/v6.4.2/css/sharp-regular.css">
+    <link rel="stylesheet" href="/v6.4.2/css/sharp-light.css">
+    <link rel="stylesheet" href="/v6.4.2/css/all.css">
+
+    <style>
+        .errorMessage{
+            color:red;
+        }
+    </style>
 </head>
+
 <body>
 <div class="container-scroller">
     <!-- partial:partials/_sidebar.html -->
     <nav class="sidebar sidebar-offcanvas" id="sidebar">
         <div class="sidebar-brand-wrapper d-none d-lg-flex align-items-center justify-content-center fixed-top">
-            <a class="sidebar-brand brand-logo" href="index.html"><img src="/assets/images/logo.svg" alt="logo" /></a>
+            <a class="sidebar-brand brand-logo" th:href="@{/admin/adminHome}">CRAVEHUB</a>
             <a class="sidebar-brand brand-logo-mini" href="index.html"><img src="/assets/images/logo-mini.svg" alt="logo" /></a>
         </div>
         <ul class="nav">
@@ -40,7 +52,7 @@
                             <span class="count bg-success"></span>
                         </div>
                         <div class="profile-name">
-                            <h5 class="mb-0 font-weight-normal">Henry Klein</h5>
+                            <h5 class="mb-0 font-weight-normal" th:text="${session.userName}">Henry Klein</h5>
                             <span>Gold Member</span>
                         </div>
                     </div>
@@ -52,19 +64,21 @@
             <li class="nav-item menu-items">
                 <a class="nav-link" th:href="@{/admin/adminHome}">
               <span class="menu-icon">
-                <i class="mdi mdi-speedometer"></i>
+                <i class="mdi mdi-view-grid"></i>
               </span>
                     <span class="menu-title">Dashboard</span>
                 </a>
             </li>
+
             <li class="nav-item menu-items">
                 <a class="nav-link" th:href="@{/admin/salesReport}">
               <span class="menu-icon">
-                <i class="mdi mdi-speedometer"></i>
+                <i class="mdi mdi-chart-line"></i>
               </span>
                     <span class="menu-title">Sales Report</span>
                 </a>
             </li>
+
             <li class="nav-item menu-items">
                 <a class="nav-link"  th:href="@{/admin/listUsers}">
               <span class="menu-icon">
@@ -102,7 +116,7 @@
             <li class="nav-item menu-items">
                 <a class="nav-link" th:href="@{/admin/listOrders}">
               <span class="menu-icon">
-                <i class="mdi mdi-playlist-play"></i>
+                <i class="mdi mdi-truck-delivery"></i>
               </span>
                     <span class="menu-title">Order</span>
                 </a>
@@ -110,9 +124,17 @@
             <li class="nav-item menu-items">
                 <a class="nav-link" th:href="@{/admin/listCoupons}">
               <span class="menu-icon">
-                <i class="mdi mdi-playlist-play"></i>
+                <i class="mdi mdi-gift"></i>
               </span>
                     <span class="menu-title">Coupon</span>
+                </a>
+            </li>
+            <li class="nav-item menu-items">
+                <a class="nav-link" th:href="@{/admin/offers}">
+              <span class="menu-icon">
+                <i class="mdi mdi-wallet-giftcard"></i>
+              </span>
+                    <span class="menu-title">Offers</span>
                 </a>
             </li>
         </ul>
@@ -133,7 +155,7 @@
                         <a class="nav-link" id="profileDropdown" href="#" data-toggle="dropdown">
                             <div class="navbar-profile">
                                 <img class="img-xs rounded-circle" src="/assets/images/faces/face15.jpg" alt="">
-                                <p class="mb-0 d-none d-sm-block navbar-profile-name">Henry Klein</p>
+                                <p class="mb-0 d-none d-sm-block navbar-profile-name" th:text="${session.userName}">Henry Klein</p>
                                 <i class="mdi mdi-menu-down d-none d-sm-block"></i>
                             </div>
                         </a>
@@ -148,8 +170,8 @@
                                         <i class="mdi mdi-logout text-danger"></i>
                                     </div>
                                 </div>
-                                <div class="preview-item-content">
-                                    <p class="preview-subject mb-1">Log out</p>
+                                <div class="preview-item-content" onclick="logOut()">
+                                    <p class="preview-subject mb-1" >Log out</p>
                                 </div>
                             </a>
                             <div class="dropdown-divider"></div>
@@ -167,40 +189,39 @@
             <div class="content-wrapper">
                 <div class="row ">
 
-
-
-
                                     <div class="col-12 grid-margin stretch-card">
                                         <div class="card">
                                             <div class="card-body ">
                                                 <h4 class="card-title">Add Products</h4>
                                                 <hr class="text-light">
                                                 <p th:if="${error}!= null" th:text="${error}" class="text-light"></p>
-                                                <form class="forms-sample col-8 mx-auto" th:action="@{/admin/addProduct}" method="post" th:object="${product}" required>
+
+                                                <form class="forms-sample col-8 mx-auto" th:action="@{/admin/addProduct}" method="post" th:object="${product}" onsubmit="return validateForm()">
                                                     <div class="form-group">
-                                                        <label for="exampleInputName1">Name</label>
-                                                        <input type="text" class="form-control" id="exampleInputName1" placeholder="Name" th:field="*{productName}" required>
+                                                        <label for="productName">Name</label>
+                                                        <input type="text" class="form-control mb-2" id="productName" name="productName" placeholder="Name" th:field="*{productName}" required >
+                                                        <span id="productNameError" class="errorMessage"></span>
                                                     </div>
                                                     <div class="form-group">
-                                                        <label for="exampleSelectGender">Category</label>
-                                                        <select class="form-control" id="exampleSelectGender" th:field="*{categories}">
+                                                        <label for="exampleSelectCategory">Category</label>
+                                                        <select class="form-control" id="exampleSelectCategory" th:field="*{categories}">
                                                             <option th:each="item : ${categories}" th:if="${not item.isEnabled}" th:value="${item.id}" th:text="${item.category}" required></option>
                                                         </select>
 
                                                     </div>
 
                                                     <div class="form-group">
-                                                        <label for="exampleTextarea1">Description</label>
-                                                        <textarea class="form-control" id="exampleTextarea1" rows="4" th:field="*{description}" required></textarea>
+                                                        <label for="description">Description</label>
+                                                        <textarea class="form-control mb-2" name="description" id="description" rows="4" th:field="*{description}" required></textarea>
+                                                        <span id="descriptionError" class="errorMessage"></span>
                                                     </div>
+
                                                     <button type="submit" class="btn btn-lg btn-inverse-primary mr-2 mt-5">Next
                                                         Page-></button>
                                                 </form>
                                             </div>
                                         </div>
                                     </div>
-
-
 
                 </div>
             </div>
@@ -214,34 +235,78 @@
     </div>
     <!-- page-body-wrapper ends -->
 </div>
+<div id="myAlert" data-aos="fade-down" class="alert alert-success col-3 fixed-top "
+     style="left: 20px; top:20px; border-radius: 7px; opacity: 0.9; z-index: 10000;" role="alert" th:if="${addProductSuccess != null}">
+    <h6 class="alert-heading text-center"><span  th:text="${addProductSuccess}"></span><li class="fa-solid fa-badge-check fa-shake" style="color: #009e5a;"></li></h6>
+    <!-- <p class="fs-6 form-text text-white">Your password has been successfully updated.</p> -->
+</div>
+<div id="myAlert" data-aos="fade-down" class="alert alert-danger col-3 fixed-top "
+     style="left: 20px; top:20px; border-radius: 7px; opacity: 0.9; z-index: 10000;" role="alert" th:if="${addProductError != null}" >
+    <h6 class="alert-heading text-center"><span th:text="${addProductError}"></span><i class="fa-solid fa-circle-xmark fa-shake" style="color: #ff0000;"></i></h6>
+    <!-- <p class="fs-6 form-text text-white">Your password has been successfully updated.</p> -->
+</div>
 
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
-
-<!-- Add this script at the end of your HTML body -->
 <script>
-    // Select the Block and Unblock buttons by their IDs
-    var blockButton = document.getElementById("blockButton");
-    var unblockButton = document.getElementById("unblockButton");
-
-    // Add click event listeners to the buttons
-    unblockButton.addEventListener("click", function(event) {
-        // Show a confirmation dialog and proceed if the user clicks OK
-        if (!confirm("Are you sure you want to block this user?")) {
-            event.preventDefault(); // Prevent the default action if the user clicks Cancel
-        }
-    });
-
-    blockButton.addEventListener("click", function(event) {
-        // Show a confirmation dialog and proceed if the user clicks OK
-        if (!confirm("Are you sure you want to unblock this user?")) {
-            event.preventDefault(); // Prevent the default action if the user clicks Cancel
-        }
-    });
+    setTimeout(function() {
+    document.getElementById('myAlert').style.display = 'none';
+}, 5000);
 </script>
 
+<script>
 
+    var regexProductName = /^(?:[a-zA-Z]\s*){5,}$/;
+       function validateProductName() {
+           var productName = document.getElementById("productName").value;
+           var productNameError = document.getElementById("productNameError");
 
+           // Clear previous error message
+           productNameError.innerHTML = "";
 
+           // Validate username (must match email pattern)
+           if (productName.trim() === "") {
+               productNameError.innerHTML = "Product Name cannot be empty.";
+               return false;
+           }
+            else if (!regexProductName.test(productName)) {
+                productNameError.innerHTML = "Product Name must contain min 5 characters.";
+                return false;
+            }
+
+           return true;
+       }
+        var regexDescription = /(?:[a-zA-Z0-9]\s*){10,}/;
+
+       function validateDescription() {
+           var description = document.getElementById("description").value;
+           var descriptionError = document.getElementById("descriptionError");
+
+           // Clear previous error message
+           descriptionError.innerHTML = "";
+
+           // Validate password (no spaces allowed)
+           if (description.trim() === "") {
+               descriptionError.innerHTML = "Description cannot be empty.";
+               return false;
+           } else if (!regexDescription.test(description)) {
+               descriptionError.innerHTML = "Description should contain min 10 characters";
+               return false;
+           }
+
+           return true;
+       }
+
+       // Attach event listeners to input fields
+       document.getElementById("productName").addEventListener("input", validateProductName);
+       document.getElementById("description").addEventListener("input", validateDescription);
+
+       function validateForm() {
+           // Check both username and password validations
+           return validateProductName() && validateDescription();
+       }
+</script>
+<script src="/assets/js/adminjs.js"></script>
 
 <!-- container-scroller -->
 <!-- plugins:js -->

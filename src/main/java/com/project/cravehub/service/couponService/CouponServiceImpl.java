@@ -41,6 +41,7 @@ public class CouponServiceImpl implements CouponService{
                 couponDto.getDescription(),
                 couponDto.getExpiryDateAsLocalDate(),
                 couponDto.getAmount(),
+                couponDto.getUsageCount(),
                 couponDto.getMinimumPurchaseAmount());
 
         couponRepository.save(coupon);

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error 404 - Page Not Found</title>
+    <script src="https://cdn.lordicon.com/bhenfmcm.js"></script>
+    <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            height: 90vh;
+        }
+        .big-404 {
+            font-size: 100px;
+            font-weight: bold;
+            margin-bottom: 10px; /* Adjust the margin as needed */
+        }
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            flex: 1;
+        }
+        .custom-button {
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div class="button-container">
+
+
+
+    <dotlottie-player src="https://lottie.host/0f79f750-a909-4bb6-8f63-26508aee87d1/78WcYVxw1L.json" background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay></dotlottie-player>
+    <h1>Page not found!!!</h1>
+</div>
+
+<script>
+    function redirectToHome() {
+        window.location.href = '/'; // Replace with the desired home page URL
+    }
+</script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.7.5/lottie.min.js'></script>
+<script>
+    var animation = bodymovin.loadAnimation({
+        container: document.getElementById('animContainer'),
+        renderer: 'svg',
+        loop: true,
+        autoplay: true,
+        path: 'page404.lottie' // lottie file path
+    })
+</script>
+
+</body>

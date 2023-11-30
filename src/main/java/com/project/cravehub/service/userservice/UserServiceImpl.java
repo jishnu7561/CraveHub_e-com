@@ -5,7 +5,9 @@ import com.project.cravehub.dto.UserRegistrationDto;
 import com.project.cravehub.model.admin.Product;
 import com.project.cravehub.model.user.*;
 import com.project.cravehub.repository.*;
+import com.project.cravehub.service.categoryservice.CategoryService;
 import com.project.cravehub.service.productservice.ProductService;
+import com.project.cravehub.util.EmailReferral;
 import com.project.cravehub.util.EmailUtil;
 import com.project.cravehub.util.OtpUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 //import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.MessagingException;
+import javax.servlet.http.HttpSession;
 import java.security.Principal;
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -41,6 +44,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private EmailUtil emailUtil;
+
+    @Autowired
+    private EmailReferral emailReferral;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -71,6 +77,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private TransactionRepository transactionRepository;
+
+    @Autowired
+    private CategoryService categoryService;
 
     @Override
     public User save(UserRegistrationDto registrationDto) {
@@ -290,6 +299,9 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByEmail(username);
         Cart cart = cartRepository.findByUser(user);
 
+        productService.updateIsEnabled();
+        categoryService.updateIsEnabled();
+
         List<CartItem> cartItems =  cartItemRepository.findByCart(cart);
         int totalPrice = 0;
 
@@ -392,12 +404,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void createWallet(User user) {
-        Wallet wallet = new Wallet();
-        wallet.setUser(user);
-        user.setWallet(wallet);
+        if (user.getWallet() == null) {
+            Wallet wallet = new Wallet();
+            wallet.setUser(user);
+            user.setWallet(wallet);
 
-        // Save user and wallet in a single transaction
-        userRepository.save(user);
+            // Save user and wallet in a single transaction
+            userRepository.save(user);
+        }
     }
 
     @Override
@@ -428,7 +442,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional
     public void addTransactionAndRefund(OrderItem orderItem) {
         System.out.println("called the refund");
         Transactions transactions = new Transactions();
@@ -470,6 +483,60 @@ public class UserServiceImpl implements UserService {
              userRepository.save(user1);
     }
 
+//    @Override
+//    @Transactional
+//    public void addTransactionAndRefund(OrderItem orderItem) {
+//        System.out.println("called the refund");
+//
+//        // Create a new transaction
+//        Transactions transactions = new Transactions();
+//        transactions.getUser().add(orderItem.getOrder().getUser());
+//        LocalDateTime date = LocalDateTime.now();
+//        transactions.setTransactionDate(date);
+//
+//        // Calculate discount based on the order's coupon
+//        Double discount = 0.0;
+//        if (!orderItem.getOrder().isRefund_used() && orderItem.getOrder().getCoupon() != null) {
+//            discount = orderItem.getOrder().getCoupon().getAmount();
+//        }
+//
+//        // Set transaction details
+//        transactions.setOrderAmount(orderItem.getOrder().getOrderAmount() - discount);
+//        transactions.setPaymentMethod(orderItem.getOrder().getPaymentMethod());
+//        transactions.setPurchaseOrder(orderItem.getOrder());
+//        transactions.setPurpose("refund");
+//
+//        // Save the transaction
+//        transactionRepository.save(transactions);
+//
+//        // Update wallet and purchase order
+//        User user1 = orderItem.getOrder().getUser();
+//        Wallet wallet = user1.getWallet();
+//
+//        if (wallet == null) {
+//            wallet = new Wallet();
+//            wallet.setUser(user1);
+//            user1.setWallet(wallet);
+//        }
+//
+//        // Update the wallet balance based on the refund amount
+//        wallet.setBalance(wallet.getBalance() + ((orderItem.getItemCount() * orderItem.getProduct().getPrice()) - discount));
+//
+//        // Update the purchase order to indicate that the refund was used
+//        PurchaseOrder purchaseOrder = orderItem.getOrder();
+//        purchaseOrder.setRefund_used(true);
+//
+//        // Save the updated entities
+//        walletRepository.save(wallet);
+//        purchaseOrderRepository.save(purchaseOrder);
+//
+//        // Add the transaction to the user's set of transactions
+//        user1.getTransaction().add(transactions);
+//
+//        // Save the updated user entity
+//        userRepository.save(user1);
+//    }
+
     @Override
     public void addBalanceToWallet(User user,double totalAmount) {
         Double balance = user.getWallet().getBalance();
@@ -495,6 +562,48 @@ public class UserServiceImpl implements UserService {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void createCartForUser(String userEmail) {
+
+        User user = userRepository.findByEmail(userEmail);
+        System.out.println(user);
+
+        if (user != null) {
+            Cart cart = user.getCart();
+
+            if (cart == null) {
+                cart = new Cart();
+                cart.setUser(user);
+                user.setCart(cart);
+                cartRepository.save(cart);
+            }
+        }
+
+    }
+
+    @Override
+    public void sentReferralLink(String email, Principal principal) throws MessagingException {
+        User user = userRepository.findByEmail(principal.getName());
+        emailReferral.sendLinkEmail(email,user);
+    }
+
+    @Override
+    public void addReferralOffer(HttpSession session,String email) {
+        String referralCode = session.getAttribute("referralCode").toString();
+        User user1 = userRepository.findByEmail(email);
+
+        if(referralCode != null && user1 != null)
+        {
+            User user = userRepository.findByReferralCode(referralCode);
+            user.getWallet().setBalance(user.getWallet().getBalance()+100);
+            user1.getWallet().setBalance(50.0);
+            user1.getWallet().setReferralUsed(true);
+            userRepository.save(user);
+            userRepository.save(user1);
+            session.removeAttribute("referralCode");
+        }
     }
 
 }

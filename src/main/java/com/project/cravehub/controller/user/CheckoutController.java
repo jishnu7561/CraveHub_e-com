@@ -80,9 +80,10 @@ public class CheckoutController {
     }
 
     @GetMapping("/orderPlaced")
-    public String orderPlaced(Principal principal, Model model) {
+    public String orderPlaced(Principal principal, Model model,HttpSession session) {
         User user = userRepository.findByEmail(principal.getName());
         model.addAttribute("userName", user.getUserName());
+        model.addAttribute("cartCount",session.getAttribute("cartCount"));
         return "OrderPlaced";
     }
 
@@ -93,7 +94,7 @@ public class CheckoutController {
             @RequestParam("optradio") String paymentMethod,
             @RequestParam("totalAmount") double totalAmount,
             @RequestParam(value = "couponId", required = false) Integer couponId,
-            Principal principal) throws RazorpayException {
+            Principal principal,HttpSession session,Model model) throws RazorpayException {
             System.out.println("in place an order");
 
 //        if(addressId == null)
@@ -126,13 +127,18 @@ public class CheckoutController {
         if(paymentMethod.equals("wallet"))
         {
             userService.addBalanceToWallet(user,totalAmount);
+            purchaseOrder.setPaymentStatus("success");
         }
         purchaseOrder.setAddress(address);
-
-            purchaseOrder.setPaymentStatus("pending");
+            if(paymentMethod.equals("COD")) {
+                purchaseOrder.setPaymentStatus("pending");
+            }
             response.put("isValid", true);
             purchaseOrderRepository.save(purchaseOrder);
             boolean added = userService.addOrderItems(cart, purchaseOrder);
+            int cartItemCount = userService.getCartItemsCount(user);
+            session.setAttribute("cartCount", cartItemCount);
+            model.addAttribute("cartCount", cartItemCount);
             System.out.println("checkout ---------"+added);
         if(paymentMethod.equals("online")) {
             RazorpayClient razorpay = new RazorpayClient("rzp_test_wGwkqS0TUZJIEr", "0bbu25Q53eoTXXqWyF1gFiOT");
@@ -259,7 +265,8 @@ public class CheckoutController {
             PurchaseOrder purchaseOrder = purchaseOrderRepository.findById(purchaseId).orElse(null);
             if(purchaseOrder != null)
             {
-                purchaseOrder.setPaymentStatus("success");
+                String payment_status ="success";
+                purchaseOrder.setPaymentStatus(payment_status);
                 purchaseOrder.setTransactionId(paymentId);
                 purchaseOrderRepository.save(purchaseOrder);
                 System.out.println(purchaseOrder.getPaymentMethod());

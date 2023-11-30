@@ -35,7 +35,7 @@
     <!-- partial:partials/_sidebar.html -->
     <nav class="sidebar sidebar-offcanvas" id="sidebar">
         <div class="sidebar-brand-wrapper d-none d-lg-flex align-items-center justify-content-center fixed-top">
-            <a class="sidebar-brand brand-logo" href="index.html"><img src="/assets/images/logo.svg" alt="logo" /></a>
+            <a class="sidebar-brand brand-logo" th:href="@{/admin/adminHome}">CRAVEHUB</a>
             <a class="sidebar-brand brand-logo-mini" href="index.html"><img src="/assets/images/logo-mini.svg" alt="logo" /></a>
         </div>
         <ul class="nav">
@@ -47,7 +47,7 @@
                             <span class="count bg-success"></span>
                         </div>
                         <div class="profile-name">
-                            <h5 class="mb-0 font-weight-normal">Henry Klein</h5>
+                            <h5 class="mb-0 font-weight-normal" th:text="${session.userName}">Henry Klein</h5>
                             <span>Gold Member</span>
                         </div>
                     </div>
@@ -59,15 +59,16 @@
             <li class="nav-item menu-items">
                 <a class="nav-link" th:href="@{/admin/adminHome}">
               <span class="menu-icon">
-                <i class="mdi mdi-speedometer"></i>
+                <i class="mdi mdi-view-grid"></i>
               </span>
                     <span class="menu-title">Dashboard</span>
                 </a>
             </li>
+
             <li class="nav-item menu-items">
                 <a class="nav-link" th:href="@{/admin/salesReport}">
               <span class="menu-icon">
-                <i class="mdi mdi-speedometer"></i>
+                <i class="mdi mdi-chart-line"></i>
               </span>
                     <span class="menu-title">Sales Report</span>
                 </a>
@@ -110,7 +111,7 @@
             <li class="nav-item menu-items">
                 <a class="nav-link" th:href="@{/admin/listOrders}">
               <span class="menu-icon">
-                <i class="mdi mdi-playlist-play"></i>
+                <i class="mdi mdi-truck-delivery"></i>
               </span>
                     <span class="menu-title">Order</span>
                 </a>
@@ -118,9 +119,17 @@
             <li class="nav-item menu-items">
                 <a class="nav-link" th:href="@{/admin/listCoupons}">
               <span class="menu-icon">
-                <i class="mdi mdi-playlist-play"></i>
+                <i class="mdi mdi-gift"></i>
               </span>
                     <span class="menu-title">Coupon</span>
+                </a>
+            </li>
+            <li class="nav-item menu-items">
+                <a class="nav-link" th:href="@{/admin/offers}">
+              <span class="menu-icon">
+                <i class="mdi mdi-wallet-giftcard"></i>
+              </span>
+                    <span class="menu-title">Offers</span>
                 </a>
             </li>
         </ul>
@@ -141,7 +150,7 @@
                         <a class="nav-link" id="profileDropdown" href="#" data-toggle="dropdown">
                             <div class="navbar-profile">
                                 <img class="img-xs rounded-circle" src="/assets/images/faces/face15.jpg" alt="">
-                                <p class="mb-0 d-none d-sm-block navbar-profile-name">Henry Klein</p>
+                                <p class="mb-0 d-none d-sm-block navbar-profile-name" th:text="${session.userName}">Henry Klein</p>
                                 <i class="mdi mdi-menu-down d-none d-sm-block"></i>
                             </div>
                         </a>
@@ -156,8 +165,8 @@
                                         <i class="mdi mdi-logout text-danger"></i>
                                     </div>
                                 </div>
-                                <div class="preview-item-content">
-                                    <p class="preview-subject mb-1">Log out</p>
+                                <div class="preview-item-content" onclick="logOut()">
+                                    <p class="preview-subject mb-1" >Log out</p>
                                 </div>
                             </a>
                             <div class="dropdown-divider"></div>
@@ -178,24 +187,24 @@
                             <div class="card-body">
                                 <h4 class="card-title mb-5">Edit Product Offer</h4>
                                 <!-- <p class="card-description"> Basic form layout </p> -->
-                                <form class="forms-sample" th:action="@{'/admin/editCategoryOffer/'+ ${categoryOfferId}}" method="post" th:object="${categoryOffer}">
+                                <form class="forms-sample" th:action="@{'/admin/editCategoryOffer/'+ ${categoryOfferId}}" method="post" th:object="${categoryOffer}" onsubmit="return validateOfferForm()">
                                     <div class="form-group  row">
 
                                         <div class="col-6  text-light mb-4">
-                                            <label for="exampleInputName1">Offer Name</label>
-                                            <input type="text" class="form-control  text-light" name="categoryOfferName" id="exampleInputName1"  placeholder="Offer Name" th:value="${categoryOffer.categoryOfferName}">
+                                            <label for="offerName">Offer Name</label>
+                                            <input type="text" class="form-control  text-light" name="categoryOfferName" id="offerName"  placeholder="Offer Name" th:value="${categoryOffer.categoryOfferName}">
                                         </div>
                                         <div class="col-6 mb-4">
-                                            <label for="exampleInputName1">Discount Amount</label>
-                                            <input type="number" class="form-control text-light" id="exampleInputName2" name="discountPercentage"    placeholder="Discount Amount" th:value="${categoryOffer.discountPercentage}">
+                                            <label for="percentage">Discount Amount</label>
+                                            <input type="number" class="form-control text-light" id="percentage" name="discountPercentage"    placeholder="Discount Amount" th:value="${categoryOffer.discountPercentage}">
                                         </div>
                                         <div class="col-6 mb-4">
-                                            <label for="exampleInputName1">Start Date</label>
-                                            <input type="date" class="form-control text-light" id="exampleInputName3" name="startDate"    placeholder="Start Date" th:value="${categoryOffer.startDate}">
+                                            <label for="startDate">Start Date</label>
+                                            <input type="date" class="form-control text-light" id="startDate" name="startDate"    placeholder="Start Date" th:value="${categoryOffer.startDate}">
                                         </div>
                                         <div class="col-6 mb-4">
-                                            <label for="exampleInputName1">End Date</label>
-                                            <input type="date" class="form-control text-light" id="exampleInputName4" name="expiryDate"    placeholder="Expiry Date" th:value="${categoryOffer.expiryDate}">
+                                            <label for="endDate">End Date</label>
+                                            <input type="date" class="form-control text-light" id="endDate" name="expiryDate"    placeholder="Expiry Date" th:value="${categoryOffer.expiryDate}">
                                         </div>
                                         <div class="col-4 mx-auto mt-4">
                                             <button type="submit"  class="btn btn-inverse-primary btn-lg btn-block">
@@ -213,7 +222,14 @@
     </div>
     <!-- page-body-wrapper ends -->
 </div>
+<div id="validateAlert" data-aos="fade-down" class="alert alert-danger col-3 fixed-top mx-auto"
+     style="top:20px; border-radius: 7px; opacity: 0.9; z-index: 10000;display:none;" role="alert" >
+    <h5 class="alert-heading text-center" ><i class="fa-solid fa-circle-exclamation" style="color: #ff0000;"></i> <span id="ValidErrMess"></span></h5>
+    <!-- <p class="fs-6 form-text text-white">Your password has been successfully updated.</p> -->
+</div>
+<script src="/assets/js/adminjs.js"></script>
 
+<script src="/assetsProfile/js/validation.js"></script>
 
 <!-- container-scroller -->
 <!-- plugins:js -->

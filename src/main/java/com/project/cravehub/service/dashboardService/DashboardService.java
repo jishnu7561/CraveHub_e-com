@@ -19,4 +19,6 @@ public interface DashboardService {
     Integer countOfCod();
 
     Integer countOfOnline();
+
+    String getUserNameByEmail(String name);
 }

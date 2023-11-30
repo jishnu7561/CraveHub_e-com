@@ -6,6 +6,8 @@ import com.project.cravehub.model.admin.Product;
 import com.project.cravehub.model.user.*;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
+import javax.mail.MessagingException;
+import javax.servlet.http.HttpSession;
 import java.security.Principal;
 import java.util.List;
 
@@ -60,6 +62,12 @@ public interface UserService extends UserDetailsService {
     void addBalanceToWallet(User user,double totalAmount);
 
     boolean verifyReferralCode(String referralCode, String name);
+
+    void createCartForUser(String emailid);
+
+    void sentReferralLink(String email, Principal principal) throws MessagingException;
+
+    void addReferralOffer(HttpSession session,String email);
 
     // int findQuantityByCartId(Cart cartId);
 }

@@ -45,7 +45,7 @@ public class Coupon {
         user.getCoupons().add(this);
     }
 
-    public Coupon(String couponCode, String description, LocalDate expiryDate, Double amount, Double minimumPurchaseAmount) {
+    public Coupon(String couponCode, String description, LocalDate expiryDate, Double amount,Integer usageCount, Double minimumPurchaseAmount) {
         this.couponCode = couponCode;
         this.description = description;
         this.expiryDate = expiryDate;

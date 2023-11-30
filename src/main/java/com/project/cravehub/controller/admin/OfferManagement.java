@@ -1,15 +1,9 @@
 package com.project.cravehub.controller.admin;
 
 import com.project.cravehub.dto.OfferDto;
-import com.project.cravehub.model.admin.Category;
-import com.project.cravehub.model.admin.CategoryOffer;
-import com.project.cravehub.model.admin.Product;
-import com.project.cravehub.model.admin.ProductOffer;
+import com.project.cravehub.model.admin.*;
 import com.project.cravehub.model.user.User;
-import com.project.cravehub.repository.CategoryOfferRepository;
-import com.project.cravehub.repository.CategoryRepository;
-import com.project.cravehub.repository.ProductOfferRepository;
-import com.project.cravehub.repository.ProductRepository;
+import com.project.cravehub.repository.*;
 import com.project.cravehub.service.categoryservice.CategoryService;
 import com.project.cravehub.service.productservice.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -105,17 +99,21 @@ public class OfferManagement {
                                                  @RequestParam("offerId") Integer offerId,
                                                  HttpSession session)
     {
+        Map<String,String> response = new HashMap<>();
         String added = productService.addProductToOffer(productId,offerId);
         System.out.println("the product id is "+ productId);
         System.out.println("the offerId is "+offerId);
-        Map<String,String> response = new HashMap<>();
         if(added.equals("exist"))
         {
             response.put("isValid","false");
             response.put("message","product already exist");
         } else if (added.equals("success")) {
             response.put("isValid","true");
-        }else {
+        } else if (added.equals("categoryExist")) {
+            response.put("isValid","false");
+            response.put("message","Product already have a category offer.");
+        }
+        else {
             response.put("isValid","false");
             response.put("message","Failed to add product");
         }
@@ -327,5 +325,6 @@ public class OfferManagement {
         return "redirect:/admin/listCategoryOffers";
 
     }
+
 
 }

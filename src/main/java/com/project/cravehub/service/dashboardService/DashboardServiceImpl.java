@@ -3,9 +3,11 @@ package com.project.cravehub.service.dashboardService;
 import com.project.cravehub.model.admin.Product;
 import com.project.cravehub.model.user.OrderItem;
 import com.project.cravehub.model.user.PurchaseOrder;
+import com.project.cravehub.model.user.User;
 import com.project.cravehub.repository.OrderItemRepository;
 import com.project.cravehub.repository.ProductRepository;
 import com.project.cravehub.repository.PurchaseOrderRepository;
+import com.project.cravehub.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -30,6 +32,9 @@ public class DashboardServiceImpl implements DashboardService{
 
     @Autowired
     private PurchaseOrderRepository purchaseOrderRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
     public double totalRevenueWeekly(String period) {
@@ -147,6 +152,12 @@ public class DashboardServiceImpl implements DashboardService{
             }
         }
         return count;
+    }
+
+    @Override
+    public String getUserNameByEmail(String email) {
+        User user = userRepository.findByEmail(email);
+        return user.getUserName();
     }
 
     public Integer calculateOrderTotalPrice(PurchaseOrder order)

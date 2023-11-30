@@ -123,18 +123,24 @@ public class SalesReportController {
 
 
         List<OrderItem> orderItemList = new ArrayList<>();
+        double totalRevenue =0.0;
+        int totalSales =0;
 
         if(end != null && start !=null) {
             LocalDate dateFrom = LocalDate.parse(start, DateTimeFormatter.ISO_LOCAL_DATE);
             LocalDate dateTo = LocalDate.parse(end, DateTimeFormatter.ISO_LOCAL_DATE);
              orderItemList = salesReportService.generateSalesReport(dateFrom,dateTo);
+          totalRevenue = salesReportService.totalRevenue(dateFrom , dateTo);
+          totalSales = salesReportService.totalSales(dateFrom,dateTo);
 
         }
         else {
              orderItemList = salesReportService.getSalesReport();
+             totalRevenue = salesReportService.getTotalRevenue();
+             totalSales = salesReportService.getTotalSales();
         }
 
-        byte[] pdfBytes = pdfReportGenerationService.generatePdfOrderReport(orderItemList,start,end);
+        byte[] pdfBytes = pdfReportGenerationService.generatePdfOrderReport(orderItemList,start,end,totalRevenue,totalSales);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_PDF);

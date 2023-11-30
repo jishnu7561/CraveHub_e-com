@@ -48,7 +48,13 @@ public class Product {
     @JoinColumn(name = "subCategoryId")
     private SubCategory subcategories;
 
-    private String imageName;
+//    @ElementCollection
+//    @CollectionTable(name = "product_images", joinColumns = @JoinColumn(name = "product_id"))
+//    @Column(name = "image_name")
+//    private List<String> images;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProductImages> productImages;
 
     @Column(name="isEnabled",nullable=false)
     private boolean isEnabled;
@@ -71,22 +77,22 @@ public class Product {
 
     public Product(String productName, String description, Double price, Integer quantity,
                    Category categories, SubCategory subcategories,
-                   String imageName, boolean isEnabled) {
+                  boolean isEnabled) {
         this.productName = productName;
         this.description = description;
         this.price = price;
         this.quantity = quantity;
         this.categories = categories;
         this.subcategories = subcategories;
-        this.imageName= imageName;
+//        this.productImages= imageName;
         this.isEnabled = isEnabled;
     }
 
-    public Product(String productName, String description, Category categories, String imageName,Double price) {
+    public Product(String productName, String description, Category categories,Double price) {
         this.productName = productName;
         this.description = description;
         this.categories = categories;
-        this.imageName = imageName;
+//        this.productImages = imageName;
         this.price = price;
     }
 
@@ -98,14 +104,14 @@ public class Product {
 
 
 
-    public Product(String productName, String description, Category categories, String imageName, Double price, Integer quantity, SubCategory subcategories) {
+    public Product(String productName, String description, Category categories, Double price, Integer quantity, SubCategory subcategories,List<ProductImages> productImages) {
         this.productName = productName;
         this.description = description;
         this.price = price;
         this.quantity = quantity;
         this.categories = categories;
         this.subcategories = subcategories;
-        this.imageName = imageName;
+        this.productImages = productImages;
     }
 
     public Integer getProductId() {
@@ -173,12 +179,12 @@ public class Product {
         this.subcategories = subcategories;
     }
 
-    public String getImageName() {
-        return imageName;
+    public List<ProductImages> getProductImages() {
+        return productImages;
     }
 
-    public void setImageName(String imageName) {
-        this.imageName = imageName;
+    public void setProductImages(List<ProductImages> productImages) {
+        this.productImages = productImages;
     }
 
     public boolean isEnabled() {
@@ -248,6 +254,15 @@ public class Product {
             averageRating = totalRating / reviews.size();
             System.out.println("aaaaaaaaaaaaaa"+ averageRating);
         }
+    }
+
+    public void addProductImage(ProductImages productImage) {
+        productImages.add(productImage);
+    }
+
+    // New method to remove a product image from the product
+    public void removeProductImage(ProductImages productImage) {
+        productImages.remove(productImage);
     }
 
 }

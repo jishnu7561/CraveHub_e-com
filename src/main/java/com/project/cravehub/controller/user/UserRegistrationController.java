@@ -36,9 +36,13 @@ public class UserRegistrationController {
 
 
     @PostMapping("/registration")
-    public String registerUserAccount(@ModelAttribute("user") UserRegistrationDto userRegistrationDto, HttpSession session) {
+    public String registerUserAccount(@RequestParam(name = "referralCode", required = false) String referralCode,
+                                      @ModelAttribute("user") UserRegistrationDto userRegistrationDto,
+                                      HttpSession session) {
         String email = userRegistrationDto.getEmail();
 
+        session.setAttribute("referralCode",referralCode);
+        System.out.println("hhhhhhhhhhhhhhhhhhhhhhhhhhhhh"+referralCode);
         // Check if the email already exists
         boolean validEmailId = userService.isValidEmailId(email);
 

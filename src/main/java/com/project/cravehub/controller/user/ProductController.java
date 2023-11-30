@@ -1,6 +1,7 @@
 package com.project.cravehub.controller.user;
 
 import com.project.cravehub.model.admin.Product;
+import com.project.cravehub.model.user.Review;
 import com.project.cravehub.model.user.User;
 import com.project.cravehub.repository.ProductRepository;
 import com.project.cravehub.repository.UserRepository;
@@ -49,11 +50,13 @@ public class ProductController {
             int cartCount = (int) session.getAttribute("cartCount");
             model.addAttribute("cartCount",cartCount);
             model.addAttribute("user", user);
+            model.addAttribute("userName",session.getAttribute((String)session.getAttribute("userName")));
             int rating = reviewService.getReviewCountForProduct(product);
             model.addAttribute("rating",rating);
             Integer sold = productService.totalSold(product,user);
             model.addAttribute("sold",sold);
-
+            List<Review> reviewList = reviewService.getReviewsByProduct(product);
+            model.addAttribute("review",reviewList);
         }
 
         return "product-single";

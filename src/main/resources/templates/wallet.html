@@ -9,18 +9,6 @@
     <meta name="keywords" content="HTML5 Template">
     <meta name="description" content="Molla - Bootstrap eCommerce Template">
     <meta name="author" content="p-themes">
-    <!-- Favicon -->
-    <!--    <link rel="apple-touch-icon" sizes="180x180" href="assets/images/icons/apple-touch-icon.png">-->
-    <!--    <link rel="icon" type="image/png" sizes="32x32" href="assets/images/icons/favicon-32x32.png">-->
-    <!--    <link rel="icon" type="image/png" sizes="16x16" href="assets/images/icons/favicon-16x16.png">-->
-    <!--    <link rel="manifest" href="assets/images/icons/site.html">-->
-    <!--    <link rel="mask-icon" href="/images/icons/safari-pinned-tab.svg" color="#666666">-->
-    <!--    <meta name="apple-mobile-web-app-title" content="Molla">-->
-    <!--    <meta name="application-name" content="Molla">-->
-    <!--    <meta name="msapplication-TileColor" content="#cc9966">-->
-    <!--    <meta name="msapplication-config" content="assets/images/icons/browserconfig.xml">-->
-    <!--    <meta name="theme-color" content="#ffffff">-->
-    <!-- Plugins CSS File -->
     <link rel="stylesheet" href="/assetsProfile/css/bootstrap.min.css">
     <!-- Main CSS File -->
     <link rel="stylesheet" href="/assetsProfile/css/style.css">
@@ -133,8 +121,8 @@ background: linear-gradient(to right, #29323c, #485563); /* W3C, IE 10+/ Edge, F
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Shop</a>
                     <div class="dropdown-menu" aria-labelledby="dropdown04">
-                        <a class="dropdown-item" href="shop.html">Shop</a>
-                        <a class="dropdown-item" href="wishlist.html">Wishlist</a>
+                        <a class="dropdown-item" th:href="@{/shop}">Shop</a>
+                        <a class="dropdown-item" th:href="@{/wishlist}">Wishlist</a>
                         <a class="dropdown-item" th:href="@{/cart}" th:if="${#authorization.expression('isAuthenticated()')}">Cart</a>
                         <a class="dropdown-item" th:href="@{/login}" th:if="${#authorization.expression('!isAuthenticated()')}">Cart</a>
                     </div>
@@ -148,21 +136,15 @@ background: linear-gradient(to right, #29323c, #485563); /* W3C, IE 10+/ Edge, F
                     </a>
                 </li>
                 <li class="nav-item">
-                    <!-- <input class="search_bar" type="search" placeholder="Search" aria-label="Search"> -->
                     <form th:action="@{/search}" method="get">
                         <input type="text" class="search-bar" name="searchTerm" placeholder="Search..." >
-                    </form>          <!-- <div class="search-container">
-              <input type="text" class="search-input" placeholder="Search...">
-              <button class="search-button">
-                <i class="fa fa-search"></i>
-              </button>
-            </div> -->
+                    </form>
                 </li>
                 <li class="nav-item dropdown">
                     <!--<a href="contact.html" class="nav-link">Contact</a>-->
                     <!--				<a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"  th:text="${user.userName}">Account</a>-->
-                    <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" th:if="${user != null}" th:text="${userName}">Account</a>
-                    <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" th:unless="${user != null}">Account</a>
+                    <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" th:if="${userName != null}" th:text="${userName}">Account</a>
+                    <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" th:if="${userName == null}">Account</a>
 
                     <div class="dropdown-menu" aria-labelledby="dropdown04">
                         <a class="dropdown-item" sec:authorize="hasRole('USER')" th:href="@{/profile}">Profile</a>
@@ -178,15 +160,15 @@ background: linear-gradient(to right, #29323c, #485563); /* W3C, IE 10+/ Edge, F
 <!-- END nav -->
 
 <main class="main">
-    <div class="page-header text-center" style="background-image: url('/images/—Pngtree—background%20with%20fast%20food%20drawn_1199846%20copy.jpg')">
+    <div class="page-header text-center" style="background-image: url('/images/backgroundwithfastfood.jpg')">
         <div class="container">
-            <h1 class="page-title text-white"><i class="fa-regular fa-wallet" style="color: #ffffff;"></i> My Wallet<span class="text-warning">wallet</span></h1>
+            <h1 class="page-title text-white"><i class="fa-regular fa-wallet" style="color: #ffffff;"></i> My Wallet</h1>
         </div>
     </div>
     <nav aria-label="breadcrumb" class="breadcrumb-nav mb-3">
         <div class="container">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="index.html">My Account</a></li>
+                <li class="breadcrumb-item"><a th:href="@{/profile}">My Account</a></li>
 
                 <li class="breadcrumb-item active" aria-current="page">wallet</li>
             </ol>
@@ -199,15 +181,10 @@ background: linear-gradient(to right, #29323c, #485563); /* W3C, IE 10+/ Edge, F
                 <div class="row">
                     <div class="col-lg-5  col-10 gradient1" >
                         <div class="card-body my-auto " style="margin:0px 3rem;">
-<!--                            <div class="d-flex justify-content-end">-->
-<!--                            </div>-->
                             <div class="mt-5 d-flex justify-content-between">
                                 <span  class="ps-5"  th:text="${wallet.user.firstName}" style="font-size: 2rem;padding-top: 1rem;color:white"></span>
                                 <span class="fa-solid fa-tarp" style="color: #ffff;font-size:5rem"></span>
                             </div>
-<!--                            <p>-->
-<!--                                In your showWishlist method, you are attempting to access the products property of the wishlist object without checking if the wishlist object is null. This can lead to a NullPointerException if the wishlist object is not properly initialized.-->
-<!--                            </p>-->
                             <div class="d-flex justify-content-between mb-5 mt-5">
                                 <span style="font-weight: bold;    font-size: 2.5rem; padding-top: 2.3rem;color:#938c8c">Wallet Balance</span>
                                 <span style="font-weight: bold;font-size:5rem;color:white" th:text="'₹'+${wallet.balance}">$1000</span>
@@ -266,20 +243,7 @@ background: linear-gradient(to right, #29323c, #485563); /* W3C, IE 10+/ Edge, F
 
 <section class="ftco-section ftco-no-pt ftco-no-pb py-5 bg-light">
     <div class="container py-4">
-        <div class="row d-flex justify-content-center py-5">
-            <div class="col-md-6">
-                <h2 style="font-size: 22px;" class="mb-0">Subcribe to our Newsletter</h2>
-                <span>Get e-mail updates about our latest shops and special offers</span>
-            </div>
-            <div class="col-md-6 d-flex align-items-center">
-                <form action="#" class="subscribe-form">
-                    <div class="form-group d-flex">
-                        <input type="text" class="form-control" placeholder="Enter email address">
-                        <input type="submit" value="Subscribe" class="submit px-3">
-                    </div>
-                </form>
-            </div>
-        </div>
+
     </div>
 </section>
 <footer class="ftco-footer ftco-section">
@@ -294,8 +258,8 @@ background: linear-gradient(to right, #29323c, #485563); /* W3C, IE 10+/ Edge, F
         <div class="row mb-5">
             <div class="col-md">
                 <div class="ftco-footer-widget mb-4">
-                    <h2 class="ftco-heading-2">Vegefoods</h2>
-                    <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia.</p>
+                    <h2 class="ftco-heading-2">CraveHUB</h2>
+                    <p>Indulge in a gastronomic adventure with our junk food delivery – a delicious escape into a world of irresistible flavors.</p>
                     <ul class="ftco-footer-social list-unstyled float-md-left float-lft mt-5">
                         <li class="ftco-animate"><a href="#"><span class="icon-twitter"></span></a></li>
                         <li class="ftco-animate"><a href="#"><span class="icon-facebook"></span></a></li>
@@ -338,19 +302,10 @@ background: linear-gradient(to right, #29323c, #485563); /* W3C, IE 10+/ Edge, F
                         <ul>
                             <li><span class="icon icon-map-marker"></span><span class="text">203 Fake St. Mountain View, San Francisco, California, USA</span></li>
                             <li><a href="#"><span class="icon icon-phone"></span><span class="text">+2 392 3929 210</span></a></li>
-                            <li><a href="#"><span class="icon icon-envelope"></span><span class="text">info@yourdomain.com</span></a></li>
+                            <li><a href="#"><span class="icon icon-envelope"></span><span class="text">info@cravehub.online</span></a></li>
                         </ul>
                     </div>
                 </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12 text-center">
-
-                <p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                    Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="icon-heart color-danger" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
-                    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                </p>
             </div>
         </div>
     </div>

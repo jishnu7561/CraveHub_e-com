@@ -48,6 +48,7 @@ public class WishlistController {
             List<Product> productList = wishlist.getProducts();
             model.addAttribute("productList", productList);
         }
+        model.addAttribute("userName",(String)session.getAttribute("userName"));
         model.addAttribute("cartCount",(Integer)session.getAttribute("cartCount"));
         return "wishlist";
     }

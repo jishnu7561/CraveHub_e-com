@@ -29,4 +29,7 @@ public interface ProductRepository extends JpaRepository<Product,Integer> {
     Page<Product> findByProductNameContainingOrCategoriesCategoryContainingOrSubcategoriesSubCategoryNameContaining(String searchTerm1, String searchTerm2, String searchTerm3, Pageable pageable);
 
     List<Product> findByProductNameContaining(String searchTerm);
+
+    boolean existsByProductNameIgnoreCase(String productName);
+
 }

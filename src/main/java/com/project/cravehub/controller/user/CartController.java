@@ -68,6 +68,8 @@ public class CartController {
         int cartCount = (int)session.getAttribute("cartCount");
         model.addAttribute("cartCount",cartCount);
 
+        model.addAttribute("cartId",user.getCart().getCartId());
+
         return "cart";
     }
 
@@ -180,4 +182,11 @@ public class CartController {
 //        cartItemRepository.deleteByCart(cart);
 //        return "redirect:/";
 //    }
+
+    @ResponseBody
+    @GetMapping("/blockedPage")
+    private String blockedPage()
+    {
+        return "blockedPage";
+    }
 }

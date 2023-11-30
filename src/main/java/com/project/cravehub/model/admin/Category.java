@@ -26,9 +26,11 @@ public class Category {
     @JoinColumn(name = "category_offer_id")
     private CategoryOffer categoryOffer;
 
-    @ManyToMany
+    @OneToMany(mappedBy = "categories", cascade = CascadeType.ALL)
     private Set<Product> products = new HashSet<>();
 
+//    @OneToMany(mappedBy = "subcategories", cascade = CascadeType.ALL)
+//    private List<Product> products;
 
     public Category(){
 

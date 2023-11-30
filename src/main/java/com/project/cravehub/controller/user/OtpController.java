@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.security.Principal;
 
 @Controller
 public class OtpController {
@@ -65,7 +66,9 @@ private UserRepository userRepository;
         {
             User verifyCustomer = (User) session.getAttribute("verifyCustomer");
             userService.createWallet(verifyCustomer);
+            userService.createCartForUser(emailid);
             userRepository.save(verifyCustomer);
+            userService.addReferralOffer(session,emailid);
             System.out.println("successfully verified and regisrered");
             return ResponseEntity.ok(true);
         }

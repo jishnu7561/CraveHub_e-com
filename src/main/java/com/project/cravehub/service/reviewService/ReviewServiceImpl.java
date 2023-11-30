@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -53,5 +54,11 @@ public class ReviewServiceImpl implements ReviewService{
 
     public Integer getReviewCountForProduct(Product product) {
         return reviewRepository.countByProduct(product);
+    }
+
+    @Override
+    public List<Review> getReviewsByProduct(Product product) {
+
+        return reviewRepository.findByProduct(product);
     }
 }

@@ -61,16 +61,21 @@ public class OrderManagement {
             String delivered = "delivered";
             if(selectedStatus.equals(delivered))
             {
+                String payment_sts = "success";
                 PurchaseOrder purchaseOrder = orderItem.getOrder();
-                purchaseOrder.setPaymentStatus("success");
+                purchaseOrder.setPaymentStatus(payment_sts);
                 purchaseOrderRepository.save(purchaseOrder);
+                System.out.println(orderItem.getOrder());
                 System.out.println("deli.....");
             }
-            PurchaseOrder purchaseOrder = orderItem.getOrder();
-            purchaseOrder.setPaymentStatus("pending");
-            purchaseOrderRepository.save(purchaseOrder);
-            orderItemRepository.save(orderItem);
-            return "redirect:/admin/orderDetails/{orderItemId}?successful";
+            else {
+                PurchaseOrder purchaseOrder = orderItem.getOrder();
+                purchaseOrder.setPaymentStatus("pending");
+                purchaseOrderRepository.save(purchaseOrder);
+                orderItemRepository.save(orderItem);
+            }
+                return "redirect:/admin/orderDetails/{orderItemId}?successful";
+
 
         }
         return "redirect:/admin/orderDetails?error";

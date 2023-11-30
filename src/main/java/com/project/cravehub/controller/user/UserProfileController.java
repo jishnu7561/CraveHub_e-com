@@ -21,6 +21,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.security.Principal;
@@ -92,12 +93,17 @@ public class UserProfileController {
         model.addAttribute("referralError",(String)session.getAttribute("referralError"));
         session.removeAttribute("referralSuccess");
         session.removeAttribute("referralError");
+
+        model.addAttribute("profileSuccess",(String)session.getAttribute("profileSuccess"));
+        model.addAttribute("profileError",(String)session.getAttribute("profileError"));
+        session.removeAttribute("profileSuccess");
+        session.removeAttribute("profileError");
         return "profile";
     }
 
     @PostMapping("/updateUserDetails")
     public String updateUserDetailsPost(Principal principal, @ModelAttribute("user")
-                                            UserRegistrationDto userDto) {
+                                            UserRegistrationDto userDto,HttpSession session) {
 
         String user_email = principal.getName();
         User user = userRepository.findByEmail(user_email);
@@ -107,9 +113,12 @@ public class UserProfileController {
             user.setUserName(userDto.getUserName());
             user.setEmail(userDto.getEmail());
             userRepository.save(user);
-            return "redirect:/profile";
+            session.setAttribute("profileSuccess","User details edited successfully.");
         }
-        return "redirect:/profile?SmtngWrong";
+        else {
+            session.setAttribute("profileError","Failed to edit user details.");
+        }
+        return "redirect:/profile";
     }
 
     @PostMapping("/addAddress")
@@ -151,7 +160,8 @@ public class UserProfileController {
 
     @PostMapping("/updatePassword")
     public String changePasswordInProfilePost(@RequestParam("newPassword") String password,
-                                     @RequestParam("confirmPassword") String confirmPassword,Principal principal) {
+                                     @RequestParam("confirmPassword") String confirmPassword,
+                                              Principal principal,HttpSession session) {
         String user_email = principal.getName();
         User user = userRepository.findByEmail(user_email);
         if(user == null) {
@@ -160,9 +170,12 @@ public class UserProfileController {
         if(password.equals(confirmPassword)) {
             user.setPassword(passwordEncoder.encode(confirmPassword));
             userRepository.save(user);
-            return "redirect:/profile";
+            session.setAttribute("profileSuccess","Password changed successfully.");
         }
-        return "redirect:/profile?mismatch";
+        else {
+            session.setAttribute("profileError","Failed to change password,mismatch in given password.");
+        }
+        return "redirect:/profile";
     }
 
     @PostMapping("/deleteAddress")
@@ -239,11 +252,10 @@ public class UserProfileController {
     }
 
     @GetMapping("/wallet")
-    public String showWallet(Principal principal,Model model) {
+    public String showWallet(Principal principal,Model model,HttpSession session) {
         User user = userRepository.findByEmail(principal.getName());
-        if(user.getWallet() == null) {
-            userService.createWallet(user);
-        }
+        model.addAttribute("userName",user.getUserName());
+        model.addAttribute("cartCount",(int)session.getAttribute("cartCount"));
         Wallet wallet = user.getWallet();
         Set<Transactions> transactions = user.getTransaction();
         for (Transactions transactions1 : transactions)
@@ -271,6 +283,14 @@ public class UserProfileController {
         else {
             session.setAttribute("referralError", "Oops! It seems there was an issue processing your referral. Please double-check the details and try again");
         }
+        return "redirect:/profile";
+    }
+
+    @PostMapping("referralLink")
+    public  String referralLink(@RequestParam("email") String email,
+                                Principal principal,HttpSession session) throws MessagingException {
+        userService.sentReferralLink(email,principal);
+        session.setAttribute("profileSuccess","Referral Link successfully sent.");
         return "redirect:/profile";
     }
 }

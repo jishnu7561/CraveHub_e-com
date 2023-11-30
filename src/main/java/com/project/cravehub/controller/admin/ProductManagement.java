@@ -3,15 +3,19 @@ package com.project.cravehub.controller.admin;
 import com.project.cravehub.dto.ProductDto;
 import com.project.cravehub.model.admin.Category;
 import com.project.cravehub.model.admin.Product;
+import com.project.cravehub.model.admin.ProductImages;
 import com.project.cravehub.model.admin.SubCategory;
 import com.project.cravehub.repository.CategoryRepository;
 import com.project.cravehub.repository.ProductRepository;
+import com.project.cravehub.repository.ProductsImageRepository;
 import com.project.cravehub.repository.SubCategoryRepository;
 import com.project.cravehub.service.productservice.ProductService;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -41,6 +45,9 @@ public class ProductManagement {
 
     @Autowired
     private ProductService productService;
+
+    @Autowired
+    private ProductsImageRepository productsImageRepository;
     @GetMapping("/listProducts")
     public String listProducts(Model model)
     {
@@ -51,13 +58,15 @@ public class ProductManagement {
 
 
     @GetMapping("/addProducts")
-    public String addProducts(Model model) {
+    public String addProductsGet(Model model,HttpSession session) {
         List<Category> category = categoryRepository.findAll();
         model.addAttribute("categories",category);
 
         List<SubCategory> subCategory = subCategoryRepository.findAll();
         model.addAttribute("subCategories",subCategory);
 
+        model.addAttribute("addProductError",(String)session.getAttribute("addProductError"));
+        session.removeAttribute("addProductError");
         return "add-products";
     }
 
@@ -68,10 +77,19 @@ public class ProductManagement {
     }
 
     @PostMapping("/addProduct")
-    public String addProducts(@ModelAttribute("product") ProductDto productDto, HttpSession session) {
-        session.setAttribute("productDto", productDto);
+    public String addProductsPost(@ModelAttribute("product") ProductDto productDto,
+                                  HttpSession session) {
 
-
+        boolean isAlreadyExist = productService.findProductNameExist(productDto.getProductName().trim());
+        if(isAlreadyExist) {
+            System.out.println(productDto.getProductName() +" already exist");
+            session.setAttribute("addProductError","Product Name already exist,please change the name .");
+            return "redirect:/admin/addProducts";
+        }
+        else {
+            System.out.println(productDto.getProductName());
+            session.setAttribute("productDto", productDto);
+        }
         //productService.save(productDto);
         return "redirect:/admin/addProducts2";
     }
@@ -103,28 +121,166 @@ public class ProductManagement {
     }
 
 
+
+//    ===========================  add product using cropper.js  ============================
+
 //    @PostMapping("/addProduct2")
-//    public String addProducts2(@ModelAttribute("product2") ProductDto productDto2, HttpSession session,
-//                               @RequestParam("image") MultipartFile file,Model model) throws IOException{
+//    public String addProducts2(@ModelAttribute("product2") ProductDto productDto,
+//                               HttpSession session,
+//                               @RequestParam("croppedImage1") MultipartFile croppedImage1,
+//                               @RequestParam("croppedImage2") MultipartFile croppedImage2,
+//                               @RequestParam("croppedImage3") MultipartFile croppedImage3,
+//                               @RequestParam("croppedImage4") MultipartFile croppedImage4,
+//                               Model model) throws IOException {
+//
 //        ProductDto storedProductDto = (ProductDto) session.getAttribute("productDto");
-//        if( storedProductDto == null )
-//        {
+//        if (storedProductDto == null) {
 //            model.addAttribute("error", "please start from the beginning step");
 //            return "redirect:/admin/addProducts";
 //        }
-//        storedProductDto.setQuantity(productDto2.getQuantity());
-//        storedProductDto.setSubcategories(productDto2.getSubcategories());
-//        storedProductDto.setPrice(productDto2.getPrice());
+//
+//        ProductImages productImage = new ProductImages();
+//        handleCroppedImage(croppedImage1, storedProductDto, "1",productImage);
+//        handleCroppedImage(croppedImage2, storedProductDto, "2",productImage);
+//        handleCroppedImage(croppedImage3, storedProductDto, "3",productImage);
+//        handleCroppedImage(croppedImage4, storedProductDto, "4",productImage);
+//
+//        storedProductDto.setQuantity(productDto.getQuantity());
+//        storedProductDto.setSubcategories(productDto.getSubcategories());
+//        storedProductDto.setCategories(productDto.getCategories());
+//        storedProductDto.setPrice(productDto.getPrice());
+//        Product productEntity =  productService.save(storedProductDto);
+//
+//        productImage.setProduct(productEntity);
+//
+//
+//        return "redirect:/admin/addProducts";
+//    }
+//
+//    private void handleCroppedImage(MultipartFile croppedImageData, ProductDto storedProductDto, String suffix,ProductImages productImage) throws IOException {
+//
+//        if (croppedImageData != null && !croppedImageData.isEmpty()) {
+//            byte[] decodedImageData = croppedImageData.getBytes();
+//            BufferedImage croppedImage = ImageIO.read(new ByteArrayInputStream(decodedImageData));
+//            String croppedImageFileName = storedProductDto.getProductName().trim() + "_" + suffix + ".jpg";
+//            File croppedImageFile = new File(UPLOAD_DIR, croppedImageFileName);
+//            FileUtils.writeByteArrayToFile(croppedImageFile, decodedImageData);
+//
+//
+//            productImage.setImageName("/productImages/" + croppedImageFileName);
+//            storedProductDto.addProductImage(productImage);
+//
+//            // Set the Product entity into the ProductImages entity
+////            productsImageRepository.save(productImage);
+//        }
+//    }
+
+
+    @PostMapping("/addProduct2")
+    public String addProducts2(@ModelAttribute("product2") ProductDto productDto,
+                               HttpSession session,
+                               @RequestParam("croppedImage1") MultipartFile croppedImage1,
+                               @RequestParam("croppedImage2") MultipartFile croppedImage2,
+                               @RequestParam("croppedImage3") MultipartFile croppedImage3,
+                               @RequestParam("croppedImage4") MultipartFile croppedImage4,
+                               Model model) throws IOException {
+
+        ProductDto storedProductDto = (ProductDto) session.getAttribute("productDto");
+        if (storedProductDto == null) {
+            model.addAttribute("error", "please start from the beginning step");
+            return "redirect:/admin/addProducts";
+        }
+
+        List<ProductImages> productImages = new ArrayList<>();
+
+        handleCroppedImage(croppedImage1, storedProductDto, "1", productImages);
+        handleCroppedImage(croppedImage2, storedProductDto, "2", productImages);
+        handleCroppedImage(croppedImage3, storedProductDto, "3", productImages);
+        handleCroppedImage(croppedImage4, storedProductDto, "4", productImages);
+
+        storedProductDto.setQuantity(productDto.getQuantity());
+        storedProductDto.setSubcategories(productDto.getSubcategories());
+        storedProductDto.setPrice(productDto.getPrice());
+        storedProductDto.setImages(productImages);
+
+        System.out.println(productDto.getCategories()+"dhhhhhhhhhhhhhhhhh");
+
+        Product productEntity = productService.save(storedProductDto);
+
+        // Set the product entity for each product image
+        for (ProductImages productImage : productImages) {
+            productImage.setProduct(productEntity);
+        }
+
+        // Save the product images
+        productsImageRepository.saveAll(productImages);
+
+        return "redirect:/admin/addProducts";
+    }
+
+    private void handleCroppedImage(MultipartFile croppedImageData, ProductDto storedProductDto, String suffix,
+                                    List<ProductImages> productImages) throws IOException {
+        if (croppedImageData != null && !croppedImageData.isEmpty()) {
+            byte[] decodedImageData = croppedImageData.getBytes();
+            BufferedImage croppedImage = ImageIO.read(new ByteArrayInputStream(decodedImageData));
+            String croppedImageFileName = storedProductDto.getProductName().trim() + "_" + suffix + ".jpg";
+            File croppedImageFile = new File(UPLOAD_DIR, croppedImageFileName);
+            FileUtils.writeByteArrayToFile(croppedImageFile, decodedImageData);
+
+            ProductImages productImage = new ProductImages();
+            productImage.setImageName("/productImages/" + croppedImageFileName);
+
+            // Add product image to the list in the Product entity
+            productImages.add(productImage);
+        }
+    }
+
+
+//    ===========================  /add product using cropper.js  ============================
+
+
+    @GetMapping("/updateProducts")
+    public String updateProducts() {
+        return "editProduct";
+    }
+
+    @GetMapping("/editProduct/{id}")
+    public String editProduct(@PathVariable(value = "id") Integer productId, Model model) {
+        Optional<Product> optionalProduct = productRepository.findById(productId);
+        if (optionalProduct.isPresent()) {
+            Product product = optionalProduct.get();
+            model.addAttribute("product", product);
+            model.addAttribute("productId", productId);
+            return "editProduct";
+        } else {
+            return "redirect:/admin/listProducts?error";
+        }
+    }
+
+//    @PostMapping("/editProduct/{id}")
+//    public String editProduct(@PathVariable("id") Integer productId ,@ModelAttribute("product") ProductDto productDto)
+//    {
+//        productService.editProductByID(productId,productDto, croppedImageFileName);
+//        return "redirect:/admin/listProducts";
+//    }
+
+//    @PostMapping("/editProduct/{id}")
+//    public String editProduct(@PathVariable("id") Integer productId ,@ModelAttribute("product") ProductDto productDto,
+//                               @RequestParam("image") MultipartFile file,Model model) throws IOException{
+//
+//        String croppedImageFileName = productDto.getImageName();
 //        try {
 //            // Validate uploaded file using Apache Tika
 //            Tika tika = new Tika();
 //            String mimeType = tika.detect(file.getInputStream());
 //            if (!mimeType.startsWith("image")) {
 //                model.addAttribute("error", "Invalid file format. Please upload an image.");
-//                return "list-products";
+//                return "redirect:/admin/listProducts";
 //            }
+//
 //            // Read the uploaded image into a BufferedImage
 //            BufferedImage originalImage = ImageIO.read(file.getInputStream());
+//             croppedImageFileName = generateUniqueFileName(Objects.requireNonNull(file.getOriginalFilename()));
 //
 ////            if (originalImage == null) {
 ////                System.out.println("Failed to read the uploaded image. Check if the uploaded file is a valid image.");
@@ -141,160 +297,69 @@ public class ProductManagement {
 //            BufferedImage croppedImage = originalImage.getSubimage(cropX, cropY, cropWidth, cropHeight);
 //
 //            // Save the cropped image to a file
-//            String croppedImageFileName =storedProductDto.getProductName()+"_cropped.jpg"; // You can generate a unique filename if needed
+//            // You can generate a unique filename if needed
 //            File croppedImageFile = new File(UPLOAD_DIR, croppedImageFileName);
 //            ImageIO.write(croppedImage, "jpg", croppedImageFile);
-//
+//            croppedImageFileName= "/productImages/" +croppedImageFileName;
 //            // Set the cropped image file path in your ProductDto or store it in the database as needed
-//            storedProductDto.setImageName("/productImages/" + croppedImageFileName);
-//
-//            System.out.println("Cropped Image Path: " + storedProductDto.getImageName());
-//            // Delete the temporary file
-//            File tempFile = File.createTempFile("temp", ".jpg");
-//            tempFile.deleteOnExit();
 //        } catch (IOException e) {
 //            e.printStackTrace();
 //            // Handle exceptions
 //        }
-//        productService.save(storedProductDto);
-//
-//        return "redirect:/admin/addProducts";
-//    }
-
-
-//   ######################## cropper.js######################################
-
-    @PostMapping("/addProduct2")
-    public String addProducts2(@ModelAttribute("product2") ProductDto productDto, HttpSession session,
-                               @RequestParam("croppedImage") String croppedImageData, Model model) throws IOException {
-        // ... (your existing code)
-
-
-        System.out.println("cropped image Name from product2 controller ="+ croppedImageData);
-        ProductDto storedProductDto = (ProductDto) session.getAttribute("productDto");
-        if( storedProductDto == null )
-        {
-            model.addAttribute("error", "please start from the beginning step");
-            return "redirect:/admin/addProducts";
-        }
-        storedProductDto.setQuantity(productDto.getQuantity());
-        storedProductDto.setSubcategories(productDto.getSubcategories());
-        storedProductDto.setPrice(productDto.getPrice());
-        // Read the uploaded image into a BufferedImage
-        byte[] decodedImageData = Base64.getDecoder().decode(croppedImageData.split(",")[1]); // Remove the data:image/png;base64 prefix
-        BufferedImage croppedImage = ImageIO.read(new ByteArrayInputStream(decodedImageData));
-
-        // Save the cropped image to a file (you can generate a unique filename if needed)
-        String croppedImageFileName = storedProductDto.getProductName()+".jpg";
-        File croppedImageFile = new File(UPLOAD_DIR, croppedImageFileName);
-//        ImageIO.write(croppedImage, "jpg", croppedImageFile);
-        FileUtils.writeByteArrayToFile(croppedImageFile, decodedImageData);
-
-        // Set the cropped image file path in your ProductDto or store it in the database as needed
-        storedProductDto.setImageName("/productImages/" + croppedImageFileName);
-
-        // ... (your existing code)
-        productService.save(storedProductDto);
-
-        return "redirect:/admin/addProducts";
-    }
-
-
-//   ######################## cropper.js#####################################
-
-    @GetMapping("/updateProducts")
-    public String updateProducts() {
-        return "update-products";
-    }
-
-//    @GetMapping("/deleteProduct/{productId}")
-//    public String deleteCategory(@PathVariable(value = "productId") Integer productId)
-//    {
-//        boolean isExist = productService.isExist(productId);
-//        if(isExist)
-//        {
-//            return "redirect:/admin/listProducts?cantDelete";
-//        }
-//        Product deleteProduct = productService.deleteProductById(productId);
-//        if(deleteProduct!=null) {
-//            return "redirect:/admin/listProducts";
-//        }
-//        return "redirect:/admin/listProducts?notExist";
-//    }
-
-    @GetMapping("/editProduct/{id}")
-    public String editProduct(@PathVariable(value = "id") Integer productId, Model model) {
-        Optional<Product> optionalProduct = productRepository.findById(productId);
-        if (optionalProduct.isPresent()) {
-            Product product = optionalProduct.get();
-            model.addAttribute("product", product);
-            model.addAttribute("productId", productId);
-            return "update-products";
-        } else {
-            return "redirect:/admin/listProducts?error";
-        }
-    }
-
-//    @PostMapping("/editProduct/{id}")
-//    public String editProduct(@PathVariable("id") Integer productId ,@ModelAttribute("product") ProductDto productDto)
-//    {
-//        productService.editProductByID(productId,productDto, croppedImageFileName);
+//        productService.editProductByID(productId,productDto,croppedImageFileName );
 //        return "redirect:/admin/listProducts";
 //    }
 
+
+
     @PostMapping("/editProduct/{id}")
-    public String editProduct(@PathVariable("id") Integer productId ,@ModelAttribute("product") ProductDto productDto,
-                               @RequestParam("image") MultipartFile file,Model model) throws IOException{
+    @Transactional
+    public String editProduct(@PathVariable("id") Integer productId, @ModelAttribute("product") ProductDto productDto,
+                              @RequestParam("croppedImage1") MultipartFile image1,
+                              @RequestParam("croppedImage2") MultipartFile image2,
+                              @RequestParam("croppedImage3") MultipartFile image3,
+                              @RequestParam("croppedImage4") MultipartFile image4) throws IOException {
+        // Retrieve the existing product from the database
+        Product existingProduct = productService.findByProductId(productId);
 
-        String croppedImageFileName = productDto.getImageName();
-        try {
-            // Validate uploaded file using Apache Tika
-            Tika tika = new Tika();
-            String mimeType = tika.detect(file.getInputStream());
-            if (!mimeType.startsWith("image")) {
-                model.addAttribute("error", "Invalid file format. Please upload an image.");
-                return "redirect:/admin/listProducts";
-            }
+//        // Update product details from the form
+//        existingProduct.setProductName(productDto.getProductName());
+//        existingProduct.setPrice(productDto.getPrice());
+//        existingProduct.setQuantity(productDto.getQuantity());
+//        existingProduct.setDescription(productDto.getDescription());
 
-            // Read the uploaded image into a BufferedImage
-            BufferedImage originalImage = ImageIO.read(file.getInputStream());
-             croppedImageFileName = generateUniqueFileName(Objects.requireNonNull(file.getOriginalFilename()));
 
-//            if (originalImage == null) {
-//                System.out.println("Failed to read the uploaded image. Check if the uploaded file is a valid image.");
-//                // Handle this case, maybe return an error response to the user
-//                return "redirect:/admin/addProducts?error"; // Or redirect to an error page
-//
-            // Define crop dimensions (adjust these according to your requirements)
-            int cropX = 50;
-            int cropY = 20;
-            int cropWidth = 500;
-            int cropHeight = 300;
+        // Update specific product images if new files are provided
+        updateProductImage(existingProduct, 0, image1);
+        updateProductImage(existingProduct, 1, image2);
+        updateProductImage(existingProduct, 2, image3);
+        updateProductImage(existingProduct, 3, image4);
 
-            // Crop the image
-            BufferedImage croppedImage = originalImage.getSubimage(cropX, cropY, cropWidth, cropHeight);
+        // Save the updated product to the database
+        productService.editProductByID(productId,productDto);
 
-            // Save the cropped image to a file
-            // You can generate a unique filename if needed
-            File croppedImageFile = new File(UPLOAD_DIR, croppedImageFileName);
-            ImageIO.write(croppedImage, "jpg", croppedImageFile);
-            croppedImageFileName= "/productImages/" +croppedImageFileName;
-            // Set the cropped image file path in your ProductDto or store it in the database as needed
-        } catch (IOException e) {
-            e.printStackTrace();
-            // Handle exceptions
+        return "redirect:/admin/listProducts"; // Redirect to the product list page
+    }
+
+    private void updateProductImage(Product product, int imageIndex, MultipartFile newImage) throws IOException {
+        // Handle image update logic for a specific image
+        // You may want to check if a new image is provided before updating
+        if (newImage != null && !newImage.isEmpty()) {
+            // Your logic to save and update the image URL
+                byte[] decodedImageData = newImage.getBytes();
+                BufferedImage croppedImage = ImageIO.read(new ByteArrayInputStream(decodedImageData));
+                int index = imageIndex+1;
+                String croppedImageFileName = product.getProductName()+UUID.randomUUID().toString() + "_" + index + ".jpg";
+                File croppedImageFile = new File(UPLOAD_DIR, croppedImageFileName);
+                FileUtils.writeByteArrayToFile(croppedImageFile, decodedImageData);
+
+                //productImage.setImageName("/productImages/" + croppedImageFileName);
+
+                // Add product image to the list in the Product entity
+                product.getProductImages().get(imageIndex).setImageName("/productImages/"+croppedImageFileName);
+                productRepository.save(product);
         }
-        productService.editProductByID(productId,productDto,croppedImageFileName );
-        return "redirect:/admin/listProducts";
     }
-
-    private String generateUniqueFileName(String originalFileName) {
-        String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
-        String uniqueFileName = UUID.randomUUID().toString() + extension;
-        return uniqueFileName;
-    }
-
-
 
     @GetMapping("/blockProduct/{productId}")
     public String blockSubCategory(@PathVariable("productId") Integer id) {

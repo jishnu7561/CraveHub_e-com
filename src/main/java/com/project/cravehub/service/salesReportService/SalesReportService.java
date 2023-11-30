@@ -22,6 +22,14 @@ public interface SalesReportService {
 
     List<OrderItem> generateSalesReport(LocalDate start, LocalDate end);
 
+    double totalRevenue(LocalDate dateFrom, LocalDate dateTo);
+
+    int totalSales(LocalDate dateFrom, LocalDate dateTo);
+
+    double getTotalRevenue();
+
+    int getTotalSales();
+
 //    void downloadAsPdf(List<OrderItem> orderItemList);
 
 //    void downloadAsPdf(HttpServletResponse response,List<OrderItem> orderItemList) throws IOException;

@@ -12,6 +12,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
+import java.security.Principal;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -34,7 +36,7 @@ public class AdminController {
     }
 
     @GetMapping("/adminHome")
-    public String showAdminHome(Model model) {
+    public String showAdminHome(Model model, HttpSession session, Principal principal) {
         String period = "yearly";
         int totalRevenue = (int)dashboardService.totalRevenueWeekly(period);
         String status = "delivered";
@@ -56,6 +58,9 @@ public class AdminController {
         List<PurchaseOrder> purchaseOrderList = purchaseOrderRepository.findAll();
         Collections.reverse(purchaseOrderList);
         model.addAttribute("order",purchaseOrderList);
+        String userName = dashboardService.getUserNameByEmail(principal.getName());
+        model.addAttribute("userName",userName);
+        session.setAttribute("userName",userName);
         return "admin-index";
     }
 

@@ -188,5 +188,94 @@ public class SalesReportServiceImpl implements SalesReportService{
         return orderItemList;
     }
 
+    @Override
+    public double totalRevenue(LocalDate start, LocalDate end) {
+
+        LocalDateTime startOfDay = start.atStartOfDay(); // Start of the day
+        LocalDateTime endOfDay = end.atTime(LocalTime.MAX); // End of the day
+        List<OrderItem> orderItemList = new ArrayList<>();
+        List<PurchaseOrder> purchaseOrderList = purchaseOrderRepository.findByOrderDateBetween(startOfDay,endOfDay);
+
+        double totalCost = 0;
+        int count =0;
+        for(PurchaseOrder purchaseOrder : purchaseOrderList)
+        {
+            for(OrderItem orderItem : purchaseOrder.getOrderItems()) {
+                if(orderItem.getOrderStatus().equals("delivered")) {
+                    System.out.println(orderItem.getOrderItemId());
+                    System.out.println(purchaseOrder.getOrderId());
+
+                    double cost = (orderItem.getItemCount() * orderItem.getProduct().getPrice()) * .6;
+                    totalCost += cost;
+                    System.out.println(totalCost+"------------");
+                    count ++;
+                }
+            }
+            if(purchaseOrder.getCoupon() != null && count>0 ) {
+                totalCost = totalCost - purchaseOrder.getCoupon().getAmount();
+                System.out.println(totalCost - purchaseOrder.getCoupon().getAmount()+"------------");
+            }
+        }
+        System.out.println(totalCost);
+        return totalCost;
+    }
+
+    @Override
+    public int totalSales(LocalDate start,LocalDate end) {
+        LocalDateTime startOfDay = start.atStartOfDay(); // Start of the day
+        LocalDateTime endOfDay = end.atTime(LocalTime.MAX); // End of the day
+        List<OrderItem> orderItemList = new ArrayList<>();
+        List<PurchaseOrder> purchaseOrderList = purchaseOrderRepository.findByOrderDateBetween(startOfDay,endOfDay);
+
+        int count = 0;
+        for(PurchaseOrder purchaseOrder : purchaseOrderList)
+        {
+            for(OrderItem orderItem : purchaseOrder.getOrderItems()) {
+                if(orderItem.getOrderStatus().equals("delivered")) {
+                    count ++ ;
+                }
+            }
+        }
+        return count;
+    }
+
+    @Override
+    public double getTotalRevenue() {
+        List<OrderItem> orderItemList = new ArrayList<>();
+        List<PurchaseOrder> purchaseOrderList = purchaseOrderRepository.findAll();
+
+        double totalCost = 0;
+        int count =0;
+        for(PurchaseOrder purchaseOrder : purchaseOrderList)
+        {
+            for(OrderItem orderItem : purchaseOrder.getOrderItems()) {
+                if(orderItem.getOrderStatus().equals("delivered")) {
+                    System.out.println(orderItem.getOrderItemId());
+                    System.out.println(purchaseOrder.getOrderId());
+
+                    double cost = (orderItem.getItemCount() * orderItem.getProduct().getPrice()) * .6;
+                    totalCost += cost;
+                    System.out.println(totalCost+"------------");
+                    count ++;
+                }
+            }
+            if(purchaseOrder.getCoupon() != null && count>0 ) {
+                totalCost = totalCost - purchaseOrder.getCoupon().getAmount();
+                System.out.println(totalCost - purchaseOrder.getCoupon().getAmount()+"------------");
+            }
+        }
+        System.out.println(totalCost);
+        return totalCost;
+    }
+
+    @Override
+    public int getTotalSales() {
+        List<OrderItem> orderItemList = orderItemRepository.findByOrderStatus("delivered");
+        int count =0;
+        for(OrderItem orderItem : orderItemList) {
+                count ++ ;
+        }
+        return count;
+    }
 
 }
