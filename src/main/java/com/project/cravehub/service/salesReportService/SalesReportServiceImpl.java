@@ -45,24 +45,41 @@ public class SalesReportServiceImpl implements SalesReportService{
         return salesData;
     }
 
-    private String formatPeriod(LocalDate currentDate, String period) {
-        DateTimeFormatter formatter;
-        return switch (period) {
-            case "day=" -> {
-                formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-                yield currentDate.format(formatter);
-            }
-            case "month=" -> {
-                formatter = DateTimeFormatter.ofPattern("yyyy-MM");
-                yield currentDate.format(formatter);
-            }
-            case "year=" -> {
-                formatter = DateTimeFormatter.ofPattern("yyyy");
-                yield currentDate.format(formatter);
-            }
-            default -> throw new IllegalArgumentException("Invalid period");
-        };
+//    private String formatPeriod(LocalDate currentDate, String period) {
+//        DateTimeFormatter formatter;
+//        return switch (period) {
+//            case "day=" -> {
+//                formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+//                yield currentDate.format(formatter);
+//            }
+//            case "month=" -> {
+//                formatter = DateTimeFormatter.ofPattern("yyyy-MM");
+//                yield currentDate.format(formatter);
+//            }
+//            case "year=" -> {
+//                formatter = DateTimeFormatter.ofPattern("yyyy");
+//                yield currentDate.format(formatter);
+//            }
+//            default -> throw new IllegalArgumentException("Invalid period");
+//        };
+//    }
+private String formatPeriod(LocalDate currentDate, String period) {
+    DateTimeFormatter formatter;
+
+    if ("day=".equals(period)) {
+        formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return currentDate.format(formatter);
+    } else if ("month=".equals(period)) {
+        formatter = DateTimeFormatter.ofPattern("yyyy-MM");
+        return currentDate.format(formatter);
+    } else if ("year=".equals(period)) {
+        formatter = DateTimeFormatter.ofPattern("yyyy");
+        return currentDate.format(formatter);
+    } else {
+        throw new IllegalArgumentException("Invalid period");
     }
+}
+
 
     private double calculateSalesForPeriod(LocalDate currentDate, String period) {
         LocalDateTime startDateTime, endDateTime;

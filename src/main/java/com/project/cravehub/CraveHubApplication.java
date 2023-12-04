@@ -6,12 +6,11 @@ import org.springframework.context.annotation.ComponentScan;
 
 
 @SpringBootApplication
-@ComponentScan(basePackages = "com.project.craveHub")
+@ComponentScan(basePackages = "com.project.cravehub")
 public class CraveHubApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(CraveHubApplication.class, args);
 	}
-
 
 }
