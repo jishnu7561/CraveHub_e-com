@@ -72,18 +72,15 @@ public class ForgotPasswordController {
         if(emailId == null) {
             response.put("valid","false");
             response.put("message","session have Expired,please try again!!");
-//            return "redirect:/verifyOtp?sessionExpired";
         }
         else if(flag) {
             response.put("valid", "true");
             response.put("message", "successful");
             session.setAttribute("verification","successful");
-//            return "redirect:/changePassword";
         }
         else{
                 response.put("valid","true");
                 response.put("message","Entered OTP is wrong!!");
-//            return "redirect:/verifyOtp?otpWrong";
             }
         return response;
     }

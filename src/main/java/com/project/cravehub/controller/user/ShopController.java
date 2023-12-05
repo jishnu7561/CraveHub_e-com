@@ -38,11 +38,11 @@ public class ShopController {
                             @RequestParam(name ="category",required=false) String category){
 
         String userName = (String) session.getAttribute("userName");
-        model.addAttribute("userName ",userName);
+        model.addAttribute("userName",userName);
         List<Category> categoryList = categoryRepository.findAll();
         productService.updateIsEnabled();
         categoryService.updateIsEnabled();
-//        List<Product> productList = productService.findAllProducts();
+
         Page<Product> productsPage;
         if (category != null && !category.isEmpty()) {
             productsPage = productService.findProductsByCategory(category, page, pageSize);
@@ -54,8 +54,7 @@ public class ShopController {
         model.addAttribute("products", productsPage.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", productsPage.getTotalPages());
-//        int cartCount = (Integer) session.getAttribute("cartCount");
-//        model.addAttribute("cartCount",cartCount);
+
         Integer cartCount = (Integer) session.getAttribute("cartCount");
         int cartCountValue = (cartCount != null) ? cartCount.intValue() : 0;
         model.addAttribute("cartCount", cartCountValue);

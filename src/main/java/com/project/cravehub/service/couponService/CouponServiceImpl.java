@@ -95,7 +95,6 @@ public class CouponServiceImpl implements CouponService{
         User user = userRepository.findByEmail(userEmail);
         coupon.addUser(user);
         couponRepository.save(coupon);
-        System.out.println("working..................");
     }
 
     @Override

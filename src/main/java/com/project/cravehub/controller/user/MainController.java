@@ -56,9 +56,8 @@ public class MainController {
     @GetMapping("/")
     public String showHome(Model model, Principal principal, HttpSession session) {
         List<Product> products = productRepository.findAll();
-        model.addAttribute("products",products);
-        for(Product product :products)
-        {
+        model.addAttribute("products", products);
+        for (Product product : products) {
             System.out.println(product.getProductName());
             for (ProductImages productImages : product.getProductImages()) {
                 System.out.println(productImages.getImageName());
@@ -88,13 +87,6 @@ public class MainController {
         return "index";
     }
 
-//  @GetMapping("/login")
-//    public String loginPage() {
-//        System.out.println("login page");
-//        return "login";
-//    }
-
-
     @GetMapping("/login")
     public String loginPage(HttpServletRequest request,Principal principal,Model model) {
         HttpSession session = request.getSession(false);
@@ -106,13 +98,6 @@ public class MainController {
             session.removeAttribute("registration");
         }
         return "login";
-    }
-
-
-    @GetMapping("/accessDenied")
-    public String accessDenied()
-    {
-        return "accessDenied";
     }
 
 }

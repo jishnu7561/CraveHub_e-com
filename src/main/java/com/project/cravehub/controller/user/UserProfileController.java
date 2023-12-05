@@ -181,7 +181,6 @@ public class UserProfileController {
     @PostMapping("/deleteAddress")
     @ResponseBody
     public ResponseEntity<String> deleteAddress(@RequestParam("addressId") Integer address_id) {
-        System.out.println("in----------------");
         if(addressService.isAddressInPurchaseOrder(address_id))
         {
             return ResponseEntity.ok("you cant delete this address,you can update.");

@@ -28,9 +28,6 @@ public class OtpController {
 @Autowired
 private UserRepository userRepository;
 
-
-
-
 //    ----------------------------------from main controller------------------------------
     @Autowired
     private EmailUtil emailUtil;

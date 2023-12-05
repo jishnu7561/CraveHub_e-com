@@ -45,18 +45,6 @@ public class SubCatogeryServiceImpl implements SubCategoryService {
 
     }
 
-//    public SubCategory deleteSubCategoryById(Integer id) {
-//        Optional<SubCategory> optionalSubCategory = subCategoryRepository.findById(id);
-//        if(optionalSubCategory.isPresent()) {
-//            subCategoryRepository.deleteById(id);
-//            return optionalSubCategory.get();
-//        }else {
-//            return null;
-//        }
-//        //return Optional.empty();
-////        return null;
-//    }
-
     @Override
     public void blockSubCategoryById(Integer id) {
         SubCategory lockSubCategory = subCategoryRepository.findById(id).orElse(null);

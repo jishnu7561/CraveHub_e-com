@@ -170,19 +170,6 @@ public class CartController {
          return "redirect:/cart?error=NotExist";
     }
 
-//    @Transactional
-//    @GetMapping("/delete")
-//    public String carDelete(Principal principal)
-//    {
-//        User user = userRepository.findByEmail(principal.getName());
-//        Cart cart = user.getCart();
-////        for (CartItem cartItem : cart.getCartItem()) {
-////            cartItemRepository.deleteById(cartItem.getCartItemId());
-////        }
-//        cartItemRepository.deleteByCart(cart);
-//        return "redirect:/";
-//    }
-
     @ResponseBody
     @GetMapping("/blockedPage")
     private String blockedPage()

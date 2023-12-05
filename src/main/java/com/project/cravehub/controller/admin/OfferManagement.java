@@ -181,19 +181,9 @@ public class OfferManagement {
     }
 
 
-//    @GetMapping("/listCategoryOffers")
-//    public String listCategoryOffersGet()
-//    {
-//        Optional<ProductOffer> productOffer = productOfferRepository.findById(1);
-//        Set<Product> productList = productOffer.get().getProductList();
-//        for(Product product : productList)
-//        {
-//            System.out.println(product.getProductName());
-//        }
-//        return "listCategoryOffers";
-//    }
 
-//    ################################## category ####################################
+
+//    ------------------------ Category Offer --------------------------
 
     @GetMapping("/listCategoryOffers")
     public String listCategoryOffersGet(HttpSession session, Model model)

@@ -93,8 +93,6 @@ public class CategoryServiceImpl implements CategoryService{
         }else {
             return null;
         }
-        //return Optional.empty();
-//        return null;
     }
 
     @Override
@@ -106,7 +104,6 @@ public class CategoryServiceImpl implements CategoryService{
             category.setCategory(categoryDto.getCategory());
             categoryRepository.save(category);
         }
-//        categoryRepository.save(category);
     }
 
 

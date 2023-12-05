@@ -156,28 +156,6 @@ private String formatPeriod(LocalDate currentDate, String period) {
                 }
             }
         }
-
-
-
-
-//        for (PurchaseOrder purchaseOrder : purchaseOrderList) {
-//            for (OrderItem orderItem : purchaseOrder.getOrderItems()) {
-//                if (orderItem.getOrderStatus().equals("delivered")){
-//                    Product product = orderItem.getProduct();
-//                    double amount = (orderItem.getItemCount() * product.getPrice()) * 0.6;
-//
-//                    String amountString = String.valueOf(amount);
-//
-//                    // Convert the amount string to double and add it to the existing total for the product
-//                    int existingTotal = profitData.getOrDefault(product, 0);
-//                    double amountDouble = Double.parseDouble(amountString);
-//                    int newTotal = existingTotal + (int) amountDouble;
-//                    profitData.put(product, newTotal);
-//                }
-//            }
-//        }
-
-
         return profitData;
     }
 
@@ -224,13 +202,11 @@ private String formatPeriod(LocalDate currentDate, String period) {
 
                     double cost = (orderItem.getItemCount() * orderItem.getProduct().getPrice()) * .6;
                     totalCost += cost;
-                    System.out.println(totalCost+"------------");
                     count ++;
                 }
             }
             if(purchaseOrder.getCoupon() != null && count>0 ) {
                 totalCost = totalCost - purchaseOrder.getCoupon().getAmount();
-                System.out.println(totalCost - purchaseOrder.getCoupon().getAmount()+"------------");
             }
         }
         System.out.println(totalCost);
@@ -272,13 +248,11 @@ private String formatPeriod(LocalDate currentDate, String period) {
 
                     double cost = (orderItem.getItemCount() * orderItem.getProduct().getPrice()) * .6;
                     totalCost += cost;
-                    System.out.println(totalCost+"------------");
                     count ++;
                 }
             }
             if(purchaseOrder.getCoupon() != null && count>0 ) {
                 totalCost = totalCost - purchaseOrder.getCoupon().getAmount();
-                System.out.println(totalCost - purchaseOrder.getCoupon().getAmount()+"------------");
             }
         }
         System.out.println(totalCost);

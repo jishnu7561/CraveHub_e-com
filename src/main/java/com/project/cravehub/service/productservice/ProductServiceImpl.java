@@ -52,17 +52,6 @@ public class ProductServiceImpl implements ProductService{
         return products;
     }
 
-//    @Override
-//    public Product deleteProductById(Integer productId) {
-//        Optional<Product> optionalProduct = productRepository.findById(productId);
-//        if(optionalProduct.isPresent()) {
-//            productRepository.deleteById(productId);
-//            return optionalProduct.get();
-//        }else {
-//            return null;
-//        }
-//    }
-
     @Override
     public Product getProductById(Integer productId) {
         return productRepository.findById(productId).orElse(null);

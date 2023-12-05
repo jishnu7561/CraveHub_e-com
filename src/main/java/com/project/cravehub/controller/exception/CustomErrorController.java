@@ -20,19 +20,4 @@ public class CustomErrorController implements ErrorController {
         // Custom error handling logic
         return "errorPage";
     }
-//    @RequestMapping("/error/401")
-//    public String UnAuthorised(){
-//        return "errorPage";
-//    }
-//
-//    @RequestMapping("/blocked")
-//    public String UserBlocked(){
-//        return "userblocked";
-//    }
-//
-//    @RequestMapping("/error/500")
-//    public String internalServerError() {
-//        // Custom logic for handling 500 errors
-//        return "500";
-//    }
 }

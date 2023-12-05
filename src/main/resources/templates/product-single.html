@@ -86,21 +86,28 @@
 						  <a class="dropdown-item" th:href="@{/login}" th:if="${#authorization.expression('!isAuthenticated()')}">Cart</a>
 					  </div>
 				  </li>
-				  <li class="nav-item"><a th:href="@{orders}" th:if="${#authorization.expression('isAuthenticated()')}" class="nav-link">Order</a></li>
-				  <li class="nav-item cta cta-colored"><a th:href="@{/cart}" class="nav-link"><span class="icon-shopping_cart"></span>[<span th:text="${cartCount} != null ? ${cartCount} : '0'" id="cartCount"></span>]</a></li>
+				  <li class="nav-item"><a th:href="@{/orders}"  th:if="${#authorization.expression('isAuthenticated()')}" class="nav-link">Order</a></li>
+				  <!--                <li class="nav-item cta cta-colored"><a href="cart.html" class="nav-link"><span class="icon-shopping_cart"></span>[<span th:text="${cartCount} != null ? ${cartCount} : '0'"></span>]</a></li>-->
+				  <li class="nav-item cta cta-colored">
+					  <a th:href="@{/cart}" class="nav-link" th:if="${#authorization.expression('isAuthenticated()')}">
+						  <span class="icon-shopping_cart"></span>
+						  [<span th:text="${cartCount != null ? cartCount : '0'}" id="cartCount"></span>]
+					  </a>
+				  </li>
 				  <li class="nav-item">
 					  <form th:action="@{/search}" method="get">
 						  <input type="text" class="search-bar" name="searchTerm" placeholder="Search..." >
 					  </form>
 				  </li>
 				  <li class="nav-item dropdown">
-					  <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" th:if="${user != null}" th:text="${user.userName}">Account</a>
-					  <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" th:unless="${user != null}">Account</a>
-
+					  <!--<a href="contact.html" class="nav-link">Contact</a>-->
+					  <!--				<a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"  th:text="${user.userName}">Account</a>-->
+					  <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" th:if="${session.userName != null}" th:text="${session.userName}">Account</a>
+					  <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" th:if="${session.userName == null}">Account</a>
 					  <div class="dropdown-menu" aria-labelledby="dropdown04">
 						  <a class="dropdown-item" sec:authorize="hasRole('USER')" th:href="@{/profile}">Profile</a>
-						  <a class="dropdown-item" th:href="@{/login}">Login</a>
-						  <a class="dropdown-item" th:href="@{/registration}">Signup</a>
+						  <a class="dropdown-item" sec:authorize="!isAuthenticated()" th:href="@{/login}">Login</a>
+						  <a class="dropdown-item" sec:authorize="!isAuthenticated()" th:href="@{/registration}">Signup</a>
 						  <a class="dropdown-item" sec:authorize="isAuthenticated()" th:href="@{/logout}">Logout</a>
 					  </div>
 				  </li>
@@ -110,7 +117,7 @@
   </nav>
     <!-- END nav -->
 
-    <div class="hero-wrap hero-bread" style="background-image: url('/images/bg_1.jpg');">
+    <div class="hero-wrap hero-bread" style="background-image: url('/images/banner-1-min.jpg');">
       <div class="container">
         <div class="row no-gutters slider-text align-items-center justify-content-center">
           <div class="col-md-9 ftco-animate text-center">
@@ -152,7 +159,17 @@
 								<a href="#" class="mr-2" style="color: #000;"><span th:text="${sold}">0</span> <span style="color: #bbb;">Sold</span></a>
 							</p>
 						</div>
-    				<h4 class="price" th:text="'₹'+${product.price}" ><span></span></h4>
+<!--    				<h4 class="price" th:text="'₹'+${product.price}" ><span></span></h4>-->
+						<div class="d-flex">
+							<div class="pricing" th:if="${product.productOffer != null and product.productOffer.isEnabled or product.categories.categoryOffer != null and product.categories.categoryOffer.isEnabled}" >
+								<p class="price"><strike class="mr-2 price-dc" th:text="'₹'+ ${product.price}">$120.00</strike><span class="price-sale" th:text="'₹'+ ${product.discountedPrice}">$80.00</span></p>
+							</div>
+							<div class="pricing" th:if="${product.categories == null
+										or (product.categories.categoryOffer == null or !product.categories.categoryOffer.isEnabled)
+										and (product.productOffer == null or !product.productOffer.isEnabled)}">
+								<p class="price"><span th:text="'₹'+ ${product.price}">$120.00</span></p>
+							</div>
+						</div>
 						<p th:text="${product.description}"></p>
 						<div class="row mt-4">
 

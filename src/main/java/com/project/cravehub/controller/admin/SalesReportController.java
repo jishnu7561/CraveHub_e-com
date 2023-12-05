@@ -83,7 +83,7 @@ public class SalesReportController {
         Workbook workbook = new HSSFWorkbook();
         Sheet sheet = workbook.createSheet("Sales Report");
 
-        // Create header row
+        // Creating heading of the table
         Row headerRow = sheet.createRow(0);
         headerRow.createCell(0).setCellValue("Order Id");
         headerRow.createCell(1).setCellValue("Products-Qty");
@@ -91,8 +91,9 @@ public class SalesReportController {
         headerRow.createCell(3).setCellValue("Customer");
         headerRow.createCell(4).setCellValue("Total Amount");
 
-        // Fill data rows
+
         int rowNum = 1;
+        // adding data's to the row
         for (OrderItem orderItem : orderItemList) {
             Row row = sheet.createRow(rowNum++);
             row.createCell(0).setCellValue(orderItem.getOrder().getOrderId());
@@ -100,16 +101,12 @@ public class SalesReportController {
             row.createCell(2).setCellValue(orderItem.getOrder().getOrderDate());
             row.createCell(3).setCellValue(orderItem.getOrder().getUser().getFirstName());
             row.createCell(4).setCellValue(orderItem.getProduct().getPrice() * orderItem.getItemCount());
-
-            // Add more cells as needed
         }
 
         // Set content type and headers for the response
         response.setContentType("application/vnd.ms-excel");
         response.setHeader("Content-Disposition", "attachment; filename=SalesReport.xls");
 
-
-        // Write workbook to the response output stream
         OutputStream outputStream = response.getOutputStream();
         workbook.write(outputStream);
         workbook.close();
@@ -151,7 +148,7 @@ public class SalesReportController {
     }
 
     @GetMapping("/pdf")
-        public String pgf()
+    public String pgf()
     {
         return "pdf";
     }

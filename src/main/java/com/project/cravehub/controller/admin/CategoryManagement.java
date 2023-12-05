@@ -55,14 +55,6 @@ public class CategoryManagement {
         return "category-management";
     }
 
-//    @GetMapping("/listCategory")
-//    public String listSubCategory(Model model)
-//    {
-//        List<SubCategory> subCategory = subCategoryRepository.findAll();
-//        model.addAttribute("subCategories",subCategory);
-//        return "redirect:/admin/listCategory";
-//    }
-
 
     @PostMapping ("/listCategory")
     public String addCategory(@ModelAttribute("category") CategoryDto categoryDto)
@@ -75,18 +67,6 @@ public class CategoryManagement {
         }
         return "redirect:/admin/listCategory?categoryExist";
     }
-
-
-//    @GetMapping("/deleteCategory/{id}")
-//    public String deleteCategory(@PathVariable(value = "id") Integer id)
-//    {
-//        Category deleteCategory = categoryService.deleteCategoryById(id);
-//        if(deleteCategory!=null) {
-//            return "redirect:/admin/listCategory";
-//        }
-//        return "redirect:/admin/listCategory?notExist";
-//    }
-
 
     @GetMapping("/editCategory/{id}")
     public String editCategory(@PathVariable(value = "id") Integer CategoryId, Model model) {
@@ -109,21 +89,11 @@ public class CategoryManagement {
         return "redirect:/admin/listCategory";
     }
 
-
-//    @GetMapping("/listCategory")
-//    public String listSubCategory(Model model) {
-//        List<SubCategory> subCategory = subCategoryRepository.findAll();
-//        model.addAttribute("subCategories",subCategory);
-//        return "redirect:/admin/listCategory";
-//    }
-
-
     @PostMapping("/addSubCategory")
     public String addSubCategory(@ModelAttribute("subCategory") CategoryDto subCategory) {
-        System.out.println(subCategory.getCategory() + "-------------" + subCategory.getSubCategoryName());
         Category category = categoryRepository.findByCategory(subCategory.getCategory());
         if (category != null) {
-            String subCategoryName = subCategory.getSubCategoryName().trim(); // Trim spaces
+            String subCategoryName = subCategory.getSubCategoryName().trim(); // Trim spaces while adding
             boolean subCategoryExists = subCategoryService.isSubCategoryExistInCategory(subCategoryName, category);
 
             if (!subCategoryExists) {
@@ -136,17 +106,6 @@ public class CategoryManagement {
         }
         return "redirect:/admin/listCategory?notExist";
     }
-
-
-//    @GetMapping("/deleteSubCategory/{subCategoryId}")
-//    public String deleteSubCategory(@PathVariable(value = "subCategoryId") Integer subCategoryId)
-//    {
-//        SubCategory deleteSubCategory = subCategoryService.deleteSubCategoryById(subCategoryId);
-//        if(deleteSubCategory!=null) {
-//            return "redirect:/admin/listCategory";
-//        }
-//        return "redirect:/admin/listCategory?notExist";
-//    }
 
     @GetMapping("/blockCategory/{id}")
     public String blockCategory(@PathVariable("id") Integer id) {
@@ -172,6 +131,5 @@ public class CategoryManagement {
         subCategoryService.unBlockSubCategoryById(id);
         return "redirect:/admin/listCategory";
     }
-
 
 }

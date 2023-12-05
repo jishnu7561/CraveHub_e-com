@@ -105,7 +105,7 @@
   </nav>
     <!-- END nav -->
 
-    <div class="hero-wrap hero-bread" style="background-image: url('/images/bg_1.jpg');">
+    <div class="hero-wrap hero-bread" style="background-image: url('/images/banner-1-min.jpg');">
       <div class="container">
         <div class="row no-gutters slider-text align-items-center justify-content-center">
           <div class="col-md-9 ftco-animate text-center">
@@ -143,8 +143,19 @@
 									  <span th:text="${product.productName}"></span>
 								  </td>
 
-								  <td class="price" th:text="'₹'+ ${product.price}">$4.90</td>
-
+<!--								  <td class="price" th:text="'₹'+ ${product.price}">$4.90</td>-->
+								<td>
+									<div class="d-flex">
+										<div class="pricing" th:if="${product.productOffer != null and product.productOffer.isEnabled or product.categories.categoryOffer != null and product.categories.categoryOffer.isEnabled}" >
+											<p class="price"><strike class="mr-2 price-dc" th:text="'₹'+ ${product.price}">$120.00</strike><span class="price-sale" th:text="'₹'+ ${product.discountedPrice}">$80.00</span></p>
+										</div>
+										<div class="pricing" th:if="${product.categories == null
+																	or (product.categories.categoryOffer == null or !product.categories.categoryOffer.isEnabled)
+																	and (product.productOffer == null or !product.productOffer.isEnabled)}">
+											<p class="price"><span th:text="'₹'+ ${product.price}">$120.00</span></p>
+										</div>
+									</div>
+								</td>
 								  <td th:utext="${product.getStatus()}"></td>
 
 

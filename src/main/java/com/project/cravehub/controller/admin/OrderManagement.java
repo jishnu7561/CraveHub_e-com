@@ -97,17 +97,4 @@ public class OrderManagement {
         }
         return "redirect:/admin/orderAdmin?error";
     }
-
-//    @GetMapping("/cancelOrder")
-//    public String cancelOrderItem(@RequestParam(name = "orderItemId") Integer orderItemId) {
-//        Optional<OrderItem> orderItemOptional = orderItemRepository.findById(orderItemId);
-//        if(orderItemOptional.isPresent())
-//        {
-//            OrderItem orderItem = orderItemOptional.get();
-//            orderItem.setOrderStatus("cancelled");
-//            orderItemRepository.save(orderItem);
-//            return "redirect:/orders";
-//        }
-//        return "redirect:/orders?error";
-//    }
 }

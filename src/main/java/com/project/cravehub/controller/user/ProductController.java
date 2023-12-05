@@ -50,7 +50,6 @@ public class ProductController {
             int cartCount = (int) session.getAttribute("cartCount");
             model.addAttribute("cartCount",cartCount);
             model.addAttribute("user", user);
-            model.addAttribute("userName",session.getAttribute((String)session.getAttribute("userName")));
             int rating = reviewService.getReviewCountForProduct(product);
             model.addAttribute("rating",rating);
             Integer sold = productService.totalSold(product,user);

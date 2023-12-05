@@ -167,7 +167,6 @@ public class CheckoutController {
             return ResponseEntity.ok(jsonResponse);
         } catch (
                 JsonProcessingException e) {
-            // Handle the exception, e.g., log it and return an error response
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error processing JSON response");
         }
     }

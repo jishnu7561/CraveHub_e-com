@@ -42,16 +42,12 @@ public class UserRegistrationController {
         String email = userRegistrationDto.getEmail();
 
         session.setAttribute("referralCode",referralCode);
-        System.out.println("hhhhhhhhhhhhhhhhhhhhhhhhhhhhh"+referralCode);
+
         // Check if the email already exists
         boolean validEmailId = userService.isValidEmailId(email);
 
         if (!validEmailId) {
-//            session.setAttribute("validEmailId", "Email Id already exists");
-//            session.removeAttribute("validUserName");
-//            session.setAttribute("newUser", userRegistrationDto);
             session.setAttribute("regError","You have already an account,please login");
-
             return "redirect:/registration";
         }
         else {

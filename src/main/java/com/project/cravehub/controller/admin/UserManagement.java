@@ -47,8 +47,6 @@ public class UserManagement {
         return "redirect:/admin/listUsers";
     }
 
-
-
     @GetMapping("/search")
     public String searchUsers(@RequestParam("searchTerm") String searchTerm, Model model) {
         List<User> users = userService.getUsersByPartialEmailOrName(searchTerm);

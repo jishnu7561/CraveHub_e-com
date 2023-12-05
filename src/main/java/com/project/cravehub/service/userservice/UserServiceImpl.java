@@ -117,11 +117,6 @@ public class UserServiceImpl implements UserService {
         newOtp.setOtpGeneratedTime(LocalDateTime.now());
         otpRepository.save(newOtp);
 
-//        Otp otp = new Otp();
-//        otp.setEmail(registrationDto.getEmail());
-//        otp.setOtpGenerated(otp_generated);
-//        otp.setOtpGeneratedTime(LocalDateTime.now());
-//        otpRepository.save(otp);
         return "registration Successful";
     }
 
@@ -445,9 +440,6 @@ public class UserServiceImpl implements UserService {
     public void addTransactionAndRefund(OrderItem orderItem) {
         System.out.println("called the refund");
         Transactions transactions = new Transactions();
-//        Set<User> user = new HashSet<>();
-//        user.add(orderItem.getOrder().getUser());
-//        transactions.setUser(user);
         transactions.getUser().add(orderItem.getOrder().getUser());
         LocalDateTime date = LocalDateTime.now();
         transactions.setTransactionDate(date);
@@ -483,59 +475,6 @@ public class UserServiceImpl implements UserService {
              userRepository.save(user1);
     }
 
-//    @Override
-//    @Transactional
-//    public void addTransactionAndRefund(OrderItem orderItem) {
-//        System.out.println("called the refund");
-//
-//        // Create a new transaction
-//        Transactions transactions = new Transactions();
-//        transactions.getUser().add(orderItem.getOrder().getUser());
-//        LocalDateTime date = LocalDateTime.now();
-//        transactions.setTransactionDate(date);
-//
-//        // Calculate discount based on the order's coupon
-//        Double discount = 0.0;
-//        if (!orderItem.getOrder().isRefund_used() && orderItem.getOrder().getCoupon() != null) {
-//            discount = orderItem.getOrder().getCoupon().getAmount();
-//        }
-//
-//        // Set transaction details
-//        transactions.setOrderAmount(orderItem.getOrder().getOrderAmount() - discount);
-//        transactions.setPaymentMethod(orderItem.getOrder().getPaymentMethod());
-//        transactions.setPurchaseOrder(orderItem.getOrder());
-//        transactions.setPurpose("refund");
-//
-//        // Save the transaction
-//        transactionRepository.save(transactions);
-//
-//        // Update wallet and purchase order
-//        User user1 = orderItem.getOrder().getUser();
-//        Wallet wallet = user1.getWallet();
-//
-//        if (wallet == null) {
-//            wallet = new Wallet();
-//            wallet.setUser(user1);
-//            user1.setWallet(wallet);
-//        }
-//
-//        // Update the wallet balance based on the refund amount
-//        wallet.setBalance(wallet.getBalance() + ((orderItem.getItemCount() * orderItem.getProduct().getPrice()) - discount));
-//
-//        // Update the purchase order to indicate that the refund was used
-//        PurchaseOrder purchaseOrder = orderItem.getOrder();
-//        purchaseOrder.setRefund_used(true);
-//
-//        // Save the updated entities
-//        walletRepository.save(wallet);
-//        purchaseOrderRepository.save(purchaseOrder);
-//
-//        // Add the transaction to the user's set of transactions
-//        user1.getTransaction().add(transactions);
-//
-//        // Save the updated user entity
-//        userRepository.save(user1);
-//    }
 
     @Override
     public void addBalanceToWallet(User user,double totalAmount) {
