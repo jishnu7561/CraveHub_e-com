@@ -64,8 +64,8 @@ private UserRepository userRepository;
             User verifyCustomer = (User) session.getAttribute("verifyCustomer");
             userService.createWallet(verifyCustomer);
             userService.createCartForUser(emailid);
-            userRepository.save(verifyCustomer);
-            userService.addReferralOffer(session,emailid);
+//            userRepository.save(verifyCustomer);
+            userService.addReferralOffer(session, emailid);
             System.out.println("successfully verified and regisrered");
             return ResponseEntity.ok(true);
         }

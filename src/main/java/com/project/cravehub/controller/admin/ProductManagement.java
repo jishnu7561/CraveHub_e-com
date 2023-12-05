@@ -33,9 +33,9 @@ import java.util.*;
 public class ProductManagement {
 
     // Localhost image storage path
-//    private static final String UPLOAD_DIR = "D:\\project\\cravehub\\src\\main\\resources\\static\\productImages\\";
+    private static final String UPLOAD_DIR = "D:\\project\\cravehub\\src\\main\\resources\\static\\productImages\\";
     // Server image storage path
-    private static final String UPLOAD_DIR = "/home/ubuntu/CraveHub_e-com/src/main/resources/static/productImages";
+//    private static final String UPLOAD_DIR = "/home/ubuntu/CraveHub_e-com/src/main/resources/static/productImages";
 
     @Autowired
     private ProductRepository productRepository;

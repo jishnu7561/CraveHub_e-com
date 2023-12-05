@@ -49,7 +49,7 @@ public interface UserService extends UserDetailsService {
 
     void deleteFromWishlist(Product productId, String email);
 
-    void createWallet(User verifyCustomer);
+    void createWallet(User user);
 
 
 

@@ -15,7 +15,7 @@ public class EmailReferral {
 
 
     public void sendLinkEmail(String email, User user) {
-        String registrationLink = "http://localhost:8081/registration";
+        String registrationLink = "http://cravehub.online:8080/registration";
         String referralCode = user.getReferralCode();
 
         // You can customize the email body as per your requirements

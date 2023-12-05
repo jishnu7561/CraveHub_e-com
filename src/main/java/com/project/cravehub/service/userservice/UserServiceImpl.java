@@ -399,7 +399,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void createWallet(User user) {
-        if (user.getWallet() == null) {
+        if (user != null && user.getWallet() == null) {
             Wallet wallet = new Wallet();
             wallet.setUser(user);
             user.setWallet(wallet);
@@ -505,21 +505,21 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void createCartForUser(String userEmail) {
+        if(userEmail != null) {
+            User user = userRepository.findByEmail(userEmail);
+            System.out.println(user);
 
-        User user = userRepository.findByEmail(userEmail);
-        System.out.println(user);
+            if (user != null) {
+                Cart cart = user.getCart();
 
-        if (user != null) {
-            Cart cart = user.getCart();
-
-            if (cart == null) {
-                cart = new Cart();
-                cart.setUser(user);
-                user.setCart(cart);
-                cartRepository.save(cart);
+                if (cart == null) {
+                    cart = new Cart();
+                    cart.setUser(user);
+                    user.setCart(cart);
+                    cartRepository.save(cart);
+                }
             }
         }
-
     }
 
     @Override
@@ -536,12 +536,14 @@ public class UserServiceImpl implements UserService {
         if(referralCode != null && user1 != null)
         {
             User user = userRepository.findByReferralCode(referralCode);
-            user.getWallet().setBalance(user.getWallet().getBalance()+100);
-            user1.getWallet().setBalance(50.0);
-            user1.getWallet().setReferralUsed(true);
-            userRepository.save(user);
-            userRepository.save(user1);
-            session.removeAttribute("referralCode");
+            if(user != null) {
+                user.getWallet().setBalance(user.getWallet().getBalance() + 100);
+                user1.getWallet().setBalance(50.0);
+                user1.getWallet().setReferralUsed(true);
+                userRepository.save(user);
+                userRepository.save(user1);
+                session.removeAttribute("referralCode");
+            }
         }
     }
 
