@@ -31,10 +31,14 @@ import java.util.Optional;
 @Controller
 public class MainController {
 
-    @Bean
-    public UserRegistrationDto userRegistrationDto() {
-        return new UserRegistrationDto();
-    }
+//    @Bean
+//    public UserRegistrationDto userRegistrationDto() {
+//        return new UserRegistrationDto();
+//    }
+
+    @Autowired
+    private UserRegistrationDto userRegistrationDto;
+
     @Autowired
     private UserRepository userRepository;
 

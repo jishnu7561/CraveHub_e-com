@@ -10,6 +10,7 @@ import com.project.cravehub.util.EmailUtil;
 import com.project.cravehub.util.OtpUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,8 +26,8 @@ public class OtpController {
     @Autowired
     private UserService userService;
 
-@Autowired
-private UserRepository userRepository;
+    @Autowired
+    private UserRepository userRepository;
 
 //    ----------------------------------from main controller------------------------------
     @Autowired
@@ -35,6 +36,7 @@ private UserRepository userRepository;
     private OtpUtil otpUtil;
 
     @Autowired
+    @Lazy
     private UserRegistrationDto registrationDto;
 
     @GetMapping("/verify-account")

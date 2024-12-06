@@ -5,6 +5,7 @@ import com.project.cravehub.service.userservice.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -18,7 +19,9 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
+    @Lazy
     private UserService userService;
+
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -90,13 +93,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 })
                 .and()
 
-                .logout()
-                .invalidateHttpSession(true)
-                .clearAuthentication(true)
-                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                .logoutSuccessUrl("/login?logout")
-                .permitAll()
-                .and();
+
+                .sessionManagement()
+                .maximumSessions(2) // Allow up to 10 concurrent sessions for different users
+                .maxSessionsPreventsLogin(false) // Allow new logins even if the session limit is reached
+                .expiredUrl("/login?expires") // Redirect to the login page if the session has expired
+                ;
 
     }
     @Bean

@@ -61,6 +61,8 @@ public class ShopController {
 
         return "shop";
     }
+
+
     @GetMapping("/search")
     public String searchProducts(@RequestParam("searchTerm") String searchTerm,
                                  @RequestParam(defaultValue = "0") int page,
